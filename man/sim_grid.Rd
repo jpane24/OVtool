@@ -11,14 +11,9 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-ps_object=NULL, stop.method=NULL, data=NULL, weights=NULL,
-                     treatment=NULL, outcome=NULL, covariates=NULL,
-                     es_grid = NULL, # user can specify a grid to simulate.
-                     rho_grid = NULL,
-                     n_reps = 101, estimand = "ATE"
-
 sim_grid(ps.object, stop.method, data, weights, treatment, outcome, covariates,
 es_grid, rho_grid, n_reps, estimand)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
