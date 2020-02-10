@@ -10,10 +10,17 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
-	tidyverse (>= 1.2.1),
-	survey (>= 3.36),
-	twang (>= 2.0),
-	lsr (>= 0.5),
-	ggrepel (>= 0.8.1),
-	directlabels (>= 2018.05.22),
-	metR (>= 0.5.0),
+	tidyverse,
+	survey,
+	twang,
+	lsr,
+	ggrepel,
+	directlabels,
+	metR,
+	Hmisc
+Suggests:
+	readr,
+	haven,
+	here,
+	glue,
+	
