@@ -1,5 +1,5 @@
 #### sim_grid fn ####
-sim_grid <- function(ps_object, stop.method, data, weights,
+sim_grid <- function(ps_object=NULL, stop.method, data, weights,
                      treatment, outcome, covariates,
                      es_grid, rho_grid,
                      n_reps = 101, estimand = "ATE", ...){
