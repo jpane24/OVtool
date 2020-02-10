@@ -1,5 +1,3 @@
-rm(list=ls())
-
 #### sim_grid fn ####
 sim_grid <- function(ps_object, stop.method, data, weights,
                      treatment, outcome, covariates,
