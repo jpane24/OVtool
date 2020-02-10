@@ -1,14 +1,13 @@
 rm(list=ls())
 
 #### sim_grid fn ####
-sim_grid <- function(ps_object=NULL, stop.method=NULL, data=NULL, weights=NULL,
-                     treatment=NULL, outcome=NULL, covariates=NULL,
-                     es_grid = NULL, # user can specify a grid to simulate.
-                     rho_grid = NULL,
-                     n_reps = 101, estimand = "ATE"){
+sim_grid <- function(ps_object, stop.method, data, weights,
+                     treatment, outcome, covariates,
+                     es_grid, rho_grid,
+                     n_reps = 101, estimand = "ATE", ...){
   set.seed(24)
   if(class(ps_object)!="ps"){
-    if(is.null(data) | is.null(weights) | is.null(treatment) | is.null(outcome) | is.null(covariates)){
+    if(missing(data) | missing(weights) | missing(treatment) | missing(outcome) | missing(covariates)){
       stop("Please supply either a ps class object, stop.method, and relevant column names for:
       outcome, and covariates OR the data and relevant column names for: weights, treatment, outcome, & covariates")
     } else{
@@ -24,7 +23,7 @@ sim_grid <- function(ps_object=NULL, stop.method=NULL, data=NULL, weights=NULL,
       design_u <- svydesign(ids=~1, weights=~w_orig, data=data)
     }
   } else{
-    if(is.null(stop.method) | is.null(outcome) | is.null(covariates)){
+    if(missing(stop.method) | missing(outcome) | missing(covariates)){
       stop("Please supply a stop.method to generate the weights (e.g. \"ks.max/")
     }
     # outcome
@@ -50,12 +49,12 @@ sim_grid <- function(ps_object=NULL, stop.method=NULL, data=NULL, weights=NULL,
   if(max(table(data[,y])) > 1) warning("Ties in the outcome variable `y` may be problematic.")
 
   # pre-specify rho grid
-  if(is.null(rho_grid)){
+  if(missing(rho_grid)){
     rho_grid = seq(0, .45, by=0.05)
   }
 
   # determine reasonable effect size grid
-  if(is.null(es_grid)){
+  if(missing(es_grid)){
     jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, my_estimand = estimand)
     es_upper = ceiling_dec(max(jdp_test$ES))
     es_lower = -es_upper
