@@ -11,28 +11,51 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-sim_grid(y, tx, w_orig, rho_grid, es_grid, nreps)
+ps_object=NULL, stop.method=NULL, data=NULL, weights=NULL,
+                     treatment=NULL, outcome=NULL, covariates=NULL,
+                     es_grid = NULL, # user can specify a grid to simulate.
+                     rho_grid = NULL,
+                     n_reps = 101, estimand = "ATE"
+
+sim_grid(ps.object, stop.method, data, weights, treatment, outcome, covariates,
+es_grid, rho_grid, n_reps, estimand)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{
+  \item{data}{
+  %%     ~~Describe \code{x} here~~
+  A dataframe containing the data
+}
+  \item{ps_object}{
+  %%     ~~Describe \code{x} here~~
+  A ps object exported from TWANG
+}
+  \item{stop.method}{
+  %%     ~~Describe \code{x} here~~
+  If the user specifies ps_object, which stop.method should be used to export the weights
+}
+  \item{outcome}{
   %%     ~~Describe \code{x} here~~
   A vector that represents the outcome.
 }
-  \item{tx}{
+  \item{weights}{
+  A vector of propensity score weights
+}
+  \item{treatment}{
   A vector for the treatment indicator (must be 0s and 1s)
 }
-  \item{w_orig}{
-  A vector of propensity score weights
-
-}
-  \item{rho_grid}{
-  A grid of correlations to simulate over this rho relates the correaltion between
-  the effect size
+  \item{covariates}{
+  vector of column names representing the covariates
 }
   \item{es_grid}{
-  A grid of effect sizes to simulate over
-
+  Not required. A grid of effect sizes to simulate over
+}
+  \item{rho_grid}{
+  Note required. A grid of correlations to simulate over this rho relates the correaltion between
+  the effect size.
+}
+  \item{estimand}{
+  "ATE"" or "ATT""
 }
   \item{n_reps}{
   Number of repetitions to simulate over

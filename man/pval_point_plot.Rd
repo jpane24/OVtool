@@ -8,12 +8,16 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-pval_point_plot(x)
+pval_point_plot(prep, col)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
+  \item{prep}{
 %%     ~~Describe \code{x} here~~
+Input from prep_for_plots
+}
+  \item{col}{
+If user wants color or black and white. Specify color with "color" or black and white "bw"
 }
 }
 \details{

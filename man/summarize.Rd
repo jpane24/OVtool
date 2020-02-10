@@ -8,12 +8,13 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-summarize(x)
+summarize(r1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
+  \item{r1}{
 %%     ~~Describe \code{x} here~~
+An object returned from sim_grid
 }
 }
 \details{
