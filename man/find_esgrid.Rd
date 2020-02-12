@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-find_esgrid(my_data, my_cov, treatment, my_estimand)
+find_esgrid(my_data, my_cov, treatment, outcome, my_estimand)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +23,10 @@ vector of covariates
   \item{treatment}{
 %%     ~~Describe \code{x} here~~
 column name of treatment indicator in my_data
+}
+  \item{outcome}{
+%%     ~~Describe \code{x} here~~
+column name of outcome in my_data
 }
   \item{my_estimand}{
 %%     ~~Describe \code{x} here~~
