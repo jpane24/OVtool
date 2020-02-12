@@ -14,14 +14,7 @@ Imports:
 	ggplot2,
 	survey,
 	twang,
-	lsr,
 	ggrepel,
 	directlabels,
-	metR,
-	Hmisc
-Suggests:
-	readr,
-	haven,
-	here,
-	glue,
+	metR
 	
