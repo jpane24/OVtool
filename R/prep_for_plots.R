@@ -50,7 +50,7 @@ prep_for_plots <- function(r1){
   obs_cors = rep(NA, length(r1$data[,r1$cov]))
   for(i in 1:length(obs_cors)){
     obs_cors[i] = abs(cor(as.numeric(r1$data[,r1$cov[i]]),
-                          r1$data[,r1$tx],"pairwise.complete.obs"))
+                          r1$data[,r1$y],"pairwise.complete.obs"))
   }
 
   # x-axis of plot (effect size)

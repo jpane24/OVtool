@@ -1,14 +1,14 @@
 #### setup es grid ####
-find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, my_estimand = estimand){
-  # y-axis of plot (correlation between covariates and treatment)
+find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand){
+  # y-axis of plot (correlation between covariates and outcome)
   obs_cors = rep(NA, length(my_data[,my_cov]))
   for(i in 1:length(obs_cors)){
     if(is.factor(my_data[,my_cov[i]])){
       obs_cors[i] = abs(cor(as.numeric(my_data[,my_cov[i]]),
-                            my_data[,treatment],"pairwise.complete.obs"))
+                            my_data[,outcome],"pairwise.complete.obs"))
     } else {
       obs_cors[i] = abs(cor(as.numeric(as.character(my_data[,my_cov[i]])),
-                            my_data[,treatment],"pairwise.complete.obs"))
+                            my_data[,outcome],"pairwise.complete.obs"))
     }
   }
 

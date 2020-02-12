@@ -53,7 +53,7 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
 
   # determine reasonable effect size grid
   if(missing(es_grid)){
-    jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, my_estimand = estimand)
+    jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
     es_upper = ceiling_dec(max(jdp_test$ES))
     es_lower = -es_upper
     es_grid = seq(es_lower, es_upper, by=0.1)
