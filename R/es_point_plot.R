@@ -1,5 +1,5 @@
 #### Treatment effect plot with points ####
-es_point_plotjp = function(prep, col){
+es_point_plot = function(prep, col){
   r1_df = prep$r1_df
   pvals = prep$pvals
   pval_lines = prep$pval_lines
