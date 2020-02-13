@@ -1,5 +1,5 @@
 #### Treatment effect plot with points ####
-es_point_plot = function(prep, col){
+es_point_plotjp = function(prep, col){
   r1_df = prep$r1_df
   pvals = prep$pvals
   pval_lines = prep$pval_lines
@@ -51,9 +51,9 @@ es_point_plot = function(prep, col){
                     aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
                     box.padding = unit(0.45, "lines"), col=color[[1]][2])
   if(col == "bw"){
-    v3 = v3 + theme_bw(plot.title = element_text(hjust = 0.5),
-                       legend.key = element_blank(), legend.text = element_text(size = 10),
-                       legend.key.size =  unit(0.5, "in"))
+    v3 = v3 + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
+    legend.key = element_blank(), legend.text = element_text(size = 10),
+    legend.key.size =  unit(0.5, "in"))
   }
   return(v3)
 }
