@@ -32,7 +32,9 @@ es_plot = function(prep, col){
                                       gp = gpar(cex = .75)),
                       ymin = 0, ymax = 0, xmin = 0, xmax = 0)
   if(col == "bw"){
-    v = v + theme_bw()
+    v = v + theme_bw(plot.title = element_text(hjust = 0.5),
+                     legend.key = element_blank(), legend.text = element_text(size = 10),
+                     legend.key.size =  unit(0.5, "in"))
   }
   return(v)
 }

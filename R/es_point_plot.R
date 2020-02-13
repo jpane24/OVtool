@@ -51,7 +51,9 @@ es_point_plot = function(prep, col){
                     aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
                     box.padding = unit(0.45, "lines"), col=color[[1]][2])
   if(col == "bw"){
-    v3 = v3 + theme_bw()
+    v3 = v3 + theme_bw(plot.title = element_text(hjust = 0.5),
+                       legend.key = element_blank(), legend.text = element_text(size = 10),
+                       legend.key.size =  unit(0.5, "in"))
   }
   return(v3)
 }
