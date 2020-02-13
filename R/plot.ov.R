@@ -1,6 +1,6 @@
 #### Plotting Package for OV ####
 plot.ov <- function(x, col="color", print_all="all") {
-  prep_plots = prep_for_plotsjp(x)
+  prep_plots = prep_for_plots(x)
 
   #### some defaults ####
   .pardefault <- par(no.readonly=TRUE)
