@@ -102,23 +102,26 @@ prep_for_plots <- function(r1){
     mutate(cov=r1$cov)
   colnames(obs_cors) = c("Cor_Outcome", "ES", "cov")
 
-  cor_high = obs_cors[obs_cors$Cor_Outcome>.45,]
+  cor_high = obs_cors[obs_cors$Cor_Outcome>max(r1$es_grid),]
   if(nrow(cor_high)!=0){
-    text_high = paste0("Covariates with absolute correlation greater than .45: ",
-                       cor_high$cov, " (Actual: ", sprintf("%.3f", round(cor_high$Cor_Outcome,3)), ")")
+    text_high = paste0(cor_high$cov, " (Actual: ", sprintf("%.3f", round(cor_high$Cor_Outcome,3)), ")")
+    text_high = paste0("NOTE: Covariates with absolute correlation with outcome greater than ",
+                       max(r1$es_grid), ": ", paste(text_high, collapse=", "))
   } else{
     text_high=""
   }
 
   obs_cors = obs_cors %>%
-    mutate(Cor_Outcome = case_when(Cor_Outcome >.45 ~ .45, TRUE ~ Cor_Outcome))
+    mutate(Cor_Outcome = case_when(Cor_Outcome > max(r1$rho_grid) ~ max(r1$rho_grid), TRUE ~ Cor_Outcome))
 
   es_high = obs_cors[abs(obs_cors$ES)>max(r1$es_grid),]
   if(nrow(es_high)!=0){
-    text_high = paste0("Covariates with effect size greater than max plot allows: ",
-                       es_high$cov, " (Actual: ", sprintf("%.3f", round(es_high$ES,3)), ")")
+    text_high_es = paste0(es_high$cov, " (Actual: ", sprintf("%.3f", round(es_high$ES,3)), ")")
+    text_high_es = paste0("NOTE: Covariates with effect size greater than max plot allows: ",
+                          paste(text_high_es, collapse=", "))
+    #
   } else{
-    text_high=""
+    text_high_es = ""
   }
 
   obs_cors = obs_cors %>%
@@ -127,7 +130,7 @@ prep_for_plots <- function(r1){
            cov = gsub('_.*','',cov))
 
   return(list(r1=r1, r1_df=r1_df, obs_cors=obs_cors, text_high=text_high,
-              pvals=pvals, pval_lines=pval_lines, raw = raw))
+              text_high_es=text_high_es, pvals=pvals, pval_lines=pval_lines, raw = raw))
 
 }
 

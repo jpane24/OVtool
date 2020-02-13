@@ -24,10 +24,6 @@ pval_point_plot = function(prep, col){
                  color = color[[1]][1], breaks=pvals[2]) +
     geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[3]),
                  color = color[[1]][1], breaks=pvals[3]) +
-    annotation_custom(grob = textGrob(label = text_high, vjust = -1.5,
-                                      gp = gpar(cex = .75)),
-                      ymin = max(r1_df$rho_grid), ymax = max(r1_df$rho_grid), xmin = 0,
-                      xmax = 0)  +
     annotation_custom(grob = textGrob(label = raw, vjust = 3,
                                       gp = gpar(cex = .75)),
                       ymin = 0, ymax = 0, xmax = 0) +

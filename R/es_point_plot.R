@@ -33,10 +33,6 @@ es_point_plot = function(prep, col){
     theme(plot.title = element_text(hjust = 0.5),
           legend.key = element_blank(), legend.text = element_text(size = 10),
           legend.key.size =  unit(0.5, "in")) +
-    annotation_custom(grob = textGrob(label = text_high, vjust = -1.5,
-                                      gp = gpar(cex = .75)),
-                      ymin = .45, ymax = .45, xmin = 0,
-                      xmax = 0) +
     geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[1]),
                  color = color[[1]][1], breaks=pvals[1], size=1.25) +
     geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[2]),
