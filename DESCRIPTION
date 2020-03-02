@@ -9,7 +9,7 @@ Description: This tool was designed to assess the sensitivity of research findin
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports:
+Depends:
 	dplyr,
 	ggplot2,
 	survey,

@@ -1,5 +1,5 @@
 #### summarize fn ####
-summarize <- function(r1){
+summary.ov <- function(r1){
 
   r1_jp$es_SML = case_when(abs(r1_jp$es_grid) < .01 ~ "es Small",
                            abs(r1_jp$es_grid) <= .1 & abs(r1_jp$es_grid) > .01 ~ "es Medium",

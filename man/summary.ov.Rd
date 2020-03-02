@@ -1,14 +1,14 @@
-\name{summarize}
-\alias{summarize}
+\name{summary.ov}
+\alias{summary.ov}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{summarize
+\title{summary.ov
 %%  ~~function to do ... ~~
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-summarize(r1)
+summary.ov(r1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
