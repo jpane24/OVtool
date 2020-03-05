@@ -70,10 +70,10 @@ summary.ov <- function(r1, sig_level=0.05){
   } else if(raw_pval < sig_level & all(pvals > sig_level)){
     text_p = paste0("Statistical significance at the ", sig_level, " level is *not* expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in any of the observed confounders. In the most extreme observed case, the p-value would be expected to increase from  ", format(round(raw_pval,3), nsmall=3), " to ", format(round(max(pvals),3), nsmall=3), ".")
   } else if(raw_pval < sig_level & !(all(pvals<sig_level) | all(pvals >sig_level))){
-    nonsig = temp$obs_cors$cov[which(pvals>sig_level)]
+    sig = temp$obs_cors$cov[which(pvals<sig_level)]
     total = nrow(temp$obs_cors)
-    nonsig_count = length(nonsig)
-    text_p = paste0("Statistical significance at the ", sig_level, " level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in ", nonsig_count, " of the ", total, " observed confounders. In the most extreme observed case, the p-value would be expected to increase from ", format(round(raw_pval,3), nsmall=3), " to ", format(round(max(pvals),3), nsmall=3), ". Significance at the ", sig_level, " level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as ",  paste(nonsig, collapse=", "),".")
+    sig_count = length(sig)
+    text_p = paste0("Statistical significance at the ", sig_level, " level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in ", sig_count, " of the ", total, " observed confounders. In the most extreme observed case, the p-value would be expected to increase from ", format(round(raw_pval,3), nsmall=3), " to ", format(round(max(pvals),3), nsmall=3), ". Significance at the ", sig_level, " level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as ",  paste(nonsig, collapse=", "),".")
   }
   print("Recommendation for reporting the sensitivity analyses")
 
