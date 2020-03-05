@@ -33,6 +33,7 @@ plot.ov <- function(x, col="color", print_all="all") {
     if(prep_plots$text_high!=""){print(prep_plots$text_high)}
     if(prep_plots$text_high_es!=""){print(prep_plots$text_high_es)}
   }
+  summary.ov(x)
   par(.pardefault)
   grDevices::palette("default")
 }
