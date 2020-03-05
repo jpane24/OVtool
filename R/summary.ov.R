@@ -16,6 +16,7 @@ summary.ov <- function(r1, sig_level=0.05){
                                rho_grid = temp$obs_cors$Cor_Outcome[i], es_grid=temp$obs_cors$ES[i])
     trt_effect[i] = test_jp$trt_effect[[1]]
     pvals[i] = test_jp$p_val[[1]]
+    print(paste0(round(i/nrow(temp$obs_cors)*100,0), "% Done!"))
   }
   options(warn=1)
 
