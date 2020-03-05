@@ -8,13 +8,17 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-summary.ov(r1)
+summary.ov(r1, sig_level)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{r1}{
 %%     ~~Describe \code{x} here~~
 An object returned from sim_grid
+}
+  \item{sig_level}{
+%%     ~~Describe \code{x} here~~
+The alpha level with default 0.05
 }
 }
 \details{

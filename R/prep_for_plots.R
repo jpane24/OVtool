@@ -65,6 +65,7 @@ prep_for_plots <- function(r1){
     data.frame()
 
   es_cov = rep(NA, length(r1$cov))
+  es_cov_actual = rep(NA, length(r1$cov))
   if(r1$estimand == "ATE"){
     for(i in 1:length(r1$cov)){
       # denominator for ATE
@@ -78,6 +79,7 @@ prep_for_plots <- function(r1){
       } else{
         es_cov[i] = -1*abs(diff_means/denom_ATE)
       }
+      es_cov_actual[i] = (diff_means/denom_ATE)
     }
   } else if(r1$estimand == "ATT"){
     for(i in 1:length(r1$cov)){
@@ -93,14 +95,15 @@ prep_for_plots <- function(r1){
       } else{
         es_cov[i] = -1*abs(diff_means/denom_ATT)
       }
+      es_cov_actual[i] = (diff_means/denom_ATT)
     }
   }
 
-  obs_cors = cbind(obs_cors, es_cov)
+  obs_cors = cbind(obs_cors, es_cov, es_cov_actual)
   obs_cors = obs_cors %>%
     data.frame() %>%
     mutate(cov=r1$cov)
-  colnames(obs_cors) = c("Cor_Outcome", "ES", "cov")
+  colnames(obs_cors) = c("Cor_Outcome", "ES", "ESTRUE", "cov")
 
   cor_high = obs_cors[obs_cors$Cor_Outcome>max(r1$es_grid),]
   if(nrow(cor_high)!=0){
