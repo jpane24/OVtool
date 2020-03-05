@@ -14,8 +14,8 @@ summary.ov <- function(r1, sig_level=0.05){
     calculate_exact = sim_grid(data=r1$data, weights=r1$data$w_orig, treatment= r1$tx,
                                outcome=r1$y, covariates=r1$cov, estimand=r1$estimand,
                                rho_grid = temp$obs_cors$Cor_Outcome[i], es_grid=temp$obs_cors$ES[i])
-    trt_effect[i] = test_jp$trt_effect[[1]]
-    pvals[i] = test_jp$p_val[[1]]
+    trt_effect[i] = calculate_exact$trt_effect[[1]]
+    pvals[i] = calculate_exact$p_val[[1]]
     print(paste0(round(i/nrow(temp$obs_cors)*100,0), "% Done!"))
   }
   options(warn=1)
