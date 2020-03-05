@@ -21,7 +21,7 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
       design_u <- svydesign(ids=~1, weights=~w_orig, data=data)
     }
   } else{
-    if(missing(stop.method) | missing(outcome) | missing(covariates)){
+    if(is.null(stop.method) | is.null(outcome) | is.null(covariates)){
       stop("Please supply a stop.method to generate the weights (e.g. \"ks.max/")
     }
     # outcome
@@ -29,7 +29,9 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
     # treatment
     tx = ps_object$treat.var
     # covariates
-    cov = all.vars(covariates)
+    if(typeof(covariates) == "language"){
+      cov = all.vars(covariates)
+    }
     # data
     data = ps_object$data
     # weights
@@ -40,7 +42,7 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
   # create formula
   formula = formula(paste(outcome,  "~", tx))
   #formula_scaled = formula(paste0("scale(", outcome, ") ~ ", tx))
-  formula_scaled = formula(paste0("scale(", outcome, ")", covariates, " + ", tx))
+  formula_scaled = formula(paste0("scale(", outcome, ") ~ ", collapse(cov, sep=" + "), " + ", tx))
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
@@ -87,7 +89,9 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
       p_val_nodr[i,j] <- median(pValHd)
       trt_effect_nodr[i,j] <- median(esHd)
     }
-    print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
+    if(length(es_grid) >1){
+      print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
+    }
   }
   results = list(p_val = p_val_nodr, trt_effect = trt_effect_nodr,
                  es_grid = es_grid, rho_grid = rho_grid, cov = cov,

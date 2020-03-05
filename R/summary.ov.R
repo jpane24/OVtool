@@ -9,11 +9,15 @@ summary.ov <- function(r1, sig_level=0.05){
   # Find effects and pvalues
   pvals = rep(NA, nrow(temp$obs_cors))
   trt_effect = rep(NA, nrow(temp$obs_cors))
+  options(warn=-1)
   for(i in 1:nrow(temp$obs_cors)){
-    nearest.idx <- which.min(colSums((t(temp$r1_df[,c("es_grid", "rho_grid")]) - c(temp$obs_cors$ES[i] , temp$obs_cors$Cor_Outcome[i]))^2))
-    pvals[i] = temp$r1_df$p_val[nearest.idx]
-    trt_effect[i] = temp$r1_df$trt_effect[nearest.idx]
+    calculate_exact = sim_grid(data=r1$data, weights=r1$data$w_orig, treatment= r1$tx,
+                               outcome=r1$y, covariates=r1$cov, estimand=r1$estimand,
+                               rho_grid = temp$obs_cors$Cor_Outcome[i], es_grid=temp$obs_cors$ES[i])
+    trt_effect[i] = test_jp$trt_effect[[1]]
+    pvals[i] = test_jp$p_val[[1]]
   }
+  options(warn=1)
 
   # Effect Size cases
   effect_size_text = case_when((raw_treat < 0 & all(trt_effect < 0)) |
