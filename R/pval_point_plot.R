@@ -30,12 +30,12 @@ pval_point_plot = function(prep, col){
     scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
                           labels = pvals) +
     geom_point(data = obs_cors, col=color[[1]][2],
-               aes(x = ES, y = Cor_Outcome, z = NULL)) +
+               aes(x = ESTRUE, y = Cor_Outcome, z = NULL)) +
     theme(plot.title = element_text(hjust = 0.5),
           legend.key = element_blank(), legend.text = element_text(size = 10),
           legend.key.size =  unit(0.5, "in")) +
     geom_text_repel(data=obs_cors,
-                    aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
+                    aes(x = ESTRUE, y = Cor_Outcome, z = NULL, label = cov),
                     box.padding = unit(0.45, "lines"), col=color[[1]][2])
   if(col=="bw"){
     v2 = v2 + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
