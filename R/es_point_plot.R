@@ -42,13 +42,13 @@ es_point_plot = function(prep, col){
     scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
                           labels = pvals) +
     geom_point(data = obs_cors, col=color[[1]][2],
-               aes(x = ESTRUE, y = Cor_Outcome, z = NULL)) +
+               aes(x = ES, y = Cor_Outcome, z = NULL)) +
     geom_text_contour(aes(z=trt_effect), stroke=.2, check_overlap = T) +
     annotation_custom(grob = textGrob(label = raw, vjust = 3,
                                       gp = gpar(cex = .75)),
                       ymin = 0, ymax = 0, xmax = 0)  +
     geom_text_repel(data = obs_cors,
-                    aes(x = ESTRUE, y = Cor_Outcome, z = NULL, label = cov),
+                    aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
                     box.padding = unit(0.45, "lines"), col=color[[1]][2])
   if(col == "bw"){
     v3 = v3 + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
