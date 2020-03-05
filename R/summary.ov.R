@@ -69,7 +69,7 @@ summary.ov <- function(r1, sig_level=0.05){
     text_p = paste0("Statistical significance at the ", sig_level, " level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the p-value would be expected to increase from ", format(round(raw_pval,3), nsmall=3), " to ", format(round(max(pvals),3), nsmall=3), ".")
   } else if(raw_pval < sig_level & all(pvals > sig_level)){
     text_p = paste0("Statistical significance at the ", sig_level, " level is *not* expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in any of the observed confounders. In the most extreme observed case, the p-value would be expected to increase from  ", format(round(raw_pval,3), nsmall=3), " to ", format(round(max(pvals),3), nsmall=3), ".")
-  } else if(raw_pval < sig_level & !all(pvals<sig_level | pvals >sig_level)){
+  } else if(raw_pval < sig_level & !(all(pvals<sig_level) | all(pvals >sig_level))){
     nonsig = temp$obs_cors$cov[which(pvals>sig_level)]
     total = nrow(temp$obs_cors)
     nonsig_count = length(nonsig)
