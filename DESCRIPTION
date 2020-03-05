@@ -16,5 +16,6 @@ Depends:
 	twang,
 	ggrepel,
 	directlabels,
-	metR
+	metR,
+	glue
 	

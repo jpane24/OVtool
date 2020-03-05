@@ -42,7 +42,7 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
   # create formula
   formula = formula(paste(outcome,  "~", tx))
   #formula_scaled = formula(paste0("scale(", outcome, ") ~ ", tx))
-  formula_scaled = formula(paste0("scale(", outcome, ") ~ ", collapse(cov, sep=" + "), " + ", tx))
+  formula_scaled = formula(paste0("scale(", outcome, ") ~ ", glue_collapse(cov, sep=" + "), " + ", tx))
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
