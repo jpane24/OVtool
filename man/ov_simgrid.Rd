@@ -1,7 +1,7 @@
-\name{sim_grid}
-\alias{sim_grid}
+\name{ov_simgrid}
+\alias{ov_simgrid}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{sim_grid
+\title{ov_simgrid
 %%  ~~function to do ... ~~
 }
 \description{
@@ -11,7 +11,7 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-sim_grid(ps.object, stop.method, data, weights, treatment, outcome, covariates,
+ov_simgrid(ps.object, stop.method, data, weights, treatment, outcome, covariates,
 es_grid, rho_grid, n_reps, estimand)
 
 }

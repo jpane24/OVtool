@@ -11,7 +11,7 @@ summary.ov <- function(r1, sig_level=0.05){
   trt_effect = rep(NA, nrow(temp$obs_cors))
   options(warn=-1)
   for(i in 1:nrow(temp$obs_cors)){
-    calculate_exact = sim_grid(data=r1$data, weights=r1$data$w_orig, treatment= r1$tx,
+    calculate_exact = ov_simgrid(data=r1$data, weights=r1$data$w_orig, treatment= r1$tx,
                                outcome=r1$y, covariates=r1$cov, estimand=r1$estimand,
                                rho_grid = temp$obs_cors$Cor_Outcome[i], es_grid=temp$obs_cors$ES[i],
                                n_reps = 1)

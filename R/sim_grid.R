@@ -1,5 +1,5 @@
-#### sim_grid fn ####
-sim_grid <- function(ps_object=NULL, stop.method, data, weights,
+#### ov_simgrid fn ####
+ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
                      treatment, outcome, covariates,
                      es_grid, rho_grid,
                      n_reps = 101, estimand = "ATE", ...){
@@ -56,7 +56,7 @@ sim_grid <- function(ps_object=NULL, stop.method, data, weights,
   # determine reasonable effect size grid
   if(missing(es_grid)){
     jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
-    es_upper = ceiling_dec(max(jdp_test$ES))
+    es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 1)
     es_lower = -es_upper
     es_grid = seq(es_lower, es_upper, by=0.1)
   }
