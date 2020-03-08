@@ -40,9 +40,8 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
     design_u <- svydesign(ids=~1, weights=~w_orig, data=data)
   }
   # create formula
-  formula = formula(paste(outcome,  "~", tx))
-  #formula_scaled = formula(paste0("scale(", outcome, ") ~ ", tx))
-  formula_scaled = formula(paste0("scale(", outcome, ") ~ ", glue_collapse(cov, sep=" + "), " + ", tx))
+  # formula = formula(paste(outcome,  "~", tx))
+  formula = formula(paste0(outcome, " ~ ", glue_collapse(cov, sep=" + "), " + ", tx))
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
@@ -82,7 +81,7 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
         a <- gen_a_finish(a_prep)
         data$w_new <- data$w_orig * a
         design_u <- svydesign(ids=~1, weights=~w_new, data=data)
-        glm0_u_nodr <- svyglm(formula_scaled, design=design_u)
+        glm0_u_nodr <- svyglm(formula, design=design_u)
         esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
         pValHd[k] <- summary(glm0_u_nodr)$coefficients[tx,4]
       }
