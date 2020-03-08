@@ -1,7 +1,7 @@
 #### ov_simgrid fn ####
 ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
                      treatment, outcome, covariates,
-                     es_grid, rho_grid,
+                     es_grid, rho_grid = seq(0, .45, by=0.05),
                      n_reps = 101, estimand = "ATE", ...){
   set.seed(24)
   if(class(ps_object)!="ps"){
@@ -16,7 +16,11 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
       # treamtment
       tx = treatment
       # covariates
-      cov = all.vars(covariates)
+      if(typeof(covariates) == "language"){
+        cov = all.vars(covariates)
+      } else{
+        cov = covariates
+      }
       # survey design
       design_u <- svydesign(ids=~1, weights=~w_orig, data=data)
     }
@@ -31,6 +35,8 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
     # covariates
     if(typeof(covariates) == "language"){
       cov = all.vars(covariates)
+    } else{
+      cov = covariates
     }
     # data
     data = ps_object$data
@@ -48,12 +54,12 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
   if(max(table(data[,y])) > 1) warning("Ties in the outcome variable `y` may be problematic.")
 
   # pre-specify rho grid
-  if(missing(rho_grid)){
+  if(is.null(rho_grid)){
     rho_grid = seq(0, .45, by=0.05)
   }
 
   # determine reasonable effect size grid
-  if(missing(es_grid)){
+  if(is.null(es_grid)){
     jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
     es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 1)
     es_lower = -es_upper
