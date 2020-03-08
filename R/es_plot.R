@@ -19,14 +19,14 @@ es_plot = function(prep, col){
     theme(plot.title = element_text(hjust = 0.5),
           legend.key = element_blank(), legend.text = element_text(size = 10),
           legend.key.size =  unit(0.5, "in")) +
-    scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
-                          labels = pvals) +
-    geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype= pval_lines[1]),
-                 color = color[[1]][1], breaks=pvals[1]) +
-    geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype= pval_lines[2]),
-                 color = color[[1]][1], breaks=pvals[2]) +
-    geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype= pval_lines[3]),
-                 color = color[[1]][1], breaks=pvals[3]) +
+    # scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
+    #                       labels = pvals) +
+    # geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype= pval_lines[1]),
+    #              color = color[[1]][1], breaks=pvals[1]) +
+    # geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype= pval_lines[2]),
+    #              color = color[[1]][1], breaks=pvals[2]) +
+    # geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype= pval_lines[3]),
+    #              color = color[[1]][1], breaks=pvals[3]) +
     geom_text_contour(stroke=.2) +
     annotation_custom(grob = textGrob(label = raw, vjust = 3,
                                       gp = gpar(cex = .75)),
