@@ -21,7 +21,7 @@ summary.ov <- function(r1, sig_level=0.05){
   options(warn=1)
 
   # Effect Size cases
-  effect_size_text = case_when((raw_treat < 0 & all(trt_effect < 0)) |
+  effect_size_text = dplyr::case_when((raw_treat < 0 & all(trt_effect < 0)) |
                                  raw_treat >= 0 & all(trt_effect >= 0) ~ "no sign changes",
                                raw_treat < 0 & all(trt_effect >= 0) |
                                  raw_treat >=0 & all(trt_effect < 0) ~ "all sign changes",

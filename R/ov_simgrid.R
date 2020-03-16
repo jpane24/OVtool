@@ -22,7 +22,7 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
         cov = covariates
       }
       # survey design
-      design_u <- svydesign(ids=~1, weights=~w_orig, data=data)
+      design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
     }
   } else{
     if(is.null(stop.method) | is.null(outcome) | is.null(covariates)){
@@ -41,13 +41,13 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
     # data
     data = ps_object$data
     # weights
-    data$w_orig = get.weights(ps_object, stop.method = stop.method, estimand = estimand)
+    data$w_orig = twang::get.weights(ps_object, stop.method = stop.method, estimand = estimand)
     # survey design
-    design_u <- svydesign(ids=~1, weights=~w_orig, data=data)
+    design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
   }
   # create formula
   # formula = formula(paste(outcome,  "~", tx))
-  formula = formula(paste0(outcome, " ~ ", glue_collapse(cov, sep=" + "), " + ", tx))
+  formula = formula(paste0(outcome, " ~ ", glue::glue_collapse(cov, sep=" + "), " + ", tx))
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
@@ -71,14 +71,6 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
   pValHd <- esHd <- rep(NA, n_reps)
   # create w_new and set it to the original weights for now
   data$w_new = data$w_orig
-  # my_grid = expand.grid(rho_grid, es_grid)
-  # my_grid = my_grid %>% slice(rep(1:n(), each = n_reps)) %>%
-  #   rename(es = Var2,
-  #          rho = Var1) %>%
-  #   mutate(esHd = NA_real_, pValHd = NA_real_) %>%
-  #   head()
-
-  # jdp = apply(my_grid, MARGIN=1, FUN=get_new_weights)
 
   for(i in 1:length(es_grid)){
     for(j in 1:length(rho_grid)){
@@ -86,8 +78,8 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
         a_prep <- gen_a_start(y=data[,y], tx = data[,tx], es = es_grid[i], rho = rho_grid[j])
         a <- gen_a_finish(a_prep)
         data$w_new <- data$w_orig * a
-        design_u <- svydesign(ids=~1, weights=~w_new, data=data)
-        glm0_u_nodr <- svyglm(formula, design=design_u)
+        design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)
+        glm0_u_nodr <- survey::svyglm(formula, design=design_u)
         esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
         pValHd[k] <- summary(glm0_u_nodr)$coefficients[tx,4]
       }

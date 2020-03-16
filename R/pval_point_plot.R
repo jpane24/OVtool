@@ -13,34 +13,34 @@ pval_point_plot = function(prep, col){
                         stop("Please specify 'bw' or 'color'.")))
 
   ## Pvalue
-  v2 <- ggplot(r1_df, aes(x=es_grid, y=rho_grid, z = p_val)) +
-    ylim(0,max(r1_df$rho_grid)) + xlim(c(min(r1_df$es_grid)), max(r1_df$es_grid)) +
-    geom_contour(col='black') + xlab("Association between unobserved confounder and treatment indicator\n(effect size scale)") +
-    ylab("Absolute Correlation with Outcome (rho)") + ggtitle("Pvalue contours") +
-    geom_text_contour(stroke=.2) +
-    geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[1]),
+  v2 <- ggplot2::ggplot(r1_df, ggplot2::aes(x=es_grid, y=rho_grid, z = p_val)) +
+    ggplot2::ylim(0,max(r1_df$rho_grid)) + ggplot2::xlim(c(min(r1_df$es_grid)), max(r1_df$es_grid)) +
+    ggplot2::geom_contour(col='black') + ggplot2::xlab("Association between unobserved confounder and treatment indicator\n(effect size scale)") +
+    ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("Pvalue contours") +
+    metR::geom_text_contour(stroke=.2) +
+    ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[1]),
                  color = color[[1]][1], breaks=pvals[1]) +
-    geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[2]),
+    ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[2]),
                  color = color[[1]][1], breaks=pvals[2]) +
-    geom_contour(data = r1_df, aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[3]),
+    ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[3]),
                  color = color[[1]][1], breaks=pvals[3]) +
-    annotation_custom(grob = textGrob(label = raw, vjust = 3,
-                                      gp = gpar(cex = .75)),
+    ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
+                                      gp = grid::gpar(cex = .75)),
                       ymin = 0, ymax = 0, xmax = 0) +
-    scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
+    ggplot2::scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
                           labels = pvals) +
-    geom_point(data = obs_cors, col=color[[1]][2],
-               aes(x = ES, y = Cor_Outcome, z = NULL)) +
-    theme(plot.title = element_text(hjust = 0.5),
-          legend.key = element_blank(), legend.text = element_text(size = 10),
-          legend.key.size =  unit(0.5, "in")) +
-    geom_text_repel(data=obs_cors,
-                    aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
-                    box.padding = unit(0.45, "lines"), col=color[[1]][2])
+    ggplot2::geom_point(data = obs_cors, col=color[[1]][2],
+                        ggplot2::aes(x = ES, y = Cor_Outcome, z = NULL)) +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
+          legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
+          legend.key.size =  grid::unit(0.5, "in")) +
+    ggrepel::geom_text_repel(data=obs_cors,
+                    ggplot2::aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
   if(col=="bw"){
-    v2 = v2 + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
-                                 legend.key = element_blank(), legend.text = element_text(size = 10),
-                                 legend.key.size =  unit(0.5, "in"))
+    v2 = v2 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
+                                 legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
+                                 legend.key.size =  grid::unit(0.5, "in"))
   }
 
   return(v2)

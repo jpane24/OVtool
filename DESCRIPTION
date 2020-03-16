@@ -9,13 +9,14 @@ Description: This tool was designed to assess the sensitivity of research findin
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Depends:
-	dplyr,
-	ggplot2,
+Imports:
+	dplyr, 
+	magrittr,
+	ggplot2, 
+	grid, 
 	survey,
-	twang,
-	ggrepel,
-	directlabels,
+	twang, 
+	ggrepel, 
 	metR,
 	glue
 	

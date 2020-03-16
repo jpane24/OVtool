@@ -21,19 +21,19 @@ prep_for_plots <- function(r1){
   # max p-val -- get pvalues for plots:
   max_pval = max(r1_df$p_val)
 
-  pvals = case_when(max_pval >= .10 ~ c(.05, .01, .1),
+  pvals = dplyr::case_when(max_pval >= .10 ~ c(.05, .01, .1),
                     max_pval < .1 & max_pval >= .05 ~ c(.05, .01, NA),
                     max_pval < .05 & max_pval >= .01 ~ c(.01, .001, NA),
                     max_pval < .01 ~ c(.001, NA, NA)); pvals = pvals[complete.cases(pvals)]
   pvals = sort(pvals)
 
-  pval_lines = case_when(max_pval >= .10 ~ c("dotdash", "dotted", "solid"),
+  pval_lines = dplyr::case_when(max_pval >= .10 ~ c("dotdash", "dotted", "solid"),
                          max_pval < .1 & max_pval >= .05 ~ c('dotdash', 'dotted', NA),
                          max_pval < .05 & max_pval >= .01 ~ c('dotdash', 'dotted', NA),
                          max_pval < .01 ~ c('dotdash', NA, NA));
 
   #### make variable names shorter ####
-  RHS_short = case_when(nchar(r1$cov) > 10 ~ substr(r1$cov, start = 1, stop = 10),
+  RHS_short = dplyr::case_when(nchar(r1$cov) > 10 ~ substr(r1$cov, start = 1, stop = 10),
                         TRUE ~ r1$cov)
 
   # raw treatment effect
@@ -57,11 +57,11 @@ prep_for_plots <- function(r1){
   mean_noNA = function(x){return(mean(x, na.rm=T))}
   sd_noNA = function(x){return(sd(x, na.rm=T))}
   mean_sd_bygroup = r1$data %>%
-    select(.data[[r1$tx]], r1$cov) %>%
-    mutate_if(is.factor, as.numeric) %>%
-    group_by(.data[[r1$tx]]) %>%
+    dplyr::select(.data[[r1$tx]], r1$cov) %>%
+    dplyr::mutate_if(is.factor, as.numeric) %>%
+    dplyr::group_by(.data[[r1$tx]]) %>%
     # adding in so if there are factors, we should make numeric.
-    summarize_all(list(mean_noNA, sd_noNA)) %>%
+    dplyr::summarize_all(list(mean_noNA, sd_noNA)) %>%
     data.frame()
 
   es_cov = rep(NA, length(r1$cov))
@@ -84,7 +84,7 @@ prep_for_plots <- function(r1){
   } else if(r1$estimand == "ATT"){
     for(i in 1:length(r1$cov)){
       diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", r1$cov[i], "_fn1$"), colnames(mean_sd_bygroup))]])
-      treat_only = mean_sd_bygroup %>% filter(.data[[r1$tx]] == 1) %>% data.frame()
+      treat_only = mean_sd_bygroup %>% dplyr::filter(.data[[r1$tx]] == 1) %>% data.frame()
       denom_ATT = treat_only[,colnames(treat_only)[grep(paste0("^", r1$cov[i], "_fn2$"),
                                                         colnames(treat_only))]]
       if(raw_pval >= .05){
@@ -101,8 +101,9 @@ prep_for_plots <- function(r1){
 
   obs_cors = cbind(obs_cors, es_cov, es_cov_actual)
   obs_cors = obs_cors %>%
-    data.frame() %>%
-    mutate(cov=r1$cov)
+    dplyr::mutate(cov=r1$cov) %>%
+    data.frame()
+
   colnames(obs_cors) = c("Cor_Outcome", "ES", "ESTRUE", "cov")
 
   cor_high = obs_cors[obs_cors$Cor_Outcome>max(r1$es_grid),]
@@ -115,7 +116,7 @@ prep_for_plots <- function(r1){
   }
 
   obs_cors = obs_cors %>%
-    mutate(Cor_Outcome = case_when(Cor_Outcome > max(r1$rho_grid) ~ max(r1$rho_grid), TRUE ~ Cor_Outcome))
+    dplyr::mutate(Cor_Outcome = dplyr::case_when(Cor_Outcome > max(r1$rho_grid) ~ max(r1$rho_grid), TRUE ~ Cor_Outcome))
 
   es_high = obs_cors[abs(obs_cors$ES)>max(r1$es_grid),]
   if(nrow(es_high)!=0){
@@ -128,7 +129,7 @@ prep_for_plots <- function(r1){
   }
 
   obs_cors = obs_cors %>%
-    mutate(ES = case_when(abs(ES) > max(r1$es_grid) ~ max(r1$es_grid)*(ES/abs(ES)), TRUE ~ ES),
+    dplyr::mutate(ES = dplyr::case_when(abs(ES) > max(r1$es_grid) ~ max(r1$es_grid)*(ES/abs(ES)), TRUE ~ ES),
            # temporary line of code
            cov = gsub('_.*','',cov))
 

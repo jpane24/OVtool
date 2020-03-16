@@ -42,13 +42,13 @@ gen_a_start <- function(y, tx, es, rho){
 
   Q <- es*(1-pi)*mean(y[ind])*pi - es*pi*mean(y[-ind])*(1-pi)
 
-  #added by Joe, take b1
+  # Take b1
   alpha = (A - Q)/((1-pi)*c0)
   beta = (-c1*pi)/((1-pi)*c0)
   b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
   b1high <- min(b1lim, ((b0lim - alpha) / beta))
-  b1low_final = case_when(b1low > b1high ~ 0, TRUE ~ b1low)
-  b1high_final = case_when(b1low > b1high ~ 0, TRUE ~ b1high)
+  b1low_final = ifelse(b1low > b1high, 0, b1low)
+  b1high_final = ifelse(b1low > b1high, 0, b1high)
   # #ensure less than abs of 1
   # b1low_final = case_when(b1low_final < -1 ~ -1,
   #                         TRUE ~ b1low_final)
