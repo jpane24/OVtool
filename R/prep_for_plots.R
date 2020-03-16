@@ -101,8 +101,8 @@ prep_for_plots <- function(r1){
 
   obs_cors = cbind(obs_cors, es_cov, es_cov_actual)
   obs_cors = obs_cors %>%
-    dplyr::mutate(cov=r1$cov) %>%
     data.frame()
+    dplyr::mutate(cov=r1$cov)
 
   colnames(obs_cors) = c("Cor_Outcome", "ES", "ESTRUE", "cov")
 

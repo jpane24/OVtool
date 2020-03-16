@@ -42,8 +42,8 @@ find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y
   }
   obs_cors = cbind(obs_cors, es_cov)
   obs_cors = obs_cors %>%
-    dplyr::mutate(cov=my_cov) %>%
-    data.frame()
+    data.frame() %>%
+    dplyr::mutate(cov=my_cov)
 
   colnames(obs_cors) = c("Cor_Outcome", "ES", "cov")
 
