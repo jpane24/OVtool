@@ -12,6 +12,7 @@ LazyData: true
 Imports:
 	dplyr, 
 	magrittr,
+	rlang,	
 	ggplot2, 
 	grid, 
 	survey,
