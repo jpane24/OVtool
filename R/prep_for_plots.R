@@ -61,9 +61,9 @@ prep_for_plots <- function(r1){
   trt = r1$tx
 
   mean_sd_bygroup = r1$data %>%
-    # dplyr::select(.data[[r1$tx]], r1$cov) %>%
+    dplyr::select(.data[[r1$tx]], r1$cov) %>%
     dplyr::mutate_if(is.factor, as.numeric) %>%
-    dplyr::group_by(!!as.name(trt)) %>%
+    dplyr::group_by(.data[[r1$tx]]) %>%
     # adding in so if there are factors, we should make numeric.
     dplyr::summarize_all(list(mean_noNA, sd_noNA)) %>%
     data.frame()
@@ -87,9 +87,9 @@ prep_for_plots <- function(r1){
     }
   } else if(r1$estimand == "ATT"){
     for(i in 1:length(r1$cov)){
-      trt = trt = r1$tx
+      #trt = trt = r1$tx
       diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", r1$cov[i], "_fn1$"), colnames(mean_sd_bygroup))]])
-      treat_only = mean_sd_bygroup %>% dplyr::filter(!!as.name(trt) == 1) %>% data.frame()
+      treat_only = mean_sd_bygroup %>% dplyr::filter(.data[[r1$tx]] == 1) %>% data.frame()
       denom_ATT = treat_only[,colnames(treat_only)[grep(paste0("^", r1$cov[i], "_fn2$"),
                                                         colnames(treat_only))]]
       if(raw_pval >= .05){
