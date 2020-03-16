@@ -16,9 +16,9 @@ find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y
   mean_noNA = function(x){return(mean(x, na.rm=T))}
   sd_noNA = function(x){return(sd(x, na.rm=T))}
   mean_sd_bygroup = my_data %>%
-    dplyr::select(rlang::.data[[treatment]], my_cov) %>%
+    dplyr::select(.data[[treatment]], my_cov) %>%
     dplyr::mutate_if(is.factor, as.numeric) %>%
-    dplyr::group_by(rlang::.data[[treatment]]) %>%
+    dplyr::group_by(.data[[treatment]]) %>%
     # adding in so if there are factors, we should make numeric.
     dplyr::summarize_all(list(mean_noNA, sd_noNA)) %>%
     data.frame()
@@ -34,7 +34,7 @@ find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y
   } else if(my_estimand == "ATT"){
     for(i in 1:length(my_cov)){
       diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", my_cov[i], "_fn1$"), colnames(mean_sd_bygroup))]])
-      treat_only = mean_sd_bygroup %>% dplyr::filter(rlang::.data[[treatment]] == 1) %>% data.frame()
+      treat_only = mean_sd_bygroup %>% dplyr::filter(.data[[treatment]] == 1) %>% data.frame()
       denom_ATT = treat_only[,colnames(treat_only)[grep(paste0("^", my_cov[i], "_fn2$"),
                                                         colnames(treat_only))]]
       es_cov[i] = abs(diff_means/denom_ATT)
