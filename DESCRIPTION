@@ -11,13 +11,12 @@ Encoding: UTF-8
 LazyData: true
 Imports:
 	dplyr, 
-	rlang,
-	magrittr,
 	ggplot2, 
+	magrittr,
 	grid, 
 	survey,
 	twang, 
 	ggrepel, 
 	metR,
 	glue
-	
+RoxygenNote: 6.1.1

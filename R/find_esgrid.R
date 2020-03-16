@@ -1,3 +1,6 @@
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
+
 #### setup es grid ####
 find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand){
   # y-axis of plot (correlation between covariates and outcome)

@@ -1,3 +1,6 @@
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
+
 #### prep_for_plots ####
 prep_for_plots <- function(r1){
   #### setup for plotting ####
