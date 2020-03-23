@@ -121,7 +121,8 @@ prep_for_plots <- function(r1){
   }
 
   obs_cors = obs_cors %>%
-    dplyr::mutate(Cor_Outcome = dplyr::case_when(Cor_Outcome > max(r1$rho_grid) ~ max(r1$rho_grid), TRUE ~ Cor_Outcome))
+    dplyr::mutate(Cor_Outcome_Actual = Cor_Outcome,
+                  Cor_Outcome = dplyr::case_when(Cor_Outcome > max(r1$rho_grid) ~ max(r1$rho_grid), TRUE ~ Cor_Outcome))
 
   es_high = obs_cors[abs(obs_cors$ES)>max(r1$es_grid),]
   if(nrow(es_high)!=0){

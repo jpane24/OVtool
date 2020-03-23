@@ -15,7 +15,8 @@ es_point_plot = function(prep, col){
 
   v3 <- ggplot2::ggplot(r1_df, ggplot2::aes(es_grid, rho_grid, z = trt_effect)) +
     # xlim(0,max(r1_df$es_grid)) +
-    ggplot2::ylim(0,max(r1_df$rho_grid)) +
+    ggplot2::ylim(0,max(c(obs_cors$Cor_Outcome_Actual,
+                          r1_df$rho_grid))) +
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association between unobserved confounder and treatment indicator\n(effect size scale)") +
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
@@ -30,13 +31,13 @@ es_point_plot = function(prep, col){
     ggplot2::scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
                           labels = pvals) +
     ggplot2::geom_point(data = obs_cors, col=color[[1]][2],
-                        ggplot2::aes(x = ES, y = Cor_Outcome, z = NULL)) +
+                        ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL)) +
     metR::geom_text_contour(ggplot2::aes(z=trt_effect), stroke=.2, check_overlap = T) +
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
                                       gp = grid::gpar(cex = .75)),
                       ymin = 0, ymax = 0, xmax = 0)  +
     ggrepel::geom_text_repel(data = obs_cors,
-                             ggplot2::aes(x = ES, y = Cor_Outcome, z = NULL, label = cov),
+                             ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
                     box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
