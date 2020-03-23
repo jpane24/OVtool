@@ -19,5 +19,8 @@ Imports:
 	twang, 
 	ggrepel, 
 	metR,
-	glue
+	glue,
+	tidyselect,
+	purrr,
+	Amelia
 RoxygenNote: 6.1.1

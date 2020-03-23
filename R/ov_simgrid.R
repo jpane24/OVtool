@@ -1,8 +1,8 @@
 #### ov_simgrid fn ####
 ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
-                     treatment, outcome, covariates,
-                     es_grid, rho_grid = seq(0, .45, by=0.05),
-                     n_reps = 101, estimand = "ATE", ...){
+                       treatment, outcome, covariates,
+                       es_grid=NULL, rho_grid = seq(0, .45, by=0.05),
+                       n_reps = 101, estimand = "ATE", ...){
   set.seed(24)
   if(class(ps_object)!="ps"){
     if(missing(data) | missing(weights) | missing(treatment) | missing(outcome) | missing(covariates)){
@@ -68,7 +68,7 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
   p_val_nodr <- matrix(0,length(es_grid),length(rho_grid))
-  pValHd <- esHd <- rep(NA, n_reps)
+  pValHd <- esHd <- StdError <- rep(NA, n_reps)
   # create w_new and set it to the original weights for now
   data$w_new = data$w_orig
 
@@ -81,10 +81,19 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
         design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)
         glm0_u_nodr <- survey::svyglm(formula, design=design_u)
         esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
-        pValHd[k] <- summary(glm0_u_nodr)$coefficients[tx,4]
+        StdError[k] <- summary(glm0_u_nodr)$coefficients[tx,2]
+        #pValHd[k] <- summary(glm0_u_nodr)$coefficients[tx,4]
       }
-      p_val_nodr[i,j] <- median(pValHd)
-      trt_effect_nodr[i,j] <- median(esHd)
+      combine = Amelia::mi.meld(q=data.frame(esHd), se=data.frame(StdError))
+      melded_summary <- as.data.frame(cbind(t(combine$q.mi),
+                                            t(combine$se.mi))) %>%
+        purrr::set_names(c("estimate", "std.error")) %>%
+        dplyr::mutate(term = rownames(.)) %>%
+        dplyr::select(term, tidyselec::everything()) %>%
+        mutate(statistic = estimate / std.error,
+               p.value = 2 * pnorm(abs(statistic),lower.tail = FALSE))
+      p_val_nodr[i,j] <- melded_summary$p.value
+      trt_effect_nodr[i,j] <- melded_summary$estimate
     }
     if(length(es_grid) >1){
       print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
