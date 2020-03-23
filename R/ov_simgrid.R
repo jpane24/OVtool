@@ -90,7 +90,7 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
         purrr::set_names(c("estimate", "std.error")) %>%
         dplyr::mutate(term = rownames(.)) %>%
         dplyr::select(term, tidyselect::everything()) %>%
-        mutate(statistic = estimate / std.error,
+        dplyr::mutate(statistic = estimate / std.error,
                p.value = 2 * pnorm(abs(statistic),lower.tail = FALSE))
       p_val_nodr[i,j] <- melded_summary$p.value
       trt_effect_nodr[i,j] <- melded_summary$estimate
