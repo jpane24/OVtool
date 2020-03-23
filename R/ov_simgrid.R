@@ -47,7 +47,7 @@ ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
   }
   # create formula
   # formula = formula(paste(outcome,  "~", tx))
-  formula = formula(paste0(outcome, " ~ ", glue::glue_collapse(cov, sep=" + "), " + ", tx))
+  formula = formula(paste0("scale(", outcome, ") ~ ", glue::glue_collapse(cov, sep=" + "), " + ", tx))
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
