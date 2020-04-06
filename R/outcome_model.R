@@ -1,4 +1,4 @@
-outcome_model <- function(ps_object=NULL, stop.method, data, weights,
+outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights,
                           treatment, outcome, model_covariates,
                           estimand = "ATE"){
   set.seed(24)
@@ -53,7 +53,8 @@ outcome_model <- function(ps_object=NULL, stop.method, data, weights,
   }
   # print(summary(model_results))
 
-  return(list(ps_object, stop.method, data, weights, tx, y,
-              model_covariates, estimand, design_u, outcome_mod_results))
+  return(list(ps_object = ps_object, stop.method = stop.method, data = data,
+              weights = weights, tx = tx, y = y,  model_covariates = model_covariates,
+              estimand = estimand, mod_results = outcome_mod_results))
 }
 
