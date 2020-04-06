@@ -49,9 +49,9 @@ outcome_model <- function(ps_object=NULL, stop.method, data, weights,
   if(length(unique(data[, y ])) <=1){
     stop("No variation in outcome.")
   } else {
-    model_results = survey::svyglm(formula, design=design_u)
+    outcome_mod_results = survey::svyglm(formula, design=design_u)
   }
-  print(summary(model_results))
+  # print(summary(model_results))
 
   return(list(ps_object, stop.method, data, weights, tx, y,
               model_covariates, estimand, design_u, outcome_mod_results))
