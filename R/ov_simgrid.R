@@ -15,7 +15,7 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   }
 
   # create formula
-  formula = formula(paste0("scale(", y, ") ~ ", glue::glue_collapse(cov, sep=" + "), " + ", tx))
+  formula = results$outcome_mod_fmla
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")

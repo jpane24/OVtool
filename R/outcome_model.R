@@ -54,7 +54,7 @@ outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights,
   # print(summary(model_results))
 
   return(list(ps_object = ps_object, stop.method = stop.method, data = data,
-              weights = weights, tx = tx, y = y,  model_covariates = model_covariates,
+              weights = weights, tx = tx, y = y, outcome_mod_fmla = formula,
               estimand = estimand, mod_results = outcome_mod_results))
 }
 
