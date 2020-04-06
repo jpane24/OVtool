@@ -11,36 +11,17 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-ov_simgrid(ps.object, stop.method, data, weights, treatment, outcome, covariates,
-es_grid, rho_grid, n_reps, estimand)
+ov_simgrid(model_results, weight_covariates, es_grid=NULL,
+                       rho_grid = seq(0, .45, by=0.05), n_reps = 101)
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{
-  %%     ~~Describe \code{x} here~~
-  A dataframe containing the data
+  \item{model_results}{
+  object returned from outcome_model
 }
-  \item{ps_object}{
-  %%     ~~Describe \code{x} here~~
-  A ps object exported from TWANG
-}
-  \item{stop.method}{
-  %%     ~~Describe \code{x} here~~
-  If the user specifies ps_object, which stop.method should be used to export the weights
-}
-  \item{outcome}{
-  %%     ~~Describe \code{x} here~~
-  A vector that represents the outcome.
-}
-  \item{weights}{
-  A vector of propensity score weights
-}
-  \item{treatment}{
-  A vector for the treatment indicator (must be 0s and 1s)
-}
-  \item{covariates}{
-  vector of column names representing the covariates
+  \item{weight_covariates}{
+  vector of column names representing the covariates you used to create your propensity score weights
 }
   \item{es_grid}{
   Not required. A grid of effect sizes to simulate over
@@ -48,9 +29,6 @@ es_grid, rho_grid, n_reps, estimand)
   \item{rho_grid}{
   Note required. A grid of correlations to simulate over this rho relates the correaltion between
   the effect size.
-}
-  \item{estimand}{
-  "ATE"" or "ATT""
 }
   \item{n_reps}{
   Number of repetitions to simulate over

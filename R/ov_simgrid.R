@@ -1,53 +1,21 @@
 #### ov_simgrid fn ####
-ov_simgrid <- function(ps_object=NULL, stop.method, data, weights,
-                       treatment, outcome, covariates,
-                       es_grid=NULL, rho_grid = seq(0, .45, by=0.05),
-                       n_reps = 101, estimand = "ATE", ...){
+ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
+                       rho_grid = seq(0, .45, by=0.05), n_reps = 101){
   set.seed(24)
-  if(class(ps_object)!="ps"){
-    if(missing(data) | missing(weights) | missing(treatment) | missing(outcome) | missing(covariates)){
-      stop("Please supply either a ps class object, stop.method, and relevant column names for:
-      outcome, and covariates OR the data and relevant column names for: weights, treatment, outcome, & covariates")
-    } else{
-      # weights
-      data$w_orig = weights
-      # outcome
-      y = outcome
-      # treamtment
-      tx = treatment
-      # covariates
-      if(typeof(covariates) == "language"){
-        cov = all.vars(covariates)
-      } else{
-        cov = covariates
-      }
-      # survey design
-      design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
-    }
+  tx = model_results$tx
+  y = model_results$y
+  data = model_results$data
+  estimand = model_results$estimand
+
+  # covariates
+  if(typeof(weight_covariates) == "language"){
+    cov = all.vars(weight_covariates)
   } else{
-    if(is.null(stop.method) | is.null(outcome) | is.null(covariates)){
-      stop("Please supply a stop.method to generate the weights (e.g. \"ks.max/")
-    }
-    # outcome
-    y = outcome
-    # treatment
-    tx = ps_object$treat.var
-    # covariates
-    if(typeof(covariates) == "language"){
-      cov = all.vars(covariates)
-    } else{
-      cov = covariates
-    }
-    # data
-    data = ps_object$data
-    # weights
-    data$w_orig = twang::get.weights(ps_object, stop.method = stop.method, estimand = estimand)
-    # survey design
-    design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
+    cov = weight_covariates
   }
+
   # create formula
-  # formula = formula(paste(outcome,  "~", tx))
-  formula = formula(paste0("scale(", outcome, ") ~ ", glue::glue_collapse(cov, sep=" + "), " + ", tx))
+  formula = formula(paste0("scale(", y, ") ~ ", glue::glue_collapse(cov, sep=" + "), " + ", tx))
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
