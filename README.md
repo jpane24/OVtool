@@ -44,8 +44,8 @@ interested in the mental health outcome, `eps7p_3`, emotional problem
 scale (eps) recorded at three months. Higher values of eps indicate more
 emotional problems. Substance abuse researchers are particularly
 interested in whether or not treatment A reduces emotional problems more
-treatment B. `eps7p_3` ranges from zero to one, where higher values of
-EPS indicate more emotional problems. See (Dennis, 2003) for more
+than treatment B. `eps7p_3` ranges from zero to one, where higher values
+of EPS indicate more emotional problems. See (Dennis, 2003) for more
 details on this scale.
 
 Past research <ins style="color:red">(cite?)</ins> has indicated there
@@ -57,13 +57,17 @@ substance abuse treatment index (`sati_0`), in recovery (`recov_0`),
 traumatic stress scale (`tss_0`), and internal mental distress scale
 (`imds_0`). 
 
-We begin by loading the package and data:
+We begin by loading the development version of the package from
+[GitHub](https://github.com/) with:
 
 ``` r
 install_github("jpane24/OVtool")
 library(OVtool)
 set.seed(24)
 ```
+
+We can load the synthetic dataset and print to screen the first six
+observations by running the following two commands:
 
 ``` r
 data(sud)

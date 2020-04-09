@@ -11,8 +11,7 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-ov_simgrid(model_results, weight_covariates, es_grid=NULL,
-                       rho_grid = seq(0, .45, by=0.05), n_reps = 101)
+ov_simgrid(model_results, weight_covariates, es_grid=NULL, rho_grid = seq(0, .45, by=0.05), n_reps = 101)
 
 }
 %- maybe also 'usage' for other objects documented here.
