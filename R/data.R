@@ -1,7 +1,8 @@
-#' Longitudinal observational data from adolescents receiving SUD treatment
+#' Longitudinal observational data from adolescents receiving SUD treatment.
 #'
-#' @source Global Appraisal of Individual Needs biopsychosocial
-#' assessment instrument - GAIN - Dennis, Titus et al. 2003
+#' A dataset containing substance use disorder and mental health measures for
+#' adolescents who had one of two substance use treatments
+#'
 #' @format A tibble with columns:
 #' \describe{
 #'  \item{treat}{Substance Use Treatment Indicator, Treatment A and Treatment B}
@@ -33,11 +34,6 @@
 #'  \item{subsgrps_n}{Categorical variable where: 1="Alcohol and/or marijuana disorder/weekly use; 2="Other drugs"; 3="Opiate disorder/weekly use"}
 #'  \item{sncnt}{Total number of sessions for Treatment A}
 #'  \item{engage}{Binary indicator indicating initiated treatment and had 4+ sesssions within 45 days for Treatment A}
-
-
 #' }
-#' @examples
-#' \dontrun{
-#'  sud
-#' }
+#' @source Global Appraisal of Individual Needs biopsychosocial assessment instrument - GAIN - Dennis, Titus et al. 2003
 "sud"
