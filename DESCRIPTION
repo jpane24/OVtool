@@ -22,5 +22,7 @@ Imports:
 	glue,
 	tidyselect,
 	purrr,
-	Amelia
+	Amelia,
+	extrafont,
+	knitr
 RoxygenNote: 6.1.1
