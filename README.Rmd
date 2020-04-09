@@ -1,10 +1,12 @@
 ---
-title: "OVtool"
+title: "OVtool - Omitted Variable tool"
 output: github_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
 ---
+
+**Note: This is a work in progress**
 
 ```{r setup, include=F}
 knitr::opts_chunk$set(echo = TRUE)
@@ -36,7 +38,32 @@ set.seed(24)
 We can load the synthetic dataset and print to screen the first six observations by running the following two commands:
 
 ```{r, data}
-data(sud)
-head(sud)
+data(sud) 
+# head(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+table(sud$treat)
 ```
+
+The relevant variables in this analysis are:
+
+* **Treatment indicator** `treat`: indicates treatment type where 1 is Treatment "A" and 0 is Treatment "B"
+
+* **Outcome of interest** `eps7p_3`: emotional problem scale at 3-months
+
+* `eps7p_0`: emotional problem scale at baseline
+
+* `sfs8p_0`: substance frequency scale 8-item version at baseline
+
+* `sati_0`: substance abuse treatment index at baseline
+
+* `ada_0`: adjusted days abstinent at baseline
+
+* `recov_0`: indicates whether the adolescent was in recovery at baseline, where 1 is in recovery and 0 is not in recovery
+
+* `tss_0`: traumatic stress scale at baseline
+
+* ``
+
+
+The package will accept propensity score weights or, if not provided by the user, will calculate propensity score weights using \texttt{TWANG} Ridgeway et al. (2014). In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. The OVtool also handles binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand.
 

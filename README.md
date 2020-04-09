@@ -1,9 +1,11 @@
-OVtool
+OVtool - Omitted Variable tool
 ================
 
 
 
 
+
+**Note: This is a work in progress**
 
 # Introduction
 
@@ -70,35 +72,40 @@ We can load the synthetic dataset and print to screen the first six
 observations by running the following two commands:
 
 ``` r
-data(sud)
-head(sud)
+data(sud) 
+# head(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+table(sud$treat)
 ```
 
-    ##   treat tss_0     tss_3     tss_6    sfs8p_0   sfs8p_3   sfs8p_6   eps7p_0
-    ## 1     A     0 0.0000000 9.0000000  1.1111111  7.301587  0.000000  4.761905
-    ## 2     A     0 0.0000000 0.0000000  0.4166667 18.333333  8.611111 21.746032
-    ## 3     A     4 2.0929730 0.3283035  0.0000000  3.194444 26.666667 41.587302
-    ## 4     A     0 5.6843082 0.0000000 36.5277778 29.305556 20.833333 38.888889
-    ## 5     A     2 0.6815128 1.3258402  0.5555556  2.174038  0.000000 14.285714
-    ## 6     A     0 0.0000000 0.0000000  0.0000000  0.000000  0.000000 20.634921
-    ##     eps7p_3   eps7p_6   ias5p_0 dss9_0 mhtrt_0   sati_0 sp_sm_0   sp_sm_3
-    ## 1  8.253968 69.523810  6.666667      1       1 1.111111       1  4.451943
-    ## 2  2.380952  4.761905  6.666667      3       2 0.000000       0  4.000000
-    ## 3 23.846689 15.873016 10.444444      6       1 0.000000       0 11.000000
-    ## 4 53.968254 27.301587  0.000000      4       2 0.000000       4  3.512196
-    ## 5  9.523810 13.915008 16.444444      2       1 0.000000       2  1.000000
-    ## 6 16.666667  0.000000  0.000000      1       0 0.000000       0  0.000000
-    ##   sp_sm_6 gvs ers21_0    nproc ada_0 ada_3    ada_6 recov_0 recov_3 recov_6
-    ## 1       0   0      29 28.46232    80    76 89.00000       0       0       1
-    ## 2       1   3      37 10.82736    88    55 39.18048       1       0       0
-    ## 3       0  10      30 10.00000    84    85  0.00000       1       0       1
-    ## 4       4   6      33 20.00000    17    29  0.00000       0       0       0
-    ## 5       0   3      39 47.00000    74     0  0.00000       0       1       0
-    ## 6       0   0      26 42.52685    90    90 90.00000       1       1       1
-    ##   subsgrps_n sncnt engage
-    ## 1          2    15      1
-    ## 2          2    NA     NA
-    ## 3          1     3      0
-    ## 4          1     9      0
-    ## 5          1    11      1
-    ## 6          2    28      1
+    ## 
+    ##    0    1 
+    ## 2000 2000
+
+The relevant variables in this analysis are:
+
+  - **Treatment indicator** `treat`: indicates treatment type where 1 is
+    Treatment “A” and 0 is Treatment “B”
+
+  - **Outcome of interest** `eps7p_3`: emotional problem scale at
+    3-months
+
+  - `eps7p_0`: emotional problem scale at baseline
+
+  - `sfs8p_0`: substance frequency scale 8-item version at baseline
+
+  - `sati_0`: substance abuse treatment index at baseline
+
+  - `ada_0`: adjusted days abstinent at baseline
+
+  - `recov_0`: indicates whether the adolescent was in recovery at
+    baseline, where 1 is in recovery and 0 is not in recovery
+
+  - `tss_0`: traumatic stress scale at baseline
+
+The package will accept propensity score weights or, if not provided by
+the user, will calculate propensity score weights using  Ridgeway et al.
+(2014). In the next section, we will show how our method works with the
+average treatment effect (ATE) using a continuous outcome. The OVtool
+also handles binary outcomes and weights that were estimated using the
+average treatment effect on the treated (ATT) estimand.
