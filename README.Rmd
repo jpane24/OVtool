@@ -1,0 +1,44 @@
+---
+title: "OVtool"
+author: "Joseph D. Pane"
+output: 
+  html_document:
+      number_sections: yes
+header-includes:
+- \usepackage[T1]{fontenc}
+- \usepackage{courier}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(extrafont)
+library(knitr)
+font_import()
+```
+
+# Introduction
+
+The \underline{O}mitted \underline{V}ariable tool (\texttt{OVtool}) package was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This package includes graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (2020) describe the methodology behind the primary function in this package, \ttfamily ov_simgrid\normalfont. This document presents syntax for the implementation of the \ttfamily ov_simgrid \normalfont function and provides an example of how to interpret the packages' graphical output.
+
+This package is useful in a wide range of applications where researchers want to analyze how sensitive their research findings are to unobserved confounders that were not included in their propensity score and outcome models. It will estimate the potential impact of the unobserved counfounders on both the estimated treatment or exposure effects as well as on the statistical significance of an analysis.
+
+# Example: Synthetic Data 
+
+This package is demonstrated using a random subset of the Global Appraisal of Individual Needs biopsychosocial assessment instrument (GAIN) (Dennis, Titus et al. 2003) from sites that adminstered the Adolescent Community Reinforcement Approach (A-CRA) (Godley, Meyers et al. 2001) and Motivational Enhancement Treatment/Cognitive Behavior Therapy (MET/CBT5) (Sampl and Kadden 2001). The Center for Substance Abuse Treatment (CSAT) funded the sites that administered these two SUD treatments. This dataset consists of 2,538 adolescents. The main goal of this analysis is to understand the effect ACRA and MET/CBT5, indicated by (\texttt{acra\_derived}), have on mental health outcomes. 
+
+In this random sample, the ACRA group consists of 1,242 adolescents (48.9%), making 1,296 MET/CBT5 cases (51.1%). The mental health outcome of interest, \texttt{eps7p\_3}, analyzed in this tutorial is the emotional problem scale (eps) recorded at three months. Higher values of EPS indicate more emotional problems. Substance abuse researchers are particularly interested in whether or not one of these treatments reduces emotional problems more than the other. \texttt{eps7p\_3} ranges from zero to one, where higher values of EPS indicate more emotional problems. See (Dennis, 2003) for more details on this scale. 
+
+Past research (cite?) has indicated there are many influential confounders when analyzing adolescents' emotional problems, some included in this dataset. These variables were measured at baseline: emotional problem scale, adjusted days abstinent (any in past 90) (ada), substance frequency scale (sfs), substance abuse treatment index (sati), in recovery (recov), traumatic stress scale (tss), internal mental distress scale (imds), and the behavior complexity scale (bcs). \newline
+
+We begin by loading the package and data:  
+
+```{r, begin, echo=T, eval=F}
+install_github("jpane24/OVtool")
+library(OVtool)
+set.seed(24)
+```
+
+```{r, data, eval=T, include=F}
+aod2 = read_csv("~/Desktop/TWANG/OV/data/aod2.csv") %>%
+  data.frame()
+```
