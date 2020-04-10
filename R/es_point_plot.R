@@ -38,7 +38,13 @@ es_point_plot = function(prep, col){
                       ymin = 0, ymax = 0, xmax = 0)  +
     ggrepel::geom_text_repel(data = obs_cors,
                              ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
-                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])# +
+    # ggplot2::geom_rect(aes(ymin = c(0,max(r1_df$rho_grid)),
+    #                    ymax = c(max(r1_df$rho_grid), max(c(obs_cors$Cor_Outcome_Actual, r1_df$rho_grid))),
+    #                    xmin = -Inf,
+    #                    xmax = Inf,
+    #                    fill = c("grey", "red")),
+    #                    alpha = 0.4)
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
     legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),

@@ -52,8 +52,7 @@ details on this scale.
 
 Past research has indicated there are many influential confounders when
 analyzing adolescents’ emotional problems, some included in this
-synthetic dataset (cite CYT + our prior papers with MET/CBT5; get from
-BA or main findings paper). These variables were measured at baseline:
+synthetic dataset (cite CYT). These variables were measured at baseline:
 emotional problem scale (`eps7p_0`), adjusted days abstinent (any in
 past 90) (`ada_0`), substance frequency scale (`sfs8p_0`), substance
 abuse treatment index (`sati_0`), in recovery (`recov_0`), traumatic
@@ -364,7 +363,7 @@ size difference between the two treatment groups, we force the sign of
 the magnitude to go with the direction of the significant effect. The
 blue points are meant to give the analyst an idea (using observed
 covariates as an indicator) of what would cause a change in the
-interpreation of their
+interpretation of their
 results.*
 
 ``` r

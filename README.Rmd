@@ -36,7 +36,7 @@ This package is demonstrated using a random subset of the Global Appraisal of In
 
 In this synthetic dataset, there are 2,000 adolescents in each treatment group. Within this dataset there are variables on substance use disorder and mental health outcomes. For this tutorial we are particularly interested in the mental health outcome, `eps7p_3`, emotional problem scale (eps) recorded at three months. Higher values of eps indicate more emotional problems. Substance abuse researchers are particularly interested in whether or not treatment A reduces emotional problems more than treatment B. `eps7p_3` ranges from zero to one, where higher values of EPS indicate more emotional problems. See (Dennis, 2003) for more details on this scale. 
 
-Past research has indicated there are many influential confounders when analyzing adolescents' emotional problems, some included in this synthetic dataset (cite CYT + our prior papers with MET/CBT5; get from BA or main findings paper). These variables were measured at baseline: emotional problem scale (`eps7p_0`), adjusted days abstinent (any in past 90) (`ada_0`), substance frequency scale (`sfs8p_0`), substance abuse treatment index (`sati_0`), in recovery (`recov_0`), traumatic stress scale (`tss_0`), mental health treatment in the past 90 days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`). \newline
+Past research has indicated there are many influential confounders when analyzing adolescents' emotional problems, some included in this synthetic dataset (cite CYT). These variables were measured at baseline: emotional problem scale (`eps7p_0`), adjusted days abstinent (any in past 90) (`ada_0`), substance frequency scale (`sfs8p_0`), substance abuse treatment index (`sati_0`), in recovery (`recov_0`), traumatic stress scale (`tss_0`), mental health treatment in the past 90 days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`). \newline
 
 We begin by loading the development version of the package from 
 [GitHub](https://github.com/) with: 
@@ -151,7 +151,7 @@ ovtool_results_twang = OVtool::ov_simgrid(model_results=results,
                                                               "mhtrt_0", "dss9_0"),
                                           es_grid = NULL,
                                           rho_grid = seq(0, 0.40, by = 0.05),
-                                          n_reps=25)
+                                          n_reps=2)
 ```
 
 In some cases the `OVtool::ov_simgrid` function will produce warnings asking you to either reduce the size of the rho grid or will tell you your outcome variable has multiple ties. The function will continue to run in the latter case but in the former the user will need to reduce the size of their grid. Typically, `rho_grid` will range from 0 to 0.45. 
@@ -170,7 +170,7 @@ OVtool::plot.ov(ovtool_results_twang, print_all = "2")
 
 Figure 2 is a different variation of Figure 1 but only shows the p-value contours with an additional dimension, covariate labels.  If a covariate has a raw correlation or effect size that is outside the range of the graphic limits, the tool will inform the user. In this case there were were three covariates whose absolute correlations with the outcome were greater than 0.4. The blue dots and their labels on the plot represent the obseved covariates correlations with the outcome (y-axis) and treatment indicator (x-axis). For instance, `ada_0` and the outcome have approximately a 0.18 absolute correlation with the emotional problem scale at three months and an absolute association of approximately 0.17 effect size difference between the two treatment groups (magnitude of its relationship with the treatment indicator). In this case, not all of the observed covariate relationships with the outcome and the treatment indicator are "below" the 0.05 p-value threshold so the analyst potentially has results that are potentially sensitive to an unobserved confounder. If all of the blue points were to the "right" of the 0.05 p-value contour, then unobserved confounders with similar associations would retain the significant effect and allow the user to conclude that the results are reasonably robust. \newline
 
-*Note: When the outcome model shows a significant effect, for all observed covariates, regardless of the sign of the association effect size difference between the two treatment groups, we force the sign of the magnitude to go with the direction of the significant effect. The blue points are meant to give the analyst an idea (using observed covariates as an indicator) of what would cause a change in the interpreation of their results.*
+*Note: When the outcome model shows a significant effect, for all observed covariates, regardless of the sign of the association effect size difference between the two treatment groups, we force the sign of the magnitude to go with the direction of the significant effect. The blue points are meant to give the analyst an idea (using observed covariates as an indicator) of what would cause a change in the interpretation of their results.*
 
 ```{r, fig3, fig.width=10, fig.height=7, fig.align='center', linewidth=100}
 OVtool::plot.ov(ovtool_results_twang, print_all = "3")
