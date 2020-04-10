@@ -14,6 +14,18 @@ es_point_plot = function(prep, col){
   raw = prep$raw
 
   v3 <- ggplot2::ggplot(r1_df, ggplot2::aes(es_grid, rho_grid, z = trt_effect)) +
+    ggplot2::geom_rect(ggplot2::aes(ymin = max(rho_grid),
+                                    ymax = Inf,
+                                    xmin = -Inf,
+                                    xmax = Inf),
+                       fill = c("indianred2"),
+                       alpha = 0.01) +
+    ggplot2::geom_rect(ggplot2::aes(ymin = -Inf,
+                                    ymax = 0,
+                                    xmin = -Inf,
+                                    xmax = Inf),
+                       fill = c("snow2"),
+                       alpha = 0.01) +
     # xlim(0,max(r1_df$es_grid)) +
     ggplot2::ylim(0,max(c(obs_cors$Cor_Outcome_Actual,
                           r1_df$rho_grid))) +
@@ -35,21 +47,20 @@ es_point_plot = function(prep, col){
     metR::geom_text_contour(ggplot2::aes(z=trt_effect), stroke=.2, check_overlap = T) +
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
                                       gp = grid::gpar(cex = .75)),
-                      ymin = 0, ymax = 0, xmax = 0)  +
+                      ymin = 0, ymax = .1, xmax = .5, xmin=.4)  +
     ggrepel::geom_text_repel(data = obs_cors,
                              ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
-                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])# +
-    # ggplot2::geom_rect(aes(ymin = c(0,max(r1_df$rho_grid)),
-    #                    ymax = c(max(r1_df$rho_grid), max(c(obs_cors$Cor_Outcome_Actual, r1_df$rho_grid))),
-    #                    xmin = -Inf,
-    #                    xmax = Inf,
-    #                    fill = c("grey", "red")),
-    #                    alpha = 0.4)
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
+    ggplot2::scale_x_continuous(expand = c(0, 0))
+
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
     legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
     legend.key.size =  grid::unit(0.5, "in"))
   }
-  return(v3)
+
+  v3 <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(v3))
+  v3$layout$clip[v3$layout$name == "panel"] <- "off"
+  return(grid::grid.draw(v3))
 }
 
