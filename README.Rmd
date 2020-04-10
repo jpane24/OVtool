@@ -139,11 +139,11 @@ ovtool_results_twang = OVtool::ov_simgrid(model_results=results,
                                                               "recov_0", "tss_0",
                                                               "mhtrt_0", "dss9_0"),
                                           es_grid = NULL,
-                                          rho_grid = NULL,
+                                          rho_grid = seq(0, 0.4, by = 0.05),
                                           n_reps=2)
-# plot(ovtool_results_twang, print_all = "1")
-# plot(ovtool_results_twang, print_all = "2")
-# plot(ovtool_results_twang, print_all = "3")
+plot(ovtool_results_twang, print_all = "1")
+plot(ovtool_results_twang, print_all = "2")
+plot(ovtool_results_twang, print_all = "3")
 
 ```
 
