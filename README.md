@@ -75,12 +75,11 @@ observations by running the following two commands:
 data(sud) 
 # head(sud)
 sud$treat = ifelse(sud$treat == "A", 1, 0)
-table(sud$treat)
+# get EPS on proper scale according to GAIN
+sud$eps7p_0 = sud$eps7p_0/100
+sud$eps7p_3 = sud$eps7p_3/100
+sud$eps7p_6 = sud$eps7p_6/100
 ```
-
-    ## 
-    ##    0    1 
-    ## 2000 2000
 
 The relevant variables in this analysis are:
 
@@ -123,7 +122,7 @@ snippet of code belows walks through an example:
 ``` r
 ## Create Formula
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
-                          tss_0 +  mhtrt_0 + dss9_0)
+                          tss_0 + mhtrt_0 + dss9_0)
 
 ## Get weights
 sud = data.frame(sud)
@@ -136,7 +135,7 @@ twang::bal.table(ps.twang); # summary(ps.twang)
 
     ## $unw
     ##          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    ## eps7p_0 24.760 18.852 21.325 18.841      0.182  5.765 0.000 0.091   0.000
+    ## eps7p_0  0.248  0.189  0.213  0.188      0.182  5.765 0.000 0.091   0.000
     ## sfs8p_0 12.077 13.768 10.707 12.218      0.105  3.331 0.001 0.062   0.001
     ## sati_0   7.449 20.788  2.748 12.169      0.273  8.728 0.000 0.101   0.000
     ## ada_0   49.841 33.660 53.710 32.162     -0.117 -3.718 0.000 0.060   0.002
@@ -147,14 +146,14 @@ twang::bal.table(ps.twang); # summary(ps.twang)
     ## 
     ## $ks.max.ATE
     ##          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    ## eps7p_0 23.067 18.646 22.603 18.709      0.025  0.765 0.444 0.020   0.826
-    ## sfs8p_0 11.367 13.004 11.241 12.836      0.010  0.300 0.764 0.013   0.996
-    ## sati_0   5.213 17.396  4.327 15.739      0.052  1.542 0.123 0.021   0.799
-    ## ada_0   52.004 32.877 52.064 32.880     -0.002 -0.056 0.955 0.016   0.964
-    ## recov_0  0.254  0.435  0.244  0.429      0.023  0.708 0.479 0.010   1.000
-    ## tss_0    1.964  3.251  1.967  3.212     -0.001 -0.034 0.973 0.013   0.998
-    ## mhtrt_0  0.278  0.493  0.261  0.485      0.034  1.047 0.295 0.017   0.941
-    ## dss9_0   2.544  2.477  2.558  2.438     -0.006 -0.176 0.860 0.014   0.988
+    ## eps7p_0  0.231  0.186  0.226  0.187      0.024  0.756 0.450 0.020   0.821
+    ## sfs8p_0 11.366 13.011 11.243 12.838      0.009  0.295 0.768 0.013   0.996
+    ## sati_0   5.212 17.393  4.325 15.727      0.052  1.546 0.122 0.021   0.798
+    ## ada_0   52.009 32.877 52.056 32.882     -0.001 -0.044 0.965 0.016   0.961
+    ## recov_0  0.254  0.435  0.244  0.430      0.023  0.711 0.477 0.010   1.000
+    ## tss_0    1.962  3.250  1.967  3.212     -0.001 -0.046 0.963 0.013   0.998
+    ## mhtrt_0  0.278  0.493  0.261  0.485      0.035  1.079 0.280 0.017   0.936
+    ## dss9_0   2.542  2.477  2.559  2.439     -0.007 -0.208 0.835 0.014   0.987
 
 The output produced by the code snippet above shows that TWANG does a
 reasonable job of balancing. There are additional diagnostics we could
@@ -167,10 +166,11 @@ researcher would produce results for their outcomes model
 input the relevant information to get their outcome results using
 `OVtool::outcome_model()`.
 
-  - Input a `ps.object` from `TWANG`, a `stop.method` (e.g. `"ks.max"`)
-    or
+  - Input a `ps.object` from `TWANG` and a `stop.method` (e.g.
+    `"ks.max"`) or
   - Input a vector of `weights`, a data frame containing the `data`
-    used, and the column name representing the treatment indicator.
+    used, and the column name representing the treatment indicator,
+    `treatment`.
 
 The analyst must also provide a column name representing the outcome and
 a vector of covariates to be included in the final outcome model.
@@ -188,10 +188,10 @@ results = OVtool::outcome_model(ps_object = NULL, # could use ps.twang
                                 data = sud,
                                 weights = sud$w_twang, 
                                 treatment = "treat",
-                                outcome = "eps7p_3_std",
+                                outcome = "eps7p_3",
                                 model_covariates = c("eps7p_0", "sfs8p_0", 
                                                      "sati_0", "ada_0",
-                                                     "recov_0", "tss_0", 
+                                                     "recov_0", "tss_0",
                                                      "mhtrt_0", "dss9_0"),
                                 estimand = "ATE")
 summary(results$mod_results)
@@ -202,24 +202,24 @@ summary(results$mod_results)
     ## svyglm(formula = formula, design = design_u)
     ## 
     ## Survey design:
-    ## design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
+    ## survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
     ## 
     ## Coefficients:
-    ##              Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -0.574651   0.064473  -8.913  < 2e-16 ***
-    ## treat        0.021525   0.027113   0.794   0.4273    
-    ## eps7p_0      0.016879   0.001176  14.356  < 2e-16 ***
-    ## sfs8p_0     -0.001114   0.002012  -0.554   0.5799    
-    ## sati_0       0.002270   0.001177   1.928   0.0539 .  
-    ## ada_0       -0.001056   0.000739  -1.428   0.1532    
-    ## recov_0     -0.073422   0.031700  -2.316   0.0206 *  
-    ## tss_0        0.038360   0.006881   5.575 2.64e-08 ***
-    ## mhtrt_0      0.143324   0.033906   4.227 2.42e-05 ***
-    ## dss9_0       0.050808   0.008117   6.259 4.27e-10 ***
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -0.5764849  0.0642017  -8.979  < 2e-16 ***
+    ## treat        0.0217005  0.0270779   0.801   0.4229    
+    ## eps7p_0      1.6871797  0.1174425  14.366  < 2e-16 ***
+    ## sfs8p_0     -0.0010474  0.0020032  -0.523   0.6011    
+    ## sati_0       0.0023012  0.0011757   1.957   0.0504 .  
+    ## ada_0       -0.0010416  0.0007373  -1.413   0.1578    
+    ## recov_0     -0.0732305  0.0317215  -2.309   0.0210 *  
+    ## tss_0        0.0383000  0.0068819   5.565 2.79e-08 ***
+    ## mhtrt_0      0.1442749  0.0337082   4.280 1.91e-05 ***
+    ## dss9_0       0.0509168  0.0081181   6.272 3.94e-10 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.6863185)
+    ## (Dispersion parameter for gaussian family taken to be 0.6861048)
     ## 
     ## Number of Fisher Scoring iterations: 2
 
@@ -233,9 +233,10 @@ snippet of code presents the main function in `OVtool`: `ov_simgrid`.
 This function requires results from `OVtool::outcome_model` plus
 additional parameters including:
 
-  - a vector of column names representing the covariates used to produce
-    the analysts propensity score weights (these may or may not be the
-    same as the list of covariates used for the outcome model)
+  - `weight_covariates`: a vector of column names representing the
+    covariates used to produce the analysts propensity score weights
+    (these may or may not be the same as the list of covariates used for
+    the outcome model)
 
   - `es_grid`: a vector on an effect size scale representing the
     association between an unobserved confounder (omitted variable) and
@@ -258,7 +259,7 @@ Please see Burgette et al. (2020), for additional details.
 ovtool_results_twang = OVtool::ov_simgrid(model_results=results, 
                                           weight_covariates=c("eps7p_0", "sfs8p_0", 
                                                               "sati_0", "ada_0",
-                                                              "recov_0", "tss_0", 
+                                                              "recov_0", "tss_0",
                                                               "mhtrt_0", "dss9_0"),
                                           es_grid = NULL,
                                           rho_grid = NULL,

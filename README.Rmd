@@ -41,7 +41,10 @@ We can load the synthetic dataset and print to screen the first six observations
 data(sud) 
 # head(sud)
 sud$treat = ifelse(sud$treat == "A", 1, 0)
-table(sud$treat)
+# get EPS on proper scale according to GAIN
+sud$eps7p_0 = sud$eps7p_0/100
+sud$eps7p_3 = sud$eps7p_3/100
+sud$eps7p_6 = sud$eps7p_6/100
 ```
 
 The relevant variables in this analysis are:
@@ -75,7 +78,7 @@ The `OVtool` can either take a vector of weights estimated using any method or a
 ```{r, estTWANG}
 ## Create Formula
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
-                          tss_0 +  mhtrt_0 + dss9_0)
+                          tss_0 + mhtrt_0 + dss9_0)
 
 ## Get weights
 sud = data.frame(sud)
@@ -88,9 +91,9 @@ twang::bal.table(ps.twang); # summary(ps.twang)
 
 The output produced by the code snippet above shows that TWANG does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have good balance but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. The next step is to estimate the treatment effect and analyze the sensitivity of those results using `OVtool`. We first present how a researcher would produce results for their outcomes model (`survey::svyglm()`). There are two options the researcher can take to input the relevant information to get their outcome results using `OVtool::outcome_model()`. 
 
-* Input a `ps.object` from `TWANG`, a `stop.method` (e.g. `"ks.max"`)
+* Input a `ps.object` from `TWANG` and a `stop.method` (e.g. `"ks.max"`)
 or
-* Input a vector of `weights`, a data frame containing the `data` used, and the column name representing the treatment indicator. 
+* Input a vector of `weights`, a data frame containing the `data` used, and the column name representing the treatment indicator, `treatment`. 
 
 The analyst must also provide a column name representing the outcome and a vector of covariates to be included in the final outcome model.
 
@@ -107,10 +110,10 @@ results = OVtool::outcome_model(ps_object = NULL, # could use ps.twang
                                 data = sud,
                                 weights = sud$w_twang, 
                                 treatment = "treat",
-                                outcome = "eps7p_3_std",
+                                outcome = "eps7p_3",
                                 model_covariates = c("eps7p_0", "sfs8p_0", 
                                                      "sati_0", "ada_0",
-                                                     "recov_0", "tss_0", 
+                                                     "recov_0", "tss_0",
                                                      "mhtrt_0", "dss9_0"),
                                 estimand = "ATE")
 summary(results$mod_results)
@@ -118,7 +121,7 @@ summary(results$mod_results)
 
 The outcome model results show an adjusted treatment effect estimate that accounts for some of the confounding between youth the two treatment programs. From the results, we can see that the effect size is 0.02 (p < 0.427). At this stage, researchers should begin to ask themselves if this effect is real and how sensitive it is. Our tool is used to help answer these sort of logical next step questions. The next snippet of code presents the main function in `OVtool`: `ov_simgrid`. This function requires results from `OVtool::outcome_model` plus additional parameters including:
 
-* a vector of column names representing the covariates used to produce the analysts propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)
+* `weight_covariates`: a vector of column names representing the covariates used to produce the analysts propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)
 
 * `es_grid`: a vector on an effect size scale representing the association between an unobserved confounder (omitted variable) and the treatment indicator
 
@@ -133,7 +136,7 @@ The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size
 ovtool_results_twang = OVtool::ov_simgrid(model_results=results, 
                                           weight_covariates=c("eps7p_0", "sfs8p_0", 
                                                               "sati_0", "ada_0",
-                                                              "recov_0", "tss_0", 
+                                                              "recov_0", "tss_0",
                                                               "mhtrt_0", "dss9_0"),
                                           es_grid = NULL,
                                           rho_grid = NULL,
