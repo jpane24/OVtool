@@ -8,13 +8,17 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-summary.ov(r1, sig_level)
+summary.ov(OVtool_results, model_results, sig_level)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{r1}{
+  \item{OVtool_results}{
 %%     ~~Describe \code{x} here~~
-An object returned from sim_grid
+The object returned from OVtool::ov_simgrid()
+}
+  \item{model_results}{
+%%     ~~Describe \code{x} here~~
+The object returned from OVtool::outcome_model()
 }
   \item{sig_level}{
 %%     ~~Describe \code{x} here~~

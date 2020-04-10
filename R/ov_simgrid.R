@@ -1,6 +1,7 @@
 #### ov_simgrid fn ####
 ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
-                       rho_grid = seq(0, .45, by=0.05), n_reps = 101){
+                       rho_grid = seq(0, .45, by=0.05), n_reps = 50){
+  if(n_reps <= 1){"Please specify at least two (2) n_reps."}
   set.seed(24)
   tx = model_results$tx
   y = model_results$y
@@ -31,7 +32,7 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
     jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
     es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 1)
     es_lower = -es_upper
-    es_grid = seq(es_lower, es_upper, by=0.1)
+    es_grid = seq(es_lower, es_upper, by=0.05)
   }
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))

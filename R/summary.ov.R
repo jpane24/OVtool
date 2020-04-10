@@ -1,20 +1,21 @@
 #### summarize fn ####
-summary.ov <- function(r1, sig_level=0.05){
-  temp = prep_for_plots(r1)
-  raw_treat = r1$trt_effect[which(r1$es_grid<.000000001 & r1$es_grid>-.000000001),
-                            which(r1$rho_grid==0)]
-  raw_pval = r1$p_val[which(r1$es_grid<.000000001 & r1$es_grid>-.000000001),
-                      which(r1$rho_grid==0)]
+summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
+  temp = prep_for_plots(OVtool_results)
+  raw_treat = OVtool_results$trt_effect[which(OVtool_results$es_grid<.000000001 & OVtool_results$es_grid>-.000000001),
+                            which(OVtool_results$rho_grid==0)]
+  raw_pval = OVtool_results$p_val[which(OVtool_results$es_grid<.000000001 & OVtool_results$es_grid>-.000000001),
+                      which(OVtool_results$rho_grid==0)]
 
   # Find effects and pvalues
   pvals = rep(NA, nrow(temp$obs_cors))
   trt_effect = rep(NA, nrow(temp$obs_cors))
   options(warn=-1)
   for(i in 1:nrow(temp$obs_cors)){
-    calculate_exact = ov_simgrid(data=r1$data, weights=r1$data$w_orig, treatment= r1$tx,
-                               outcome=r1$y, covariates=r1$cov, estimand=r1$estimand,
-                               rho_grid = temp$obs_cors$Cor_Outcome[i], es_grid=temp$obs_cors$ES[i],
-                               n_reps = 5)
+    calculate_exact = OVtool::ov_simgrid(model_results = model_results,
+                                         weight_covariates = OVtool_results$cov,
+                                         rho_grid = temp$obs_cors$Cor_Outcome[i],
+                                         es_grid=temp$obs_cors$ES[i],
+                                         n_reps = 2)
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
   }
