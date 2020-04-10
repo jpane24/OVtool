@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-plot.ov(x, col="color", print_all="all")
+plot.ov(x, col="color", print_graphic="1")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,7 +22,7 @@ If user wants color or black and white. Specify color with "color" or black and 
 }
   \item{print_all}{
 %%     ~~Describe \code{x} here~~
-Takes values "1", "2", or "3", or "all", depending what graphics the user wants
+Takes values "1", "2", or "3", depending what graphics the user wants
 }
 }
 \details{
