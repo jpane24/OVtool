@@ -62,8 +62,89 @@ The relevant variables in this analysis are:
 
 * `tss_0`: traumatic stress scale at baseline
 
-* ``
+* `mhtrt_0`: mental health treatment in the past 90 days at baseline
+
+* `dss9_0`: depressive symptom scale at baseline
+
+In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. The OVtool also handles binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand.
+
+## Continous Outcome: Average Treatment Effect (ATE)
+
+The `OVtool` can either take a vector of weights estimated using any method or a ps object produced by `TWANG`. We begin walking through the OVtool by estimating weights using `ps()` from the `TWANG` package prior to running our outcome model using `OVtool::outcome_model()`. The snippet of code belows walks through an example:
+
+```{r, estTWANG}
+## Create Formula
+my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
+                          tss_0 +  mhtrt_0 + dss9_0)
+
+## Get weights
+sud = data.frame(sud)
+ps.twang <- twang::ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
+                      stop.method = "ks.max", verbose=F, ks.exact = T)
+
+# Check Balance
+twang::bal.table(ps.twang); # summary(ps.twang)
+```
+
+The output produced by the code snippet above shows that TWANG does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have good balance but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. The next step is to estimate the treatment effect and analyze the sensitivity of those results using `OVtool`. We first present how a researcher would produce results for their outcomes model (`survey::svyglm()`). There are two options the researcher can take to input the relevant information to get their outcome results using `OVtool::outcome_model()`. 
+
+* Input a `ps.object` from `TWANG`, a `stop.method` (e.g. `"ks.max"`)
+or
+* Input a vector of `weights`, a data frame containing the `data` used, and the column name representing the treatment indicator. 
+
+The analyst must also provide a column name representing the outcome and a vector of covariates to be included in the final outcome model.
+
+```{r, outcomemodel}
+# Get weights (not needed if user inserts a ps object in OVTool)
+sud$w_twang = ps.twang$w$ks.max.ATE
+
+# Run Models -- first standardize outcome
+sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
+
+# Use OVtool::outcome_model() to run outcomes model
+results = OVtool::outcome_model(ps_object = NULL, # could use ps.twang
+                                stop.method = NULL, # could use ks.max
+                                data = sud,
+                                weights = sud$w_twang, 
+                                treatment = "treat",
+                                outcome = "eps7p_3_std",
+                                model_covariates = c("eps7p_0", "sfs8p_0", 
+                                                     "sati_0", "ada_0",
+                                                     "recov_0", "tss_0", 
+                                                     "mhtrt_0", "dss9_0"),
+                                estimand = "ATE")
+summary(results$mod_results)
+```
+
+The outcome model results show an adjusted treatment effect estimate that accounts for some of the confounding between youth the two treatment programs. From the results, we can see that the effect size is 0.02 (p < 0.427). At this stage, researchers should begin to ask themselves if this effect is real and how sensitive it is. Our tool is used to help answer these sort of logical next step questions. The next snippet of code presents the main function in `OVtool`: `ov_simgrid`. This function requires results from `OVtool::outcome_model` plus additional parameters including:
+
+* a vector of column names representing the covariates used to produce the analysts propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)
+
+* `es_grid`: a vector on an effect size scale representing the association between an unobserved confounder (omitted variable) and the treatment indicator
+
+* `rho_grid`: a vector of correlations to simulate over. These correlations represent the correlation between the omitted variable and the outcome
+
+* `n_reps`: the number of repetitions at each grid point. The package defaults to 101.
+
+The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size and rho, respectively. We define rho in this setting as the absolute correlation a covariate has with the outcome of interest. Please see Burgette et al. (2020), for additional details.
+
+```{r, ov_simgrid}
+# Run OVtool (with weights/not a ps object)
+ovtool_results_twang = OVtool::ov_simgrid(model_results=results, 
+                                          weight_covariates=c("eps7p_0", "sfs8p_0", 
+                                                              "sati_0", "ada_0",
+                                                              "recov_0", "tss_0", 
+                                                              "mhtrt_0", "dss9_0"),
+                                          es_grid = NULL,
+                                          rho_grid = NULL,
+                                          n_reps=2)
+# plot(ovtool_results_twang, print_all = "1")
+# plot(ovtool_results_twang, print_all = "2")
+# plot(ovtool_results_twang, print_all = "3")
+
+```
 
 
-The package will accept propensity score weights or, if not provided by the user, will calculate propensity score weights using \texttt{TWANG} Ridgeway et al. (2014). In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. The OVtool also handles binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand.
+
+
 
