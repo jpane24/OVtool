@@ -57,9 +57,6 @@ pval_point_plot = function(prep, col){
                                  legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
                                  legend.key.size =  grid::unit(0.5, "in"))
   }
-
-  v2 <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(v2))
-  v2$layout$clip[v2$layout$name == "panel"] <- "off"
   return(v2)
 }
 
