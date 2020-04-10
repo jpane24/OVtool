@@ -313,7 +313,7 @@ effect contours with the p-value contour overlayed and covariate
 labels.
 
 ``` r
-OVtool::plot.ov(ovtool_results_twang, print_all = "1")
+OVtool::plot.ov(ovtool_results_twang, print_graphic = "1")
 ```
 
 <img src="README_files/figure-gfm/fig1-1.png" style="display: block; margin: auto;" />
@@ -329,7 +329,7 @@ the effect is.
 
 
 ``` r
-OVtool::plot.ov(ovtool_results_twang, print_all = "2")
+OVtool::plot.ov(ovtool_results_twang, print_graphic = "2")
 ```
 
 <img src="README_files/figure-gfm/fig2-1.png" style="display: block; margin: auto;" />
@@ -340,22 +340,24 @@ OVtool::plot.ov(ovtool_results_twang, print_all = "2")
 Figure 2 is a different variation of Figure 1 but only shows the p-value
 contours with an additional dimension, covariate labels. If a covariate
 has a raw correlation or effect size that is outside the range of the
-graphic limits, the tool will inform the user. In this case there were
-were three covariates whose absolute correlations with the outcome were
-greater than 0.4. The blue dots and their labels on the plot represent
-the obseved covariates correlations with the outcome (y-axis) and
-treatment indicator (x-axis). For instance, `ada_0` and the outcome have
-approximately a 0.18 absolute correlation with the emotional problem
-scale at three months and an absolute association of approximately 0.17
-effect size difference between the two treatment groups (magnitude of
-its relationship with the treatment indicator). In this case, not all of
-the observed covariate relationships with the outcome and the treatment
-indicator are “below” the 0.05 p-value threshold so the analyst
-potentially has results that are potentially sensitive to an unobserved
-confounder. If all of the blue points were to the “right” of the 0.05
-p-value contour, then unobserved confounders with similar associations
-would retain the significant effect and allow the user to conclude that
-the results are reasonably robust. 
+graphic limits, the tool will inform the user and will also plot a
+transparent red background in area of the graphic that is outside the
+range. In this case there were three covariates whose absolute
+correlations with the outcome were greater than 0.4. The blue dots and
+their labels on the plot represent the observed covariates correlations
+with the outcome (y-axis) and treatment indicator (x-axis). For
+instance, `ada_0` and the outcome have approximately a 0.18 absolute
+correlation with the emotional problem scale at three months and an
+absolute association of approximately 0.17 effect size difference
+between the two treatment groups (magnitude of its relationship with the
+treatment indicator). In this case, not all of the observed covariate
+relationships with the outcome and the treatment indicator are “below”
+the 0.05 p-value threshold so the analyst potentially has results that
+are sensitive to an unobserved confounder. If the blue points all
+existed to the “right” of the 0.05 p-value contour, then unobserved
+confounders with similar associations would retain the significant
+effect and allow the user to conclude that the results are reasonably
+robust. 
 
 *Note: When the outcome model shows a significant effect, for all
 observed covariates, regardless of the sign of the association effect
@@ -367,7 +369,7 @@ interpretation of their
 results.*
 
 ``` r
-OVtool::plot.ov(ovtool_results_twang, print_all = "3")
+OVtool::plot.ov(ovtool_results_twang, print_graphic = "3")
 ```
 
 <img src="README_files/figure-gfm/fig3-1.png" style="display: block; margin: auto;" />
@@ -388,8 +390,10 @@ side of the graphic shows where various p-value cutoff lines are,
 including p = 0.05. The blue points on the plot represent the observed
 ovariate correlations with the outcome and effect size associations with
 the treatment indicator (e.g., standardized mean difference on the given
-covariates between the two groups). Finally, we can interpret this
-graphic by running the summary command on the ov object:
+covariates between the two groups). If there are observed absolute
+correlations with the outcome that are outside the range of the graphic,
+we indicate that by a red transparent background. Finally, we can
+interpret this graphic by running the summary command on the ov object:
 
 ``` r
 OVtool::summary.ov(OVtool_results = ovtool_results_twang, 
