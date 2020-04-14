@@ -46,7 +46,9 @@ es_plot = function(prep, col){
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
                                                      gp = grid::gpar(cex = .75)),
                                ymin = .1, ymax = .1, xmax = max(r1_df$es_grid)+.1,
-                               xmin=max(r1_df$es_grid)+.05)
+                               xmin=max(r1_df$es_grid)+.05) +
+    ggplot2::theme_linedraw()
+
   if(col == "bw"){
     v = v + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                                legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),

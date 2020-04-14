@@ -51,7 +51,9 @@ pval_point_plot = function(prep, col){
           legend.key.size =  grid::unit(0.5, "in")) +
     ggrepel::geom_text_repel(data=obs_cors,
                     ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
-                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
+    ggplot2::theme_linedraw()
+
   if(col=="bw"){
     v2 = v2 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                                  legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
