@@ -1,6 +1,6 @@
 ---
 title: "OVtool - Omitted Variable tool"
-output: github_document
+output: word_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}

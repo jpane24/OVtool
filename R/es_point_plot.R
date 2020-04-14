@@ -31,6 +31,8 @@ es_point_plot = function(prep, col){
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(limits = c(0,max(c(obs_cors$Cor_Outcome_Actual,
                                                    r1_df$rho_grid))),expand = c(0, 0)) +
+    ggplot2::theme_linedraw() +
+    ggplot2::geom_hline(yintercept=max(r1_df$rho_grid)) +
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association between unobserved confounder and treatment indicator\n(effect size scale)") +
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
@@ -52,9 +54,7 @@ es_point_plot = function(prep, col){
                       ymin = .1, ymax = .1, xmax = max(r1_df$es_grid)+.1, xmin=max(r1_df$es_grid)+.05)  +
     ggrepel::geom_text_repel(data = obs_cors,
                              ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
-                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
-    ggplot2::theme_linedraw() +
-    ggplot2::geom_hline(yintercept=max(r1_df$rho_grid))
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
 
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),

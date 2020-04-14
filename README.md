@@ -5,20 +5,20 @@ OVtool - Omitted Variable tool
 
 
 
-*Note: This is a work in progress – last updated 04-10-2020*
+*Note: This is a work in progress – last updated 04-14-2020*
 
 # Introduction
 
-The <ins>O</ins>mitted <ins>V</ins>ariable tool (`OVtool`) package was
-designed to assess the sensitivity of research findings to omitted
-variables when estimating causal effects using propensity score (PS)
-weighting. This package includes graphics and summary results that will
-enable a researcher to quantify the impact an omitted variable would
-have on their results. Burgette et al. (in preparation) describe the
-methodology behind the primary function in this package, `ov_simgrid()`.
-This document presents syntax for the implementation of the
-`ov_simgrid()` function and provides an example of how to interpret the
-packages’ graphical output.
+The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
+package was designed to assess the sensitivity of research findings to
+omitted variables when estimating causal effects using propensity score
+(PS) weighting. This package includes graphics and summary results that
+will enable a researcher to quantify the impact an omitted variable
+would have on their results. Burgette et al. (in preparation) describe
+the methodology behind the primary function in this package,
+`ov_simgrid()`. This document presents syntax for the implementation of
+the `ov_simgrid()` function and provides an example of how to interpret
+the packages’ graphical output.
 
 This package is useful in a wide range of applications where researchers
 want to analyze how sensitive their research findings are to unobserved
@@ -29,22 +29,28 @@ as on the statistical significance of an analysis.
 
 # Example: Synthetic Data
 
-This package is demonstrated using a random subset of the Global
-Appraisal of Individual Needs biopsychosocial assessment instrument
-(GAIN) (Dennis, Titus et al. 2003) from sites that adminstered two
-different types of substance use disorder treatments (treatment “A” and
-treatment “B”). The Center for Substance Abuse Treatment (CSAT) funded
-the sites that administered these two SUD treatments. This dataset
-consists of 4,000 adolescents. The main goal of this analysis is to
-understand the effect Treatment A and Treatment B, indicated by `treat`,
-have on mental health outcomes.
+This package is demonstrated using a synthetic data set that was derived
+from a large scale observational study on youth in substance use
+treatment. More specifically, it contains a subset of measures from the
+Global Appraisal of Individual Needs biopsychosocial assessment
+instrument (GAIN) (Dennis, Titus et al. 2003) from sites that
+adminstered two different types of substance use disorder treatments
+(treatment “A” and treatment “B”). The Center for Substance Abuse
+Treatment (CSAT) funded the sites that administered these two SUD
+treatments. This dataset consists of 4,000 adolescents. The main goal of
+this analysis is to understand the effect Treatment A and Treatment B,
+indicated by `treat`, have on mental health outcomes and to assess the
+potential for an omitted variable to bias the findings. To create our
+synthetic data set, we used an R package called
+“[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf)
+: Bespoke Creation of Synthetic Data in R”.
 
-In this synthetic dataset, there are 2,000 adolescents in each treatment
+In our synthetic dataset, there are 2,000 adolescents in each treatment
 group. Within this dataset there are variables on substance use disorder
 and mental health outcomes. For this tutorial we are particularly
 interested in the mental health outcome, `eps7p_3`, emotional problem
 scale (eps) recorded at three months. Higher values of eps indicate more
-emotional problems. Substance abuse researchers are particularly
+emotional problems. Substance use researchers are particularly
 interested in whether or not treatment A reduces emotional problems more
 than treatment B. `eps7p_3` ranges from zero to one, where higher values
 of EPS indicate more emotional problems. See (Dennis, 2003) for more
@@ -52,12 +58,12 @@ details on this scale.
 
 Past research has indicated there are many influential confounders when
 analyzing adolescents’ emotional problems, some included in this
-synthetic dataset (cite CYT). These variables were measured at baseline:
-emotional problem scale (`eps7p_0`), adjusted days abstinent (any in
-past 90) (`ada_0`), substance frequency scale (`sfs8p_0`), substance
-abuse treatment index (`sati_0`), in recovery (`recov_0`), traumatic
-stress scale (`tss_0`), mental health treatment in the past 90 days
-(`mhtrt_0`), and the depressive symptom scale (`dss9_0`). 
+synthetic dataset (Diamond et al.). These variables were measured at
+baseline: emotional problem scale (`eps7p_0`), adjusted days abstinent
+(any in past 90) (`ada_0`), substance frequency scale (`sfs8p_0`),
+substance abuse treatment index (`sati_0`), in recovery (`recov_0`),
+traumatic stress scale (`tss_0`), mental health treatment in the past 90
+days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`). 
 
 We begin by loading the development version of the package from
 [GitHub](https://github.com/) with:
@@ -278,6 +284,9 @@ ovtool_results_twang = OVtool::ov_simgrid(model_results=results,
                                           n_reps=25)
 ```
 
+    ## Warning in OVtool::ov_simgrid(model_results = results, weight_covariates =
+    ## c("eps7p_0", : Ties in the outcome variable `y` may be problematic.
+
     ## [1] "6% Done!"
     ## [1] "12% Done!"
     ## [1] "18% Done!"
@@ -454,6 +463,11 @@ different results.
 
 CHIS (2005). California health interview survey (CHIS) 2003 Methodology
 Series. Los Angeles: UCLA Center for Health Policy Research.
+
+Diamond, G., Godley, S. H., Liddle, H. A., Sampl, S., Webb, C., Tims, F.
+M., & Meyers, R. (2002). Five outpatient treatment models for adolescent
+marijuana use: a description of the Cannabis Youth Treatment
+Interventions. Addiction, 97, 70-83.
 
 McCaffrey, D. F., Ridgeway, G., and Morral, A. R. (2004). Propensity
 score estimation with boosted regression for evaluating causal effects
