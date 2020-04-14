@@ -1,6 +1,6 @@
 ---
 title: "OVtool - Omitted Variable tool"
-output: html_document
+output: github_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
@@ -9,6 +9,7 @@ header-includes:
 *Note: This is a work in progress -- last updated 04-14-2020*
 
 ```{r setup, include=F}
+# github_document
 # html_document
 # word_document
 # pdf_document

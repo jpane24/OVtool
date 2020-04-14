@@ -11,7 +11,7 @@ es_point_plot = function(prep, col){
   color = ifelse(col == "color", list(c("red", "blue")),
                  ifelse(col == "bw", list(c("grey70", "black")),
                         stop("Please specify 'bw' or 'color'.")))
-  redregion = ifelse(col == "color", "indianred2","gray85")
+  redregion = ifelse(col == "color", "white","gray85") #indianred2
 
   raw = prep$raw
 
@@ -53,7 +53,8 @@ es_point_plot = function(prep, col){
     ggrepel::geom_text_repel(data = obs_cors,
                              ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
                     box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
-    ggplot2::theme_linedraw()
+    ggplot2::theme_linedraw() +
+    ggplot2::geom_hline(yintercept=max(rho_grid))
 
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
