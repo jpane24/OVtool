@@ -54,7 +54,7 @@ es_point_plot = function(prep, col){
                              ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
                     box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
     ggplot2::theme_linedraw() +
-    ggplot2::geom_hline(yintercept=max(rho_grid))
+    ggplot2::geom_hline(yintercept=max(r1_df$rho_grid))
 
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
