@@ -5,7 +5,7 @@ OVtool - Omitted Variable tool
 
 
 
-*Note: This is a work in progress – last updated 04-14-2020*
+*Note: This is a work in progress – last updated 04-15-2020*
 
 # Introduction
 
@@ -70,6 +70,51 @@ We begin by loading the development version of the package from
 
 ``` r
 devtools::install_github("jpane24/OVtool")
+```
+
+    ## Downloading GitHub repo jpane24/OVtool@master
+
+    ## metR         (0.6.0       -> 0.7.0      ) [CRAN]
+    ## Rcpp         (1.0.4       -> 1.0.4.6    ) [CRAN]
+    ## isoband      (0.2.0       -> 0.2.1      ) [CRAN]
+    ## RCurl        (1.95-4.12   -> 1.98-1.1   ) [CRAN]
+    ## RcppArmad... (0.9.850.1.0 -> 0.9.860.2.0) [CRAN]
+    ## xfun         (0.12        -> 0.13       ) [CRAN]
+
+    ## Installing 6 packages: metR, Rcpp, isoband, RCurl, RcppArmadillo, xfun
+
+    ## Installing packages into '/Users/josephp/Library/R/3.6/library'
+    ## (as 'lib' is unspecified)
+
+    ## 
+    ##   There are binary versions available but the source versions are later:
+    ##                    binary      source needs_compilation
+    ## Rcpp                1.0.4     1.0.4.6              TRUE
+    ## RcppArmadillo 0.9.850.1.0 0.9.860.2.0              TRUE
+    ## xfun                 0.12        0.13             FALSE
+    ## 
+    ## 
+    ## The downloaded binary packages are in
+    ##  /var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T//RtmpOUUSsV/downloaded_packages
+
+    ## installing the source packages 'Rcpp', 'RcppArmadillo', 'xfun'
+
+    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpOUUSsV/remotesdf3a5e9f8980/jpane24-OVtool-f53d83c/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpOUUSsV/remotesdf3a5e9f8980/jpane24-OVtool-f53d83c/DESCRIPTION’ (425ms)
+    ##   ─  preparing ‘OVtool’:
+    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    ##   ─  checking for LF line-endings in source and make files and shell scripts
+    ##   ─  checking for empty or unneeded directories
+    ## ─  looking to see if a ‘data/datalist’ file should be added
+    ##   ─  building ‘OVtool_1.0.0.tar.gz’
+    ##      Warning: invalid uid value replaced by that for user 'nobody'
+    ##    Warning: invalid gid value replaced by that for user 'nobody'
+    ##      
+    ## 
+
+    ## Installing package into '/Users/josephp/Library/R/3.6/library'
+    ## (as 'lib' is unspecified)
+
+``` r
 library(OVtool)
 set.seed(24)
 ```
@@ -119,8 +164,7 @@ The `OVtool` can either take a vector of weights estimated using any
 method or a ps object produced by `TWANG` (Ridgeway et al., 2014). We
 begin walking through the OVtool by estimating weights using `ps()` from
 the `TWANG` package prior to running our outcome model using
-`OVtool::outcome_model()`. The snippet of code belows walks through an
-example:
+`outcome_model()`. The snippet of code belows walks through an example:
 
 ``` r
 ## Create Formula
@@ -129,11 +173,11 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
 
 ## Get weights
 sud = data.frame(sud)
-ps.twang <- twang::ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
-                      stop.method = "ks.max", verbose=F, ks.exact = T)
+ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
+               stop.method = "ks.max", verbose=F, ks.exact = T)
 
 # Check Balance
-twang::bal.table(ps.twang); # summary(ps.twang)
+bal.table(ps.twang); # summary(ps.twang)
 ```
 
     ## $unw
@@ -164,10 +208,9 @@ check to ensure we have good balance but we move on without diving in
 further because the purpose of this tutorial is to showcase `OVtool`.
 The next step is to estimate the treatment effect and analyze the
 sensitivity of those results using `OVtool`. We first present how a
-researcher would produce results for their outcomes model
-(`survey::svyglm()`). There are two options the researcher can take to
-input the relevant information to get their outcome results using
-`OVtool::outcome_model()`.
+researcher would produce results for their outcomes model (`svyglm()`).
+There are two options the researcher can take to input the relevant
+information to get their outcome results using `outcome_model()`.
 
   - Input a `ps.object` from `TWANG` and a `stop.method` (e.g.
     `"ks.max"`) or
@@ -185,18 +228,18 @@ sud$w_twang = ps.twang$w$ks.max.ATE
 # Run Models -- first standardize outcome
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
-# Use OVtool::outcome_model() to run outcomes model
-results = OVtool::outcome_model(ps_object = NULL, 
-                                stop.method = NULL, 
-                                data = sud,
-                                weights = sud$w_twang, 
-                                treatment = "treat",
-                                outcome = "eps7p_3_std",
-                                model_covariates = c("eps7p_0", "sfs8p_0", 
-                                                     "sati_0", "ada_0",
-                                                     "recov_0", "tss_0",
-                                                     "mhtrt_0", "dss9_0"),
-                                estimand = "ATE")
+# Use outcome_model() to run outcomes model
+results = outcome_model(ps_object = NULL, 
+                        stop.method = NULL, 
+                        data = sud,
+                        weights = sud$w_twang, 
+                        treatment = "treat",
+                        outcome = "eps7p_3_std", 
+                        model_covariates = c("eps7p_0", "sfs8p_0",
+                                             "sati_0", "ada_0",
+                                             "recov_0", "tss_0",
+                                             "mhtrt_0", "dss9_0"),
+                        estimand = "ATE")
 
 summary(results$mod_results)
 ```
@@ -206,7 +249,7 @@ summary(results$mod_results)
     ## svyglm(formula = formula, design = design_u)
     ## 
     ## Survey design:
-    ## design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
+    ## survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
     ## 
     ## Coefficients:
     ##               Estimate Std. Error t value Pr(>|t|)    
@@ -237,9 +280,8 @@ youth in treatment program B.
 At this stage, researchers should begin to ask themselves if this effect
 is real and how sensitive it is. Our tool is used to help answer these
 sort of logical next step questions. The next snippet of code presents
-the main function in `OVtool`: `Ovtool::ov_simgrid()`. This function
-requires results from `OVtool::outcome_model()` plus additional
-parameters including:
+the main function in `OVtool`: `ov_simgrid()`. This function requires
+results from `outcome_model()` plus additional parameters including:
 
   - `weight_covariates`: a vector of column names representing the
     covariates used to produce the analysts propensity score weights
@@ -274,17 +316,17 @@ methodology used by `OVtool`.
 
 ``` r
 # Run OVtool (with weights/not a ps object)
-ovtool_results_twang = OVtool::ov_simgrid(model_results=results, 
-                                          weight_covariates=c("eps7p_0", "sfs8p_0", 
-                                                              "sati_0", "ada_0",
-                                                              "recov_0", "tss_0", 
-                                                              "mhtrt_0", "dss9_0"),
-                                          es_grid = NULL,
-                                          rho_grid = seq(0, 0.40, by = 0.05),
-                                          n_reps=25)
+ovtool_results_twang = ov_simgrid(model_results=results, 
+                                  weight_covariates=c("eps7p_0", "sfs8p_0",
+                                                      "sati_0", "ada_0",
+                                                      "recov_0", "tss_0", 
+                                                      "mhtrt_0", "dss9_0"),
+                                  es_grid = NULL,
+                                  rho_grid = seq(0, 0.40, by = 0.05),
+                                  n_reps=25)
 ```
 
-    ## Warning in OVtool::ov_simgrid(model_results = results, weight_covariates =
+    ## Warning in ov_simgrid(model_results = results, weight_covariates =
     ## c("eps7p_0", : Ties in the outcome variable `y` may be problematic.
 
     ## [1] "6% Done!"
@@ -305,24 +347,33 @@ ovtool_results_twang = OVtool::ov_simgrid(model_results=results,
     ## [1] "94% Done!"
     ## [1] "100% Done!"
 
-In some cases the `OVtool::ov_simgrid` function will produce warnings
-asking you to either reduce the size of the rho grid or will tell you
-your outcome variable has multiple ties. The function will continue to
-run in the latter case but in the former the user will need to reduce
-the size of their grid. Typically, `rho_grid` will range from 0 to 0.45.
+In our example, `ov_simgrid` produced a warning stating ties in the
+outcome variable may be problematic. This warning allows the user to
+continue with their analysis but it is important for the analyst to
+understand that when generating the omitted variable (U), the empirical
+cumulative distribution function (CDF) for the outcome within each
+treatment is used. Many ties could lead to issues. See Burgette et
+al. for details. Although not in this example, `ov_simgrid` may produce
+a warning asking the analyst to reduce the size of the rho grid.
+Typically, `rho_grid` will range from 0 to 0.45 but occasionally large
+values of `rho_grid` are intractable. A key assumption in this tool is
+the omitted variable is independent from all covariates included in the
+propensity score model; this assumption may result in correlations of
+the omitted variable that have a maximum bound below moderately sized
+correlations.
 
 Furthermore, the user may expand the size of the effect size grid if the
-user feels it is applicable. To visualize our results, the
-`OVtool::plot.ov()` function will produce three graphics. The first
-graphic (Figure 1) plots the treatment effect contours without covariate
-labels. The second graphic (Figure 2) plots the p-value contours with
-the column names submitted to `weight_covariates` plotted by their raw
-rho and effect size. The third graphic (Figure 3) plots the treatment
-effect contours with the p-value contour overlayed and covariate
+user feels it is applicable. To visualize our results, the `plot.ov`
+function will produce three graphics. The first graphic (Figure 1) plots
+the treatment effect contours without covariate labels. The second
+graphic (Figure 2) plots the p-value contours with the column names
+submitted to `weight_covariates` plotted by their raw rho and effect
+size. The third graphic (Figure 3) plots the treatment effect contours
+with the p-value contour overlayed and covariate
 labels.
 
 ``` r
-OVtool::plot.ov(ovtool_results_twang, print_graphic = "1")
+plot.ov(ovtool_results_twang, print_graphic = "1")
 ```
 
 <img src="README_files/figure-gfm/fig1-1.png" style="display: block; margin: auto;" />
@@ -338,7 +389,7 @@ the effect is.
 
 
 ``` r
-OVtool::plot.ov(ovtool_results_twang, print_graphic = "2")
+plot.ov(ovtool_results_twang, print_graphic = "2")
 ```
 
 <img src="README_files/figure-gfm/fig2-1.png" style="display: block; margin: auto;" />
@@ -378,7 +429,7 @@ interpretation of their
 results.*
 
 ``` r
-OVtool::plot.ov(ovtool_results_twang, print_graphic = "3")
+plot.ov(ovtool_results_twang, print_graphic = "3")
 ```
 
 <img src="README_files/figure-gfm/fig3-1.png" style="display: block; margin: auto;" />
@@ -402,11 +453,11 @@ the treatment indicator (e.g., standardized mean difference on the given
 covariates between the two groups). If there are observed absolute
 correlations with the outcome that are outside the range of the graphic,
 we indicate that by a red transparent background. Finally, we can
-interpret this graphic by running the summary command on the ov object:
+interpret this graphic by running the summary command on the ov
+object:
 
 ``` r
-OVtool::summary.ov(OVtool_results = ovtool_results_twang, 
-                   model_results = results)
+summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
 ```
 
     ## [1] "Recommendation for reporting the sensitivity analyses"
@@ -423,19 +474,19 @@ OVtool::summary.ov(OVtool_results = ovtool_results_twang,
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
-analyst could take the results produced by `OVtool::summary.ov()` and
-plug them into a manuscript. In summary, the sign of the estimated
-effect is expected to be robust to unobserved confounders that have the
-same strength of association with the treatment indicator and outcome
-that are seen in the observed confounders. In the most extreme observed
-case, the estimated effect size is reduced by 75 percent. However,
-statistical significance at the 0.05 level is expected to be robust to
-unobserved confounders with strengths of associations with the treatment
-indicator and outcome that are seen in 5 of the 8 observed confounders.
-In the most extreme observed case, the p-value would be expected to
-increase from 0.004 to 0.496. Significance at the 0.05 level would not
-be expected to be preserved for unobserved confounders that have the
-same strength of association with the treatment indicator and outcome as
+analyst could take the results produced by `summary.ov()` and plug them
+into a manuscript. In summary, the sign of the estimated effect is
+expected to be robust to unobserved confounders that have the same
+strength of association with the treatment indicator and outcome that
+are seen in the observed confounders. In the most extreme observed case,
+the estimated effect size is reduced by 75 percent. However, statistical
+significance at the 0.05 level is expected to be robust to unobserved
+confounders with strengths of associations with the treatment indicator
+and outcome that are seen in 5 of the 8 observed confounders. In the
+most extreme observed case, the p-value would be expected to increase
+from 0.004 to 0.496. Significance at the 0.05 level would not be
+expected to be preserved for unobserved confounders that have the same
+strength of association with the treatment indicator and outcome as
 `eps7p_0`, `sati_0`, `tss_0`.
 
 # Conclusion
@@ -459,7 +510,7 @@ different results.
 
 # References
 
-*Needs updated and fixed*
+*Will update to link with text*
 
 CHIS (2005). California health interview survey (CHIS) 2003 Methodology
 Series. Los Angeles: UCLA Center for Health Policy Research.
