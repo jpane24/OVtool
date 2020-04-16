@@ -5,7 +5,7 @@ OVtool - Omitted Variable tool
 
 
 
-*Note: This is a work in progress – last updated 04-15-2020*
+*Note: This is a work in progress – last updated 04-16-2020*
 
 # Introduction
 
@@ -66,55 +66,13 @@ traumatic stress scale (`tss_0`), mental health treatment in the past 90
 days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`). 
 
 We begin by loading the development version of the package from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/). If you haven’t installed the devtools
+package, make sure you uncomment and run the first line of the following
+code snippet prior to running the second line:
 
 ``` r
+# install.packages("devtools")
 devtools::install_github("jpane24/OVtool")
-```
-
-    ## Downloading GitHub repo jpane24/OVtool@master
-
-    ## metR         (0.6.0       -> 0.7.0      ) [CRAN]
-    ## Rcpp         (1.0.4       -> 1.0.4.6    ) [CRAN]
-    ## isoband      (0.2.0       -> 0.2.1      ) [CRAN]
-    ## RCurl        (1.95-4.12   -> 1.98-1.1   ) [CRAN]
-    ## RcppArmad... (0.9.850.1.0 -> 0.9.860.2.0) [CRAN]
-    ## xfun         (0.12        -> 0.13       ) [CRAN]
-
-    ## Installing 6 packages: metR, Rcpp, isoband, RCurl, RcppArmadillo, xfun
-
-    ## Installing packages into '/Users/josephp/Library/R/3.6/library'
-    ## (as 'lib' is unspecified)
-
-    ## 
-    ##   There are binary versions available but the source versions are later:
-    ##                    binary      source needs_compilation
-    ## Rcpp                1.0.4     1.0.4.6              TRUE
-    ## RcppArmadillo 0.9.850.1.0 0.9.860.2.0              TRUE
-    ## xfun                 0.12        0.13             FALSE
-    ## 
-    ## 
-    ## The downloaded binary packages are in
-    ##  /var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T//RtmpOUUSsV/downloaded_packages
-
-    ## installing the source packages 'Rcpp', 'RcppArmadillo', 'xfun'
-
-    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpOUUSsV/remotesdf3a5e9f8980/jpane24-OVtool-f53d83c/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpOUUSsV/remotesdf3a5e9f8980/jpane24-OVtool-f53d83c/DESCRIPTION’ (425ms)
-    ##   ─  preparing ‘OVtool’:
-    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ## ─  looking to see if a ‘data/datalist’ file should be added
-    ##   ─  building ‘OVtool_1.0.0.tar.gz’
-    ##      Warning: invalid uid value replaced by that for user 'nobody'
-    ##    Warning: invalid gid value replaced by that for user 'nobody'
-    ##      
-    ## 
-
-    ## Installing package into '/Users/josephp/Library/R/3.6/library'
-    ## (as 'lib' is unspecified)
-
-``` r
 library(OVtool)
 set.seed(24)
 ```
