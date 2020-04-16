@@ -1,6 +1,6 @@
 ---
 title: "OVtool - Omitted Variable tool"
-output: html_document
+output: github_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
@@ -46,7 +46,7 @@ Past research has indicated there are many influential confounders when analyzin
 We begin by loading the development version of the package from 
 [GitHub](https://github.com/) with: 
 
-```{r, begin, echo=T, eval=T}
+```{r, begin, results="hide", eval=T}
 devtools::install_github("jpane24/OVtool")
 library(OVtool)
 set.seed(24)
