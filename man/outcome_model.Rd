@@ -70,66 +70,7 @@ outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment, outc
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (ps_object = NULL, stop.method, data, weights, treatment,
-    outcome, model_covariates, estimand = "ATE")
-{
-    set.seed(24)
-    if (class(ps_object) != "ps") {
-        if (missing(data) | missing(weights) | missing(treatment) |
-            missing(outcome) | missing(model_covariates)) {
-            stop("Please supply either a ps class object, stop.method, and relevant column names for:\n      outcome, and covariates OR the data and relevant column names for: weights, treatment, outcome, & covariates")
-        }
-        else {
-            data$w_orig = weights
-            y = outcome
-            tx = treatment
-            if (typeof(model_covariates) == "language") {
-                cov = all.vars(model_covariates)
-            }
-            else {
-                cov = model_covariates
-            }
-            design_u <- survey::svydesign(ids = ~1, weights = ~w_orig,
-                data = data)
-        }
-    }
-    else {
-        if (is.null(stop.method) | is.null(outcome) | is.null(model_covariates)) {
-            stop("Please supply a stop.method to generate the weights (e.g. \"ks.max/")
-        }
-        y = outcome
-        tx = ps_object$treat.var
-        if (typeof(model_covariates) == "language") {
-            cov = all.vars(model_covariates)
-        }
-        else {
-            cov = model_covariates
-        }
-        data = ps_object$data
-        data$w_orig = twang::get.weights(ps_object, stop.method = stop.method,
-            estimand = estimand)
-        design_u <- survey::svydesign(ids = ~1, weights = ~w_orig,
-            data = data)
-    }
-    formula = formula(paste0("scale(", y, ") ~ ", tx, " + ",
-        glue::glue_collapse(cov, sep = " + ")))
-    if (length(unique(data[, "y"])) <= 1) {
-        stop("No variation in outcome.")
-    }
-    else {
-        model_results = survey::svyglm(formula, design = design_u)
-    }
-    print(summary(model_results))
-    return(list(ps_object, stop.method, data, weights, tx, y,
-        model_covariates, estimand, design_u, outcome_mod_results))
-  }
-}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
