@@ -21,28 +21,28 @@ outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment, outc
 }
   \item{stop.method}{
   %%     ~~Describe \code{x} here~~
-  If the user specifies ps_object, which stop.method should be used to export the weights
+  If the user specifies ps_object, stop.method should be used to export the weights (e.g "ks.max")
 }
   \item{data}{
   %%     ~~Describe \code{x} here~~
-  A dataframe containing the data
+  A data frame containing the data
 }
   \item{weights}{
   A vector of propensity score weights
 }
   \item{treatment}{
-  Column name for the treatment indicator
+  A column name in data for the treatment indicator
 }
   \item{outcome}{
   %%     ~~Describe \code{x} here~~
-  Column name for the outcome
+  A column name in data indicating the outcome vector
 }
   \item{model_covariates}{
 %%     ~~Describe \code{model_covariates} here~~
-  vector of column names representing the covariates in your final outcomes model
+  A vector of column names representing the covariates in your final outcome's model
 }
   \item{estimand}{
-  "ATE"" or "ATT""
+  "ATE" or "ATT"
 }
 }
 \details{
@@ -50,10 +50,21 @@ outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment, outc
 }
 \value{
 %%  ~Describe the value returned
+outcome_model returns a list containing the following components:
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
+\item{ps_object}{The ps_object from TWANG specified in the function call. If ignored, this component will be NULL}
+\item{stop.method}{The stop method, if applicable, specified in the function call}
+\item{data}{the updated data frame}
+\item{weights}{a vector of weights}
+\item{tx}{a character name in data indicating the treatment indicator}
+\item{y}{a character name in data indicating the outcome}
+\item{outcome_mod_fmla}{the final outcome model formula}
+\item{estimand}{The estimand specified in the function call}
+\item{mod_results}{an object of class "svyglm"}
+
 }
 \references{
 %% ~put references to the literature/web site here ~

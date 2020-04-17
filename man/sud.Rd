@@ -7,7 +7,7 @@ Longitudinal observational data from adolescents receiving SUD treatment.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of the dataset. ~~
-A dataset containing substance use disorder and mental health measures for adolescents who had one of two substance use treatments
+A dataset containing substance use disorder and mental health measures for adolescents who had one of two substance use treatments.
 }
 
 \usage{data("sud")}

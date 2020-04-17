@@ -22,10 +22,16 @@ An object returned from sim_grid
 }
 \value{
 %%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+prep_for_plots returns a list containing the following components:
+\item{r1}{a list with the components returned from ov_simgrid}
+\item{r1_df}{a data frame with components used to create the contour graphic}
+\item{obs_cors}{a data frame with components used to plot the observed covariates on plot_graphic = "2" and plot_graphic = "3"}
+\item{text_high}{a character noting the covariates whose absolute correlation with the outcome is greater than the grid allows}
+\item{text_high_es}{a character noting the covariates with effect sizes greater than the maximum the plot will allow}
+\item{pvals}{a vector of p-value thresholds to be plotted on the graphics}
+\item{pval_lines}{a vector of line types to represent pvals}
+\item{raw}{a character with the raw effect and pvalue from the outcome model}
+
 }
 \references{
 %% ~put references to the literature/web site here ~

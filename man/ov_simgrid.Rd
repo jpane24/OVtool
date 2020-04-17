@@ -11,7 +11,8 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-ov_simgrid(model_results, weight_covariates, es_grid=NULL, rho_grid = seq(0, .45, by=0.05), n_reps = 101)
+ov_simgrid(model_results, weight_covariates, es_grid=NULL,
+rho_grid = seq(0, .45, by=0.05), n_reps = 101)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -38,10 +39,20 @@ ov_simgrid(model_results, weight_covariates, es_grid=NULL, rho_grid = seq(0, .45
 }
 \value{
 %%  ~Describe the value returned
+ov_simgrid returns a list containing the following components:
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
+\item{p_val}{matrix of pvalues for each grid point}
+\item{trt_effect}{matrix of effect sizes for each grid point}
+\item{es_grid}{vector of the effect size grid}
+\item{rho_grid}{vector of the rho grid}
+\item{cov}{vector of covariates used to estimate propensity score weights}
+\item{data}{the initial data frame containing data with new weights}
+\item{tx}{column name in data representing the treatment indicator}
+\item{y}{column name in data representing the outcome}
+\item{estimand}{estimand used}
 }
 \references{
 %% ~put references to the literature/web site here ~

@@ -26,7 +26,7 @@ If user wants color or black and white. Specify color with "color" or black and 
 }
 \value{
 %%  ~Describe the value returned
-%%  If it is a LIST, use
+a list of class gg and ggplot
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...

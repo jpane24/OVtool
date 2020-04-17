@@ -29,11 +29,7 @@ Takes values "1", "2", or "3", depending what graphics the user wants
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+This function will print the plot to screen that the use specifies with print_graphic.
 }
 \references{
 %% ~put references to the literature/web site here ~
