@@ -16,7 +16,7 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   }
 
   # create formula
-  formula = results$outcome_mod_fmla
+  formula = model_results$outcome_mod_fmla
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")

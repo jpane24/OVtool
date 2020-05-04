@@ -1,12 +1,13 @@
 ---
 title: "OVtool - Omitted Variable tool"
-output: github_document
+author: Joseph D. Pane, Beth Ann Griffin, Lane Burgette
+output: html_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
 ---
 
-*Note: This is a work in progress -- last updated 04-16-2020*
+*Note: This is a work in progress -- last updated 04-17-2020*
 
 ```{r setup, include=F}
 # github_document
