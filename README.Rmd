@@ -1,7 +1,7 @@
 ---
 title: "OVtool - Omitted Variable tool"
 author: Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey
-output: html_document
+output: md_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
@@ -162,7 +162,7 @@ In our example, `ov_simgrid` produced a warning stating ties in the outcome vari
 
 Furthermore, the user may expand the size of the effect size grid if the user feels it is applicable. To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. The second graphic (Figure 2) plots the p-value contours with the column names submitted to `weight_covariates` plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlayed and covariate labels. 
 
-```{r, fig1, fig.width=10, fig.height=7, fig.align='center'}
+```{r, fig1, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang, print_graphic = "1")
 ```
 

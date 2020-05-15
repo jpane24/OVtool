@@ -2,7 +2,7 @@
 
 
 
-*Note: This is a work in progress – last updated 04-17-2020*
+*Note: This is a work in progress – last updated 05-15-2020*
 
 Introduction
 ============
@@ -71,59 +71,12 @@ code snippet prior to running the second line:
 
     # install.packages("devtools")
     devtools::install_github("jpane24/OVtool")
-
-    ## rlang      (0.4.5 -> 0.4.6) [CRAN]
-    ## tidyselect (1.0.0 -> 1.1.0) [CRAN]
-    ## vctrs      (0.2.4 -> 0.3.0) [CRAN]
-    ## pkgbuild   (1.0.7 -> 1.0.8) [CRAN]
-    ## ps         (1.3.2 -> 1.3.3) [CRAN]
-    ## scales     (1.1.0 -> 1.1.1) [CRAN]
-    ## 
-    ##   There are binary versions available but the source versions are later:
-    ##            binary source needs_compilation
-    ## tidyselect  1.0.0  1.1.0              TRUE
-    ## vctrs       0.2.4  0.3.0              TRUE
-    ## scales      1.1.0  1.1.1             FALSE
-    ## 
-    ## 
-    ## The downloaded binary packages are in
-    ##  /var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T//RtmpDO0MMP/downloaded_packages
-    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpDO0MMP/remotes10ad921dd80ad/jpane24-OVtool-8bfe78f/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpDO0MMP/remotes10ad921dd80ad/jpane24-OVtool-8bfe78f/DESCRIPTION’ (464ms)
-    ##   ─  preparing ‘OVtool’:
-    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ##   ─  building ‘OVtool_1.0.0.tar.gz’
-    ##      Warning: invalid uid value replaced by that for user 'nobody'
-    ##    Warning: invalid gid value replaced by that for user 'nobody'
-    ##      
-    ## 
-
     library(OVtool)
-    set.seed(24)
 
-We can load the synthetic dataset and print to screen the first six
-observations by running the following commands (we also make the
-treatment variable a binary indicator):
+We can load the synthetic dataset and make our treatment variable a
+binary indicator of 0’s and 1’s:
 
     data(sud) 
-    head(sud)
-
-    ## # A tibble: 6 x 29
-    ##   treat tss_0 tss_3    tss_6 sfs8p_0 sfs8p_3 sfs8p_6 eps7p_0 eps7p_3 eps7p_6
-    ##   <chr> <dbl> <dbl>    <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-    ## 1 A         0 5     0.         0        4.99  14.7    0.151  0.288    0     
-    ## 2 A         0 0.578 5.30e- 1  11.5      3.19   3.75   0.0476 0.00760  0.171 
-    ## 3 A         0 0     2.37e+ 0  40.6     29.7    0.833  0.0952 0.286    0.0476
-    ## 4 A         0 0     0.        29.7      8.89   4.58   0.0730 0.0778   0     
-    ## 5 A         0 2.65  5.55e-17  22.2     22.2    0.833  0.286  0.387    0.0952
-    ## 6 A         8 4.99  0.         0.694    0      0      0.438  0.321    0.0476
-    ## # … with 19 more variables: ias5p_0 <dbl>, dss9_0 <dbl>, mhtrt_0 <dbl>,
-    ## #   sati_0 <dbl>, sp_sm_0 <dbl>, sp_sm_3 <dbl>, sp_sm_6 <dbl>, gvs <dbl>,
-    ## #   ers21_0 <dbl>, nproc <dbl>, ada_0 <dbl>, ada_3 <dbl>, ada_6 <dbl>,
-    ## #   recov_0 <dbl>, recov_3 <dbl>, recov_6 <dbl>, subsgrps_n <dbl>, sncnt <dbl>,
-    ## #   engage <dbl>
-
     sud$treat = ifelse(sud$treat == "A", 1, 0)
 
 The relevant variables in this analysis are:
@@ -365,70 +318,6 @@ size. The third graphic (Figure 3) plots the treatment effect contours
 with the p-value contour overlayed and covariate labels.
 
     plot.ov(ovtool_results_twang, print_graphic = "1")
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
-
-    ## Warning in as.numeric(group[1]) %in% rot.groups: NAs introduced by coercion
 
 <img src="README_files/figure-markdown_strict/fig1-1.png" style="display: block; margin: auto;" />
 
