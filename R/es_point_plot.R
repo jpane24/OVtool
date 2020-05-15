@@ -11,7 +11,7 @@ es_point_plot = function(prep, col){
   color = ifelse(col == "color", list(c("red", "blue")),
                  ifelse(col == "bw", list(c("grey70", "black")),
                         stop("Please specify 'bw' or 'color'.")))
-  redregion = ifelse(col == "color", "white","gray85") #indianred2
+  redregion = "white"
 
   raw = prep$raw
 

@@ -7,11 +7,11 @@ plot.ov <- function(x, col="color", print_graphic="1") {
   plot_2 = pval_point_plot(prep=prep_plots, col=col)
   plot_3 = es_point_plot(prep=prep_plots,col=col)
 
-  plot_1 <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot_1))
+  plot_1 <- ggplot2::ggplotGrob(plot_1)
   plot_1$layout$clip[plot_1$layout$name == "panel"] <- "off"
-  plot_2 <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot_2))
+  plot_2 <- ggplot2::ggplotGrob(plot_2)
   plot_2$layout$clip[plot_2$layout$name == "panel"] <- "off"
-  plot_3 <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot_3))
+  plot_3 <- ggplot2::ggplotGrob(plot_3)
   plot_3$layout$clip[plot_3$layout$name == "panel"] <- "off"
 
   # .pardefault <- graphics::par(no.readonly=TRUE)

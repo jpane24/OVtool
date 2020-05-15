@@ -1,13 +1,13 @@
 ---
 title: "OVtool - Omitted Variable tool"
-author: Joseph D. Pane, Beth Ann Griffin, Lane Burgette
+author: Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey
 output: html_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
 ---
 
-*Note: This is a work in progress -- last updated 04-17-2020*
+*Note: This is a work in progress -- last updated 05-15-2020*
 
 ```{r setup, include=F}
 # github_document
@@ -50,14 +50,12 @@ We begin by loading the development version of the package from [GitHub](https:/
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool")
 library(OVtool)
-set.seed(24)
 ```
 
-We can load the synthetic dataset and print to screen the first six observations by running the following two commands:
+We can load the synthetic dataset and make our treatment variable a binary indicator of 0's and 1's:
 
 ```{r, data}
 data(sud) 
-# head(sud)
 sud$treat = ifelse(sud$treat == "A", 1, 0)
 ```
 
@@ -96,11 +94,11 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
 
 ## Get weights
 sud = data.frame(sud)
-ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
-               stop.method = "ks.max", verbose=F, ks.exact = T)
+ps.twang <- twang::ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
+                      stop.method = "ks.max", verbose=F, ks.exact = T)
 
 # Check Balance
-bal.table(ps.twang); # summary(ps.twang)
+twang::bal.table(ps.twang); # summary(ps.twang)
 ```
 
 The output produced by the code snippet above shows that TWANG does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have good balance but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. The next step is to estimate the treatment effect and analyze the sensitivity of those results using `OVtool`. We first present how a researcher would produce results for their outcomes model (`svyglm()`). There are two options the researcher can take to input the relevant information to get their outcome results using `outcome_model()`. 
@@ -119,17 +117,17 @@ sud$w_twang = ps.twang$w$ks.max.ATE
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
 # Use outcome_model() to run outcomes model
-results = outcome_model(ps_object = NULL, 
-                        stop.method = NULL, 
-                        data = sud,
-                        weights = sud$w_twang, 
-                        treatment = "treat",
-                        outcome = "eps7p_3_std", 
-                        model_covariates = c("eps7p_0", "sfs8p_0",
-                                             "sati_0", "ada_0",
-                                             "recov_0", "tss_0",
-                                             "mhtrt_0", "dss9_0"),
-                        estimand = "ATE")
+results = OVtool::outcome_model(ps_object = NULL, 
+                                stop.method = NULL, 
+                                data = sud,
+                                weights = sud$w_twang, 
+                                treatment = "treat",
+                                outcome = "eps7p_3_std", 
+                                model_covariates = c("eps7p_0", "sfs8p_0",
+                                                     "sati_0", "ada_0",
+                                                     "recov_0", "tss_0",
+                                                     "mhtrt_0", "dss9_0"),
+                                estimand = "ATE")
 
 summary(results$mod_results)
 ```

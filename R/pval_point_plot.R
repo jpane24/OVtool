@@ -11,7 +11,7 @@ pval_point_plot = function(prep, col){
   color = ifelse(col == "color", list(c("red", "blue")),
                  ifelse(col == "bw", list(c("grey70", "black")),
                         stop("Please specify 'bw' or 'color'.")))
-  redregion = ifelse(col == "color", "white","gray85") #indianred2
+  redregion = "white"
 
   ## Pvalue
   v2 <- ggplot2::ggplot(r1_df, ggplot2::aes(x=es_grid, y=rho_grid, z = p_val)) +
