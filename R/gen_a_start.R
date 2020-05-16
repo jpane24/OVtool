@@ -45,26 +45,32 @@ gen_a_start <- function(y, tx, es, rho){
   # Take b1
   alpha = (A - Q)/((1-pi)*c0)
   beta = (-c1*pi)/((1-pi)*c0)
-  b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
-  b1high <- min(b1lim, ((b0lim - alpha) / beta))
-  b1low_final = ifelse(b1low > b1high, 0, b1low)
-  b1high_final = ifelse(b1low > b1high, 0, b1high)
-  # #ensure less than abs of 1
-  # b1low_final = case_when(b1low_final < -1 ~ -1,
-  #                         TRUE ~ b1low_final)
-  # b1high_final = case_when(b1high_final > 1 ~ 1,
-  #                          TRUE ~ b1high_final)
 
-  b1 = runif(1, min = b1low_final, max = b1high_final);
+  if(beta > 0){
+    b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
+    b1high <- min(b1lim, ((b0lim - alpha) / beta))
+  }
+  if(beta < 0){
+    b1low <- max(-b1lim, ((b0lim - alpha) / beta))
+    b1high <- min(b1lim, ((-b0lim - alpha) / beta))
+  }
+
+  b1 = runif(1, min = b1low, max = b1high);
 
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
 
-  if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
   ve1 <- 1 - b1^2 * var(ystar1)
   ve0 <- 1 - b0^2 * var(ystar0)
-  if(ve0 < 0) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
-  #print(c(b0, b1))
+
+  # redraw b1 if ve0 < 0
+  while(ve0 < 0 | ve1 < 0){
+    b1 = runif(1, min = b1low, max = b1high);
+    b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
+    ve1 <- 1 - b1^2 * var(ystar1)
+    ve0 <- 1 - b0^2 * var(ystar0)
+  }
+  if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
   return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, ystar1 = ystar1,
                       es = es, pi = pi, n0 = n0, ve0 = ve0, b0 = b0,
