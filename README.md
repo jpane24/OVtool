@@ -72,19 +72,6 @@ code snippet prior to running the second line:
 
     # install.packages("devtools")
     devtools::install_github("jpane24/OVtool")
-
-    ## 
-    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpqVSIwp/remotes156ed724f4852/jpane24-OVtool-ddd656e/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpqVSIwp/remotes156ed724f4852/jpane24-OVtool-ddd656e/DESCRIPTION’ (334ms)
-    ##   ─  preparing ‘OVtool’:
-    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ##   ─  building ‘OVtool_1.0.0.tar.gz’
-    ##      Warning: invalid uid value replaced by that for user 'nobody'
-    ##    Warning: invalid gid value replaced by that for user 'nobody'
-    ##      
-    ## 
-
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a
