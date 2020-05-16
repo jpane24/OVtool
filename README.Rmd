@@ -1,13 +1,13 @@
 ---
 title: "OVtool - Omitted Variable tool"
 author: Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey
-output: word_document
+output: html_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
 ---
 
-*Note: This is a work in progress -- last updated 05-15-2020*
+*Note: This is a work in progress -- last updated 05-16-2020 -- text needs updated*
 
 ```{r setup, include=F}
 # github_document
@@ -155,7 +155,7 @@ ovtool_results_twang = ov_simgrid(model_results=results,
                                                       "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05),
-                                  n_reps=500)
+                                  n_reps=25)
 ```
 
 In our example, `ov_simgrid` produced a warning stating ties in the outcome variable may be problematic. This warning allows the user to continue with their analysis but it is important for the analyst to understand that when generating the omitted variable (U), the empirical cumulative distribution function (CDF) for the outcome within each treatment is used. Many ties could lead to issues. See Burgette et al. for details. Although not in this example, `ov_simgrid` may produce a warning asking the analyst to reduce the size of the rho grid. Typically, `rho_grid` will range from 0 to 0.45 but occasionally large values of `rho_grid` are intractable. A key assumption in this tool is the omitted variable is independent from all covariates included in the propensity score model; this assumption may result in correlations of the omitted variable that have a maximum bound below moderately sized correlations.
