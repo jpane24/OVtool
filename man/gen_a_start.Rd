@@ -24,12 +24,12 @@ A vector for the treatment indicator (must be 0s and 1s).
 An effect size value to simulate over.
 }
   \item{rho}{
-A rho (correlation) value to simulate over.}
-
+A rho (correlation) value to simulate over.
 }
-  \item{b1}{
-additional parameter needed; occasionally assumed away unknowingly.}
 
+  \item{b1}{
+additional parameter needed; occasionally assumed away unknowingly.
+}
 }
 
 \details{

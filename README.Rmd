@@ -1,7 +1,7 @@
 ---
 title: "OVtool - Omitted Variable tool"
 author: Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey
-output: html_document
+output: md_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
