@@ -51,8 +51,8 @@ gen_b1 <- function(y, tx, es, rho){
   }
 
   if(beta <0){
-    b1low <- 0#max(-b1lim, ((b0lim - alpha) / beta))
-    b1high <- 0#min(b1lim, ((-b0lim - alpha) / beta))
+    b1low <- max(-b1lim, ((b0lim - alpha) / beta))
+    b1high <- min(b1lim, ((-b0lim - alpha) / beta))
   }
   return(c(b1low, b1high))
 }

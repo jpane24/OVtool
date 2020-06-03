@@ -44,8 +44,8 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
     b1_low_high[i,3:4] = gen_b1(y=data[,y], tx = data[,tx],
                                 es = b1_low_high$es[i], rho = b1_low_high$rho[i])
   }
-  b1_low = max(b1_low_high$b1_low)
-  b1_high = min(b1_low_high$b1_high)
+  b1_low = #max(b1_low_high$b1_low)
+  b1_high = #min(b1_low_high$b1_high)
   b1_final = mean(c(b1_low, b1_high))
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
