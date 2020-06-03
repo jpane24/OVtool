@@ -1,5 +1,5 @@
 #### Effect Size plot (no points) ####
-es_plot = function(prep, col){
+es_plot2 = function(prep, col){
   r1_df = prep$r1_df
   pvals = prep$pvals
   pval_lines = prep$pval_lines
@@ -13,7 +13,7 @@ es_plot = function(prep, col){
 
   ## Parallel coordinates plot of cluster means
   #### ES with p-value overlay (no points) ####
-  v <- ggplot2::ggplot(r1_df, ggplot2::aes(es_grid, rho_grid, z = trt_effect)) +
+  v <- ggplot2::ggplot(r1_df, ggplot2::aes(es_grid, rho_grid, z=trt_effect, fill = trt_effect)) +
     ggplot2::geom_rect(ggplot2::aes(ymin = max(rho_grid),
                                     ymax = Inf,
                                     xmin = -Inf,
@@ -26,6 +26,9 @@ es_plot = function(prep, col){
                                     xmax = Inf),
                        fill = "snow2",
                        alpha = 0.01) +
+    # heat map options
+    # ggplot2::geom_tile() +
+    # ggplot2::scale_fill_gradient(low="blue", high="orange") +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(limits = c(0,max(r1_df$rho_grid)), expand = c(0, 0)) +
     ggplot2::theme_linedraw() +
@@ -39,8 +42,8 @@ es_plot = function(prep, col){
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
                                                       gp = grid::gpar(cex = .75)),
                                 ymin = .1, ymax = .1,
-                                xmax = max(r1_df$es_grid)+.1,
-                                xmin = max(r1_df$es_grid)+.05)
+                                xmax = max(r1_df$es_grid)+.15,
+                                xmin = max(r1_df$es_grid)+.1)
 
 
   if(col == "bw"){

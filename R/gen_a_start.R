@@ -1,5 +1,5 @@
 #### gen_a_start fn ####
-gen_a_start <- function(y, tx, es, rho, b1){
+gen_a_start <- function(y, tx, es, rho, b1low, b1high){
   ind <- which(tx == 1)
   if(length(unique(y[ind])) <= 2){
     y[ind][which(y[ind]==1)] = runif(length(which(y[ind]==1)), min=1, max=2)
@@ -42,20 +42,20 @@ gen_a_start <- function(y, tx, es, rho, b1){
 
   Q <- es*(1-pi)*mean(y[ind])*pi - es*pi*mean(y[-ind])*(1-pi)
 
-  #b1 = runif(1, min = b1low, max = b1high);
+  b1 = runif(1, min = b1low, max = b1high);
 
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
 
   ve1 <- 1 - b1^2 * var(ystar1)
   ve0 <- 1 - b0^2 * var(ystar0)
 
-  # # redraw b1 if ve0 < 0
-  # while(ve0 < 0 | ve1 < 0){
-  #   b1 = runif(1, min = b1low, max = b1high);
-  #   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
-  #   ve1 <- 1 - b1^2 * var(ystar1)
-  #   ve0 <- 1 - b0^2 * var(ystar0)
-  # }
+  # redraw b1 if ve0 < 0
+  while(ve0 < 0 | ve1 < 0){
+    b1 = runif(1, min = b1low, max = b1high);
+    b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
+    ve1 <- 1 - b1^2 * var(ystar1)
+    ve0 <- 1 - b0^2 * var(ystar0)
+  }
   if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
   return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, ystar1 = ystar1,

@@ -57,8 +57,10 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   for(i in 1:length(es_grid)){
     for(j in 1:length(rho_grid)){
       for(k in 1:n_reps){
-        a_prep <- gen_a_start(y=data[,y], tx = data[,tx], es = es_grid[i], rho = rho_grid[j],
-                              b1=b1_final)
+        if(k == 1){
+          a_prep <- gen_a_start(y=data[,y], tx = data[,tx], es = es_grid[i], rho = rho_grid[j],
+                                b1low=b1_low, b1high=b1_high)
+        }
         a <- gen_a_finish(a_prep)
         data$w_new <- data$w_orig * a
         design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)
