@@ -1,6 +1,6 @@
 gen_b1 <- function(y, tx, es, rho){
   ind <- which(tx == 1)
-  if(length(unique(y[ind])) <= 2){
+  if(length(unique(y[ind])) == 2){
     y[ind][which(y[ind]==1)] = runif(length(which(y[ind]==1)), min=1, max=2)
     y[ind][which(y[ind]==0)] = runif(length(which(y[ind]==0)), min=-1, max=0)
 
@@ -8,12 +8,20 @@ gen_b1 <- function(y, tx, es, rho){
     y[-ind][which(y[-ind]==0)] = runif(length(which(y[-ind]==0)), min=-1, max=0)
   }
 
-  cdf1 <- ecdf(y[ind])
-  cdf0 <- ecdf(y[-ind])
-  ystar1 <- qnorm(cdf1(y[ind]))
-  ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
-  ystar0 <- qnorm(cdf0(y[which(tx==0)]))
-  ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
+  # # Old way:
+  # cdf1 <- ecdf(y[ind])
+  # cdf0 <- ecdf(y[-ind])
+  # ystar1 <- qnorm(cdf1(y[ind]))
+  # ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
+  # ystar0 <- qnorm(cdf0(y[which(tx==0)]))
+  # ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
+
+  # New way:
+  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)$Cumulative.Probabilities
+  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)$Cumulative.Probabilities
+  ystar1 = qnorm(cdf1)
+  ystar0 = qnorm(cdf0)
+
   n1 <- sum(tx)
   n0 <- sum(1-tx)
   n<- n1 + n0
@@ -45,12 +53,12 @@ gen_b1 <- function(y, tx, es, rho){
   alpha = (A - Q)/((1-pi)*c0)
   beta = (-c1*pi)/((1-pi)*c0)
 
-  if(beta >0){
+  if(beta > 0){
     b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
     b1high <- min(b1lim, ((b0lim - alpha) / beta))
   }
 
-  if(beta <0){
+  if(beta < 0){
     b1low <- max(-b1lim, ((b0lim - alpha) / beta))
     b1high <- min(b1lim, ((-b0lim - alpha) / beta))
   }

@@ -23,7 +23,8 @@ Imports:
 	purrr,
 	Amelia,
 	knitr,
-	varhandle
+	varhandle,
+	EnvStats
 Depends:
   grid 
 RoxygenNote: 6.1.1
