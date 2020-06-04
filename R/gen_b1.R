@@ -17,10 +17,10 @@ gen_b1 <- function(y, tx, es, rho){
   # ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
 
   # New way:
-  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)$Cumulative.Probabilities
-  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)$Cumulative.Probabilities
-  ystar1 = qnorm(cdf1)
-  ystar0 = qnorm(cdf0)
+  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
+  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
+  ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
@@ -62,5 +62,6 @@ gen_b1 <- function(y, tx, es, rho){
     b1low <- max(-b1lim, ((b0lim - alpha) / beta))
     b1high <- min(b1lim, ((-b0lim - alpha) / beta))
   }
+
   return(c(b1low, b1high))
 }
