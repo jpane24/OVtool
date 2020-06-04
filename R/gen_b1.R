@@ -19,8 +19,10 @@ gen_b1 <- function(y, tx, es, rho){
   # New way:
   cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
   cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  set.seed(24)
   ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
   ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
+  set.seed(Sys.time())
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)

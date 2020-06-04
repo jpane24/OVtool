@@ -19,7 +19,7 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
-  # if(max(table(data[,y])) > 1) warning("Ties in the outcome variable `y` may be problematic.")
+  if(max(table(data[,y])) > 1) warning("Ties in the outcome variable `y` may be problematic.")
 
   # determine reasonable grid to simulate over
   if(is.null(es_grid) | is.null(rho_grid)){
@@ -46,7 +46,8 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   }
   b1_low = max(b1_low_high$b1_low)
   b1_high = min(b1_low_high$b1_high)
-  # b1_final = mean(c(b1_low, b1_high))
+  # for now, take mean of b1low, b1high.
+  b1_final = mean(c(b1_low, b1_high))
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
   p_val_nodr <- matrix(0,length(es_grid),length(rho_grid))
@@ -57,8 +58,10 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   for(i in 1:length(es_grid)){
     for(j in 1:length(rho_grid)){
       for(k in 1:n_reps){
+        if(k == 1){
           a_prep <- gen_a_start(y=data[,y], tx = data[,tx], es = es_grid[i], rho = rho_grid[j],
-                                b1low=b1_low, b1high=b1_high)
+                                b1 = b1_final)
+        }
         a <- gen_a_finish(a_prep)
         data$w_new <- data$w_orig * a
         design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)

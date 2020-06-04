@@ -1,5 +1,5 @@
 #### gen_a_start fn ####
-gen_a_start <- function(y, tx, es, rho, b1low, b1high){
+gen_a_start <- function(y, tx, es, rho, b1){
   ind <- which(tx == 1)
   if(length(unique(y[ind])) == 2){
     y[ind][which(y[ind]==1)] = runif(length(which(y[ind]==1)), min=1, max=2)
@@ -20,8 +20,10 @@ gen_a_start <- function(y, tx, es, rho, b1low, b1high){
   # New way:
   cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
   cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  set.seed(24)
   ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
   ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
+  set.seed(Sys.time())
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
@@ -50,7 +52,18 @@ gen_a_start <- function(y, tx, es, rho, b1low, b1high){
 
   Q <- es*(1-pi)*mean(y[ind])*pi - es*pi*mean(y[-ind])*(1-pi)
 
-  b1 = runif(1, min = b1low, max = b1high);
+  # alpha = (A - Q)/((1-pi)*c0)
+  # beta = (-c1*pi)/((1-pi)*c0)
+  # if(beta > 0){
+  #   b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
+  #   b1high <- min(b1lim, ((b0lim - alpha) / beta))
+  #   }
+  # if(beta < 0){
+  #   b1low <- max(-b1lim, ((b0lim - alpha) / beta))
+  #   b1high <- min(b1lim, ((-b0lim - alpha) / beta))
+  #   }
+  #
+  # b1 = runif(1, min = b1low, max = b1high)
 
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
 
