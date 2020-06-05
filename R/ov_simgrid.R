@@ -38,9 +38,7 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   # first generate b1
   b1_low_high = data.frame(expand.grid(es=es_grid, rho=rho_grid)) %>%
     dplyr::mutate(b1_low = NA,
-                  b1_high = NA,
-                  alpha = NA,
-                  beta = NA) %>%
+                  b1_high = NA) %>%
     data.frame()
   for(i in 1:nrow(b1_low_high)){
     b1_low_high[i,3:4] = gen_b1(y=data[,y], tx = data[,tx],
@@ -48,7 +46,8 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
   }
   b1_low = max(b1_low_high$b1_low)
   b1_high = min(b1_low_high$b1_high)
-  b1_final = mean(c(b1_low_high$b1_low, b1_low_high$b1_high))
+  b1_final = mean(c(b1_low, b1_high))
+  # b1_final = runif(1, b1_low, b1_high); print(b1_final)
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
   p_val_nodr <- matrix(0,length(es_grid),length(rho_grid))
