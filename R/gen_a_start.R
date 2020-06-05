@@ -9,21 +9,21 @@ gen_a_start <- function(y, tx, es, rho, b1){
     y[-ind][which(y[-ind]==0)] = runif(length(which(y[-ind]==0)), min=-1, max=0)
   }
 
-  # # Old way:
-  # cdf1 <- ecdf(y[ind])
-  # cdf0 <- ecdf(y[-ind])
-  # ystar1 <- qnorm(cdf1(y[ind]))
-  # ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
-  # ystar0 <- qnorm(cdf0(y[which(tx==0)]))
-  # ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
+  # Old way:
+  cdf1 <- ecdf(y[ind])
+  cdf0 <- ecdf(y[-ind])
+  ystar1 <- qnorm(cdf1(y[ind]))
+  ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
+  ystar0 <- qnorm(cdf0(y[which(tx==0)]))
+  ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
 
-  # New way:
-  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
-  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
-  set.seed(24)
-  ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
-  ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
-  set.seed(Sys.time())
+  # # Potential New Way:
+  # cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
+  # cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  # set.seed(24)
+  # ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
+  # ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
+  # set.seed(Sys.time())
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
@@ -40,6 +40,7 @@ gen_a_start <- function(y, tx, es, rho, b1){
   sd0 <- sqrt(v0)
 
   vU <- 1 + es^2*pi*(1-pi)
+  #vU <- es^2*pi*(1-pi) In pdf, there is no 1 +
 
   Y <- y - mean(y)
 
@@ -52,18 +53,21 @@ gen_a_start <- function(y, tx, es, rho, b1){
 
   Q <- es*(1-pi)*mean(y[ind])*pi - es*pi*mean(y[-ind])*(1-pi)
 
-  # alpha = (A - Q)/((1-pi)*c0)
-  # beta = (-c1*pi)/((1-pi)*c0)
+  # Take b1
+  alpha = (A - Q)/((1-pi)*c0)
+  beta = (-c1*pi)/((1-pi)*c0)
+
   # if(beta > 0){
-  #   b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
-  #   b1high <- min(b1lim, ((b0lim - alpha) / beta))
-  #   }
+  #   b1low = max(-b1lim, ((-b0lim - alpha) / beta))
+  #   b1high = min(b1lim, ((b0lim - alpha) / beta))
+  # }
   # if(beta < 0){
-  #   b1low <- max(-b1lim, ((b0lim - alpha) / beta))
-  #   b1high <- min(b1lim, ((-b0lim - alpha) / beta))
-  #   }
-  #
-  # b1 = runif(1, min = b1low, max = b1high)
+  #   b1low = max(-b1lim, ((b0lim - alpha) / beta))
+  #   b1high = min(b1lim, ((-b0lim - alpha) / beta))
+  # }
+
+  #b1 = runif(1, min = b1low, max = b1high)
+  #b1 = mean(c(b1low, b1high))
 
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
 

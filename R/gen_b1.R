@@ -9,24 +9,24 @@ gen_b1 <- function(y, tx, es, rho){
   }
 
   # # Old way:
-  # cdf1 <- ecdf(y[ind])
-  # cdf0 <- ecdf(y[-ind])
-  # ystar1 <- qnorm(cdf1(y[ind]))
-  # ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
-  # ystar0 <- qnorm(cdf0(y[which(tx==0)]))
-  # ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
+  cdf1 <- ecdf(y[ind])
+  cdf0 <- ecdf(y[-ind])
+  ystar1 <- qnorm(cdf1(y[ind]))
+  ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
+  ystar0 <- qnorm(cdf0(y[which(tx==0)]))
+  ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
 
-  # New way:
-  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
-  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
-  set.seed(24)
-  ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
-  ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
-  set.seed(Sys.time())
+  # # Potential New Way:
+  # cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
+  # cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  # set.seed(24)
+  # ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
+  # ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
+  # set.seed(Sys.time())
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
-  n<- n1 + n0
+  n <- n1 + n0
   c1 <- cov(ystar1,y[ind])
   c0 <- cov(ystar0,y[-ind])
 
@@ -39,6 +39,7 @@ gen_b1 <- function(y, tx, es, rho){
   sd0 <- sqrt(v0)
 
   vU <- 1 + es^2*pi*(1-pi)
+  #vU <- es^2*pi*(1-pi) In pdf, there is no 1 +
 
   Y <- y - mean(y)
 
@@ -54,15 +55,26 @@ gen_b1 <- function(y, tx, es, rho){
   # Take b1
   alpha = (A - Q)/((1-pi)*c0)
   beta = (-c1*pi)/((1-pi)*c0)
+  b1low = max(-b1lim, ((-b0lim - alpha) / beta))
+  b1high = min(b1lim, ((b0lim - alpha) / beta))
+
+  # temp1 = ((-b0lim - alpha) / beta)
+  # temp2 = ((b0lim - alpha) / beta)
+  # if(abs(temp1) >= abs(b1lim)){
+  #   b1low = max(-b1lim, temp2)
+  #   b1high = min(b1lim, temp1)
+  # } else{
+  #   b1low = max(-b1lim, temp1)
+  #   b1high = min(b1lim, temp2)
+  # }
 
   if(beta > 0){
-    b1low <- max(-b1lim, ((-b0lim - alpha) / beta))
-    b1high <- min(b1lim, ((b0lim - alpha) / beta))
+    b1low = max(-b1lim, ((-b0lim - alpha) / beta))
+    b1high = min(b1lim, ((b0lim - alpha) / beta))
   }
-
   if(beta < 0){
-    b1low <- max(-b1lim, ((b0lim - alpha) / beta))
-    b1high <- min(b1lim, ((-b0lim - alpha) / beta))
+    b1low = max(-b1lim, ((b0lim - alpha) / beta))
+    b1high = min(b1lim, ((-b0lim - alpha) / beta))
   }
 
   return(c(b1low, b1high))
