@@ -2,8 +2,8 @@
 
 
 
-*Note: This is a work in progress – last updated 05-16-2020 – text needs
-updated*
+*Note: This is a work in progress – last updated 2020-06-09 11:09:10 –
+text needs updated*
 
 Introduction
 ============
@@ -14,10 +14,10 @@ omitted variables when estimating causal effects using propensity score
 (PS) weighting. This package includes graphics and summary results that
 will enable a researcher to quantify the impact an omitted variable
 would have on their results. Burgette et al. (in preparation) describe
-the methodology behind the primary function in this package,
-`ov_simgrid()`. This document presents syntax for the implementation of
-the `ov_simgrid()` function and provides an example of how to interpret
-the packages’ graphical output.
+the methodology behind the primary function in this package, `ov_sim()`.
+This document presents syntax for the implementation of the `ov_sim()`
+function and provides an example of how to interpret the packages’
+graphical output.
 
 This package is useful in a wide range of applications where researchers
 want to analyze how sensitive their research findings are to unobserved
@@ -72,6 +72,19 @@ code snippet prior to running the second line:
 
     # install.packages("devtools")
     devtools::install_github("jpane24/OVtool")
+
+    ## 
+    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp9OzWcq/remotesa8fd35554570/jpane24-OVtool-fbcbcb1/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp9OzWcq/remotesa8fd35554570/jpane24-OVtool-fbcbcb1/DESCRIPTION’
+    ##   ─  preparing ‘OVtool’:
+    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    ##   ─  checking for LF line-endings in source and make files and shell scripts
+    ##   ─  checking for empty or unneeded directories
+    ##   ─  building ‘OVtool_1.0.0.tar.gz’
+    ##      Warning: invalid uid value replaced by that for user 'nobody'
+    ##    Warning: invalid gid value replaced by that for user 'nobody'
+    ##      
+    ## 
+
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a
@@ -116,8 +129,12 @@ Continous Outcome: Average Treatment Effect (ATE)
 The `OVtool` can either take a vector of weights estimated using any
 method or a ps object produced by `TWANG` (Ridgeway et al., 2014). We
 begin walking through the OVtool by estimating weights using `ps()` from
-the `TWANG` package prior to running our outcome model using
-`outcome_model()`. The snippet of code belows walks through an example:
+the `TWANG` package prior to running the outcome model using
+`outcome_model()` from the `OVtool` package. The `outcome_model`
+function calls `svyglm` from the `survey` package in R to run the
+outcome model. The snipped of code below demonstrates how to specify
+your propensity score model and generate your propensity score weights
+using the `TWANG` package.
 
     ## Create Formula
     my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
@@ -125,11 +142,11 @@ the `TWANG` package prior to running our outcome model using
 
     ## Get weights
     sud = data.frame(sud)
-    ps.twang <- twang::ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
-                          stop.method = "ks.max", verbose=F, ks.exact = T)
+    ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
+                   stop.method = "ks.max", verbose=F, ks.exact = T)
 
     # Check Balance
-    twang::bal.table(ps.twang); # summary(ps.twang)
+    bal.table(ps.twang); # summary(ps.twang)
 
     ## $unw
     ##          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
@@ -153,13 +170,14 @@ the `TWANG` package prior to running our outcome model using
     ## mhtrt_0  0.271  0.502  0.274  0.500     -0.006 -0.171 0.865 0.004   1.000
     ## dss9_0   2.678  2.551  2.684  2.528     -0.002 -0.075 0.941 0.008   1.000
 
-The output produced by the code snippet above shows that TWANG does a
-reasonable job of balancing. There are additional diagnostics we could
-check to ensure we have good balance but we move on without diving in
-further because the purpose of this tutorial is to showcase `OVtool`.
-The next step is to estimate the treatment effect and analyze the
-sensitivity of those results using `OVtool`. We first present how a
-researcher would produce results for their outcomes model (`svyglm()`).
+The output produced by the code snippet above demonstrates that `TWANG`
+does a reasonable job of balancing. There are additional diagnostics we
+could check to ensure we have good balance but we move on without diving
+in further because the purpose of this tutorial is to showcase `OVtool`.
+See \[INSERT REFERENCE TO ps TUTORIAL\] for further information on
+balance diagnostics. The next step is to estimate the treatment effect
+and analyze the sensitivity of those results using `OVtool`. We first
+present how a researcher would produce results for their outcome model.
 There are two options the researcher can take to input the relevant
 information to get their outcome results using `outcome_model()`.
 
@@ -171,6 +189,8 @@ information to get their outcome results using `outcome_model()`.
 
 The analyst must also provide a column name representing the outcome and
 a vector of covariates to be included in the final outcome model.
+Recall: `outcome_model()` calls `svyglm()` from the survey package to
+run the outcome model.
 
     # Get weights (not needed if user inserts a ps object in OVTool)
     sud$w_twang = ps.twang$w$ks.max.ATE
@@ -179,17 +199,17 @@ a vector of covariates to be included in the final outcome model.
     sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
     # Use outcome_model() to run outcomes model
-    results = OVtool::outcome_model(ps_object = NULL, 
-                                    stop.method = NULL, 
-                                    data = sud,
-                                    weights = sud$w_twang, 
-                                    treatment = "treat",
-                                    outcome = "eps7p_3_std", 
-                                    model_covariates = c("eps7p_0", "sfs8p_0",
-                                                         "sati_0", "ada_0",
-                                                         "recov_0", "tss_0",
-                                                         "mhtrt_0", "dss9_0"),
-                                    estimand = "ATE")
+    results = outcome_model(ps_object = NULL,
+                            stop.method = NULL, 
+                            data = sud,
+                            weights = sud$w_twang, 
+                            treatment = "treat",
+                            outcome = "eps7p_3_std", 
+                            model_covariates = c("eps7p_0", "sfs8p_0",
+                                                 "sati_0", "ada_0",
+                                                 "recov_0", "tss_0",
+                                                 "mhtrt_0", "dss9_0"),
+                            estimand = "ATE")
 
     summary(results$mod_results)
 
@@ -229,7 +249,7 @@ youth in treatment program B.
 At this stage, researchers should begin to ask themselves if this effect
 is real and how sensitive it is. Our tool is used to help answer these
 sort of logical next step questions. The next snippet of code presents
-the main function in `OVtool`: `ov_simgrid()`. This function requires
+the main function in `OVtool`: `ov_sim()`. This function requires
 results from `outcome_model()` plus additional parameters including:
 
 -   `weight_covariates`: a vector of column names representing the
@@ -246,8 +266,8 @@ results from `outcome_model()` plus additional parameters including:
     and the outcome
 
 -   `n_reps`: the number of repetitions at each grid point. The package
-    defaults to 101 (typically this is overkill and the analyst can
-    reduce the number of repetitions to speed up run time).
+    defaults to 50 (Fifty repetitions should be sufficient but the
+    analyst may need to reduce or increase the number of repetitions).
 
 The grid, as shown by the x-axis and y-axis in Figure 1 presents the
 effect size and rho, respectively. We define the effect size on the
@@ -256,25 +276,22 @@ unobserved covariate (U) and the treatment group indicator; it is
 defined as the standardized mean difference in U for the treatment A and
 treatment B groups. Typical rules of thumb for effect sizes (Cohen’s D)
 follow such that effect sizes greater than 0.2 would be considered
-small, 0.4 would be moderate and 0.6 would be large (cite Cohen’s 1995
-paper). We define rho in this setting as the absolute correlation the
-unobserved covariate (U) has with the outcome of interest, with larger
-values indicating stronger relationships between U and the outcome.
-Please see Burgette et al. (in progress) for additional details on the
-methodology used by `OVtool`.
+small, 0.4 would be moderate and 0.6 would be large (REFERENCE Cohen’s
+1995 paper). We define rho in this setting as the absolute correlation
+the unobserved covariate (U) has with the outcome of interest, with
+larger values indicating stronger relationships between U and the
+outcome. Please see Burgette et al. (in progress) for additional details
+on the methodology used by `OVtool`.
 
     # Run OVtool (with weights/not a ps object)
-    ovtool_results_twang = ov_simgrid(model_results=results, 
-                                      weight_covariates=c("eps7p_0", "sfs8p_0",
-                                                          "sati_0", "ada_0",
-                                                          "recov_0", "tss_0", 
-                                                          "mhtrt_0", "dss9_0"),
-                                      es_grid = NULL,
-                                      rho_grid = seq(0, 0.40, by = 0.05),
-                                      n_reps=25)
-
-    ## Warning in ov_simgrid(model_results = results, weight_covariates =
-    ## c("eps7p_0", : Ties in the outcome variable `y` may be problematic.
+    ovtool_results_twang = ov_sim(model_results=results, 
+                                  weight_covariates=c("eps7p_0", "sfs8p_0",
+                                                      "sati_0", "ada_0",
+                                                      "recov_0", "tss_0", 
+                                                      "mhtrt_0", "dss9_0"),
+                                  es_grid = seq(-0.4, 0.4, by = 0.05),
+                                  rho_grid = seq(0, 0.40, by = 0.05),
+                                  n_reps=50)
 
     ## [1] "6% Done!"
     ## [1] "12% Done!"
@@ -294,31 +311,41 @@ methodology used by `OVtool`.
     ## [1] "94% Done!"
     ## [1] "100% Done!"
 
-In our example, `ov_simgrid` produced a warning stating ties in the
-outcome variable may be problematic. This warning allows the user to
-continue with their analysis but it is important for the analyst to
-understand that when generating the omitted variable (U), the empirical
-cumulative distribution function (CDF) for the outcome within each
-treatment is used. Many ties could lead to issues. See Burgette et
-al. for details. Although not in this example, `ov_simgrid` may produce
-a warning asking the analyst to reduce the size of the rho grid.
-Typically, `rho_grid` will range from 0 to 0.45 but occasionally large
-values of `rho_grid` are intractable. A key assumption in this tool is
-the omitted variable is independent from all covariates included in the
-propensity score model; this assumption may result in correlations of
-the omitted variable that have a maximum bound below moderately sized
-correlations.
+In our example, `ov_sim` produced a warning stating ties in the outcome
+variable may be problematic. This warning allows the user to continue
+with their analysis but it is important for the analyst to understand
+that when generating the omitted variable (U), the empirical cumulative
+distribution function (CDF) for the outcome within each treatment is
+used. Many ties could lead to issues. Additionally, a note was printed
+to the screen informing the user that the tool expanded the size of the
+grid because the maximum rho value specified (0.4) was less than the
+maximum absolute correlation an observed covariate has with the outcome.
+To allow all observed covariates’ effect size and rho values to be
+plotted on the second and third graphics, the tool autmatically will
+expand the rho grid. The grid values are not required; if es\_grid
+and/or rho\_grid is set to `NULL`, the tool will calculate reasonable
+values to simulate over. See Burgette et al. for details.
 
-Furthermore, the user may expand the size of the effect size grid if the
-user feels it is applicable. To visualize our results, the `plot.ov`
-function will produce three graphics. The first graphic (Figure 1) plots
-the treatment effect contours without covariate labels. The second
-graphic (Figure 2) plots the p-value contours with the column names
-submitted to `weight_covariates` plotted by their raw rho and effect
-size. The third graphic (Figure 3) plots the treatment effect contours
-with the p-value contour overlayed and covariate labels.
+A key assumption in this tool is the omitted variable is independent
+from all covariates included in the propensity score model; this
+assumption may result in correlations of the omitted variable that have
+a maximum bound below moderately sized correlations and results in
+unstable contour estimates outside of a particular threshold. Often the
+user will be able to observe this point because the contours will become
+unsmooth. Burgette et al. explain the implications of this assumption.
 
-    plot.ov(ovtool_results_twang, print_graphic = "1")
+To visualize our results, the `plot.ov` function will produce three
+graphics. The first graphic (Figure 1) plots the treatment effect
+contours without covariate labels. If the user specifies the parameter
+`col` as `"color"`, the contours will overlay a colored heat map. The
+second graphic (Figure 2) plots the p-value contours with the column
+names submitted to `weight_covariates` plotted by their raw rho and
+effect size. The third graphic (Figure 3) plots the treatment effect
+contours with the p-value contour overlayed and covariate labels. The
+`col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce
+a black and white and colored contour graphic, respectively.
+
+    plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
 
 <img src="README_files/figure-markdown_strict/fig1-1.png" style="display: block; margin: auto;" />
 
@@ -338,27 +365,24 @@ the effect is.
     ## [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
-Figure 2 is a different variation of Figure 1 but only shows the p-value
-contours with an additional dimension, covariate labels. If a covariate
-has a raw correlation or effect size that is outside the range of the
-graphic limits, the tool will inform the user and will also plot a
-transparent red background in area of the graphic that is outside the
-range. In this case there were three covariates whose absolute
-correlations with the outcome were greater than 0.4. The blue dots and
-their labels on the plot represent the observed covariates correlations
-with the outcome (y-axis) and treatment indicator (x-axis). For
-instance, `ada_0` and the outcome have approximately a 0.18 absolute
-correlation with the emotional problem scale at three months and an
-absolute association of approximately 0.17 effect size difference
-between the two treatment groups (magnitude of its relationship with the
-treatment indicator). In this case, not all of the observed covariate
-relationships with the outcome and the treatment indicator are “below”
-the 0.05 p-value threshold so the analyst potentially has results that
-are sensitive to an unobserved confounder. If the blue points all
-existed to the “right” of the 0.05 p-value contour, then unobserved
-confounders with similar associations would retain the significant
-effect and allow the user to conclude that the results are reasonably
-robust.
+Figure 2 is a different variation of Figure 1, but only shows the
+p-value contours with an additional dimension, covariate labels. Recall:
+if a covariate had a raw correlation that was outside the range of the
+graphic limits, the tool informed the user that the rho grid was
+expanded. The blue dots and their labels on the plot represent the
+observed covariates correlations with the outcome (y-axis) and treatment
+indicator (x-axis). For instance, `ada_0` and the outcome have
+approximately a 0.18 absolute correlation with the emotional problem
+scale at three months and an absolute association of approximately 0.17
+effect size difference between the two treatment groups (magnitude of
+its relationship with the treatment indicator). In this case, not all of
+the observed covariate relationships with the outcome and the treatment
+indicator are to the right of the 0.05 p-value threshold so the analyst
+potentially has results that are sensitive to an unobserved confounder.
+If the blue points all existed to the right of the 0.05 p-value contour,
+then unobserved confounders with similar associations would retain the
+significant effect and allow the user to conclude that the results are
+reasonably robust.
 
 *Note: When the outcome model shows a significant effect, for all
 observed covariates, regardless of the sign of the association effect
@@ -386,24 +410,26 @@ effect size (treatment effect) contour lines and the red lines
 (sometimes dashed) represent the p-value threshold. The key on the right
 side of the graphic shows where various p-value cutoff lines are,
 including p = 0.05. The blue points on the plot represent the observed
-ovariate correlations with the outcome and effect size associations with
-the treatment indicator (e.g., standardized mean difference on the given
-covariates between the two groups). If there are observed absolute
-correlations with the outcome that are outside the range of the graphic,
-we indicate that by a red transparent background. Finally, we can
-interpret this graphic by running the summary command on the ov object:
+covariate correlations with the outcome and effect size associations
+with the treatment indicator (e.g., standardized mean difference on the
+given covariates between the two groups).
+
+Finally, we can interpret this graphic by running the summary command on
+the ov object:
 
     summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
 
     ## [1] "Recommendation for reporting the sensitivity analyses"
     ## [1] "The sign of the estimated effect is expected to be robust to unobserved confounders that
     have the same strength of association with the treatment indicator and outcome that are seen in the
-    observed confounders. In the most extreme observed case, the estimated effect size is reduced by 4
+    observed confounders. In the most extreme observed case, the estimated effect size is reduced by 74
     percent."
     ## [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
-    in the observed confounders. In the most extreme observed case, the p-value would be expected to
-    increase from 0.004 to 0.006."
+    in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
+    expected to increase from 0.004 to 0.475. Significance at the 0.05 level would not be expected to
+    be preserved for unobserved confounders that have the same strength of association with the
+    treatment indicator and outcome as eps7p_0, sati_0, tss_0."
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
