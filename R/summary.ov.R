@@ -15,7 +15,7 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
                                      weight_covariates = OVtool_results$cov,
                                      rho_grid = temp$obs_cors$Cor_Outcome[i],
                                      es_grid=temp$obs_cors$ES[i],
-                                     n_reps = 2)
+                                     n_reps = 10)
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
   }
@@ -31,7 +31,7 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
   if(effect_size_text == "no sign changes"){
     diff = diff(c(min(abs(trt_effect)), abs(raw_treat)))
     percent_reduced = abs(round(diff/raw_treat*100))
-    text = paste0("The sign of the estimated effect is expected to be robust to unobserved confounders that have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by ", percent_reduced, " percent.")
+    text = paste0("The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by ", percent_reduced, " percent.")
   } else if(effect_size_text == "all sign changes"){
     if(raw_treat < 0){
       diff = diff(c(max(trt_effect), raw_treat))
@@ -61,7 +61,7 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
       mostextreme = temp$obs_cors$cov[which(trt_effect == min(trt_effect))]
     }
     percent_reduced = abs(round(diff/raw_treat*100))
-    text = paste0("The sign of the estimated effect is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in ", nochange, " of the ", total, " observed confounders. In the most extreme observed case, ", mostextreme, ", the estimated effect size is ", percent_reduced, " percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as ", paste(changes, collapse=", "), ".")
+    text = paste0("The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in ", nochange, " of the ", total, " observed confounders. In the most extreme observed case, ", mostextreme, ", the estimated effect size is ", percent_reduced, " percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as ", paste(changes, collapse=", "), ".")
   }
 
   # Pvalue Size cases

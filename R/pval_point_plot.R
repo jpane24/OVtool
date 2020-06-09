@@ -32,7 +32,7 @@ pval_point_plot = function(prep, col = "color"){
                                                    r1_df$rho_grid))),expand = c(0, 0)) +
     ggplot2::theme_linedraw() +
     ggplot2::geom_hline(yintercept=max(r1_df$rho_grid)) +
-    ggplot2::geom_contour(col='black') + ggplot2::xlab("Association between unobserved confounder and treatment indicator\n(effect size scale)") +
+    ggplot2::geom_contour(col='black') + ggplot2::xlab("Association with Treatment Indicator\n(effect size scale)") +
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("Pvalue contours") +
     metR::geom_text_contour(stroke=.2) +
     ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[1]),

@@ -34,7 +34,7 @@ es_plot = function(prep, col="bw"){
         ggplot2::scale_fill_gradient(low="blue", high="orange")
     }
     v = v + ggplot2::geom_contour(col="black") +
-      ggplot2::xlab("Association between unobserved confounder and treatment indicator\n (effect size scale)") +
+      ggplot2::xlab("Association with Treatment Indicator\n (effect size scale)") +
       ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      legend.key = ggplot2::element_blank(),

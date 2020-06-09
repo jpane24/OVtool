@@ -13,7 +13,6 @@ header-includes:
 # word_document
 # pdf_document
 library(knitr)
-library(twang)
 knitr::opts_chunk$set(echo = TRUE)
 hook_output = knit_hooks$get('output')
 knit_hooks$set(output = function(x, options) {
@@ -39,7 +38,7 @@ This package is useful in a wide range of applications where researchers want to
 
 # Example: Synthetic Data 
 
-This package is demonstrated using a synthetic data set that was derived from a large scale observational study on youth in substance use treatment. More specifically, it contains a subset of measures from the Global Appraisal of Individual Needs biopsychosocial assessment instrument (GAIN) (Dennis, Titus et al. 2003) from sites that adminstered two different types of substance use disorder treatments (treatment "A" and treatment "B"). The Center for Substance Abuse Treatment (CSAT) funded the sites that administered these two SUD treatments. This dataset consists of 4,000 adolescents. The main goal of this analysis is to understand the effect Treatment A and Treatment B, indicated by `treat`, have on mental health outcomes and to assess the potential for an omitted variable to bias the findings. To create our synthetic data set, we used an R package called "[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf ) : Bespoke Creation of Synthetic Data in R".
+This package is demonstrated using a synthetic data set that was derived from a large scale observational study on youth in substance use treatment. More specifically, it contains a subset of measures from the Global Appraisal of Individual Needs biopsychosocial assessment instrument (GAIN) (Dennis, Titus et al. 2003) from sites that adminstered two different types of substance use disorder treatments (treatment "A" and treatment "B"). The Center for Substance Abuse Treatment (CSAT) funded the sites that administered these two SUD treatments. This dataset consists of 4,000 adolescents. The main goal of this analysis is to understand the effect Treatment A and Treatment B, indicated by `treat`, have on mental health outcomes and to assess the potential for an omitted variable to bias the findings. To create our synthetic data set, we used an R package called "[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf ) : Bespoke Creation of Synthetic Data in R". 
 
 In our synthetic dataset, there are 2,000 adolescents in each treatment group. Within this dataset there are variables on substance use disorder and mental health outcomes. For this tutorial we are particularly interested in the mental health outcome, `eps7p_3`, emotional problem scale (eps) recorded at three months. Higher values of eps indicate more emotional problems. Substance use researchers are particularly interested in whether or not treatment A reduces emotional problems more than treatment B. `eps7p_3` ranges from zero to one, where higher values of EPS indicate more emotional problems. See (Dennis, 2003) for more details on this scale. 
 
@@ -86,7 +85,7 @@ In the next section, we will show how our method works with the average treatmen
 
 ## Continous Outcome: Average Treatment Effect (ATE)
 
-The `OVtool` can either take a vector of weights estimated using any method or a ps object produced by `TWANG` (Ridgeway et al., 2014). We begin walking through the OVtool by estimating weights using `ps()` from the `TWANG` package prior to running the outcome model using `outcome_model()` from the `OVtool` package. The `outcome_model` function calls `svyglm` from the `survey` package in R to run the outcome model. The snipped of code below demonstrates how to specify your propensity score model and generate your propensity score weights using the `TWANG` package.
+The `OVtool` can either take a vector of weights estimated using any method or a ps object produced by `TWANG` (Ridgeway et al., 2020). We begin walking through the OVtool by estimating weights using `ps()` from the `TWANG` package prior to running the outcome model using `outcome_model()` from the `OVtool` package. The `outcome_model` function calls `svyglm` from the `survey` package in R ([survey](http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf)) to produce outcome model results. The chunk of code below demonstrates how to specify your propensity score model and generate your propensity score weights using the `TWANG` package.
 
 ```{r, estTWANG}
 ## Create Formula
@@ -95,6 +94,7 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
 
 ## Get weights
 sud = data.frame(sud)
+library(twang)
 ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
 
@@ -102,7 +102,7 @@ ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
 bal.table(ps.twang); # summary(ps.twang)
 ```
 
-The output produced by the code snippet above demonstrates that `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have good balance but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [INSERT REFERENCE TO ps TUTORIAL] for further information on balance diagnostics. The next step is to estimate the treatment effect and analyze the sensitivity of those results using `OVtool`. We first present how a researcher would produce results for their outcome model. There are two options the researcher can take to input the relevant information to get their outcome results using `outcome_model()`. 
+The output produced by the code snippet above demonstrates that `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have good balance but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [Ridgeway et al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf) for further information on balance diagnostics. The next step is to estimate the treatment effect and analyze the sensitivity of those results using `OVtool`. We first present how a researcher would produce results for their outcome model. There are two options the researcher can take to input the relevant information to get their outcome results using `outcome_model()`. 
 
 * Input a `ps.object` from `TWANG` and a `stop.method` (e.g. `"ks.max"`)
 or
@@ -117,7 +117,7 @@ sud$w_twang = ps.twang$w$ks.max.ATE
 # Run Models -- first standardize outcome
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
-# Use outcome_model() to run outcomes model
+# Run outcome model (function in OVtool that calls survey::svyglm)
 results = outcome_model(ps_object = NULL,
                         stop.method = NULL, 
                         data = sud,
@@ -133,7 +133,7 @@ results = outcome_model(ps_object = NULL,
 summary(results$mod_results)
 ```
 
-The outcome model results show an adjusted treatment effect estimate that accounts for some of the confounding between youth in the two treatment programs (A = 1 and B = 0). From the results, we can see that the effect size is 0.079 (p = 0.004), whereby youth receiving treatment A have slightly higher emotional problems at the 3-month follow-up than youth in treatment program B. 
+The outcome model results show an adjusted treatment effect estimate that accounts for confounding from observed covariates between youth in the two treatment programs (A = 1 and B = 0). From the results, we can see that the effect size is 0.079 (p = 0.004), whereby youth receiving treatment A have slightly higher emotional problems at the 3-month follow-up than youth in treatment program B. 
 
 At this stage, researchers should begin to ask themselves if this effect is real and how sensitive it is. Our tool is used to help answer these sort of logical next step questions. The next snippet of code presents the main function in `OVtool`: `ov_sim()`. This function requires results from `outcome_model()` plus additional parameters including:
 
@@ -145,10 +145,10 @@ At this stage, researchers should begin to ask themselves if this effect is real
 
 * `n_reps`: the number of repetitions at each grid point. The package defaults to 50 (Fifty repetitions should be sufficient but the analyst may need to reduce or increase the number of repetitions).
 
-The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size and rho, respectively. We define the effect size on the x-axis to show the strength of the relationship between the simulated unobserved covariate (U) and the treatment group indicator; it is defined as the standardized mean difference in U for the treatment A and treatment B groups. Typical rules of thumb for effect sizes (Cohen's D) follow such that effect sizes greater than 0.2 would be considered small, 0.4 would be moderate and 0.6 would be large (REFERENCE Cohen's 1995 paper). We define rho in this setting as the absolute correlation the unobserved covariate (U) has with the outcome of interest, with larger values indicating stronger relationships between U and the outcome. Please see Burgette et al. (in progress) for additional details on the methodology used by `OVtool`.  
+The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size and rho, respectively. We define the effect size on the x-axis to show the strength of the relationship between the simulated unobserved covariate (U) and the treatment group indicator; it is defined as the standardized mean difference in U for the treatment A and treatment B groups. Typical rules of thumb for effect sizes (Cohen's D) follow such that effect sizes greater than 0.2 would be considered small, 0.4 would be moderate and 0.6 would be large (Cohen, J., 1995). We define rho in this setting as the absolute correlation the unobserved covariate (U) has with the outcome of interest, with larger values indicating stronger relationships between U and the outcome. Please see Burgette et al. (in progress) for additional details on the methodology used by `OVtool`.  
 
 ```{r, ov_sim}
-# Run OVtool (with weights/not a ps object)
+# Run OVtool (with weights (not a ps object))
 ovtool_results_twang = ov_sim(model_results=results, 
                               weight_covariates=c("eps7p_0", "sfs8p_0",
                                                   "sati_0", "ada_0",
@@ -182,7 +182,7 @@ Figure 2 is a different variation of Figure 1, but only shows the p-value contou
 ```{r, fig3, fig.width=10, fig.height=7, fig.align='center', linewidth=100}
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 ```
-Figure 3, combines Figure 1 and Figure 2 into one graphic. Again, the y-axis in Figure 3 still represents rho, the absolute value of the correlation between the right-hand side variable and the outcome. The x-axis represents the association between the unobserved confounder and the treatment indicator on the effect size scale. Plotted at the bottom of the figure margin is the PS weighted treatment effect size  (0.079) and associated p-value of 0.004. The solid black contours represent the effect size (treatment effect) contour lines and the red lines (sometimes dashed) represent the p-value threshold. The key on the right side of the graphic shows where various p-value cutoff lines are, including p = 0.05. The blue points on the plot represent the observed covariate correlations with the outcome and effect size associations with the treatment indicator (e.g., standardized mean difference on the given covariates
+Figure 3, combines Figure 1 and Figure 2 into one graphic. Again, the y-axis in Figure 3 still represents rho, the absolute value of the correlation between the right-hand side variable and the outcome. The x-axis represents the association with the treatment indicator on the effect size scale. Plotted at the bottom of the figure margin is the PS weighted treatment effect size  (0.079) and associated p-value of 0.004. The solid black contours represent the effect size (treatment effect) contour lines and the red lines (sometimes dashed) represent the p-value threshold. The key on the right side of the graphic shows where various p-value cutoff lines are, including p = 0.05. The blue points on the plot represent the observed covariate correlations with the outcome and effect size associations with the treatment indicator (e.g., standardized mean difference on the given covariates
 between the two groups). 
 
 Finally, we can interpret this graphic by running the summary command on the ov object:
@@ -209,7 +209,11 @@ The devlopment of this tutorial was funded by the National Institute of Health (
 CHIS (2005). California health interview survey (CHIS) 2003 Methodology
 Series. Los Angeles: UCLA Center for Health Policy Research.
 
+Cohen, J. (1995). The earth is round (p < .05): Rejoinder. American Psychologist, 50, 1103.
+
 Diamond, G., Godley, S. H., Liddle, H. A., Sampl, S., Webb, C., Tims, F. M., & Meyers, R. (2002). Five outpatient treatment models for adolescent marijuana use: a description of the Cannabis Youth Treatment Interventions. Addiction, 97, 70-83. 
+
+Lumley, T (2020). "survey: analysis of complex survey samples." R package version 4.0.
 
 McCaffrey, D. F., Ridgeway, G., and Morral, A. R. (2004). Propensity score
 estimation with boosted regression for evaluating causal effects in observational studies. Psychological methods 9, 403.
@@ -218,8 +222,8 @@ Miles, J. N., Parast, L., Babey, S. H., Griffin, B. A., and Saunders, J., M. (20
 . A propensity-score-weighted popualtion-based study of the health benefits
 of dogs and cats for children. Anthrozoos 30, 429-440.
 
-Ridgeway, G., McCaffrey, D., Morral, A., Burgette, L., and Griffin, B. A. (2014).
-Toolkit for weighting and analysis of nonequivalent groups: A tutorial for
+Ridgeway, G., McCaffrey, D., Morral, A., Burgette, L., and Griffin, B. A. (2020).
+Toolkit for Weighting and Analysis of Nonequivalent Groups: A tutorial for
 the twang package. Santa Monica, CA: RAND Corporation.
 
 Saunders, J., Parast, L., Babey, S. H., and Miles, J. V. (2017). Exploring the

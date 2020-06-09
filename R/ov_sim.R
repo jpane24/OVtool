@@ -29,7 +29,9 @@ ov_sim <- function(model_results, weight_covariates,
     es_grid = seq(es_lower, es_upper, by=0.05)
     }
   if(is.null(rho_grid) | (max(rho_grid) < max(jdp_test$Cor_Outcome))){
-    print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
+    if(length(es_grid) > 1){
+      print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
+    }
     rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
     rho_grid = seq(0, rho_upper, by=0.05)
   }
