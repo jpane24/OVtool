@@ -15,9 +15,10 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
                                      weight_covariates = OVtool_results$cov,
                                      rho_grid = temp$obs_cors$Cor_Outcome[i],
                                      es_grid=temp$obs_cors$ES[i],
-                                     n_reps = 2)
+                                     n_reps = n_reps)
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
+    print(paste0(round(i/nrow(temp$obs_cors)*100,0), "% Done!"))
   }
   options(warn=1)
 

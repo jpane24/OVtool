@@ -73,7 +73,8 @@ ov_sim <- function(model_results, weight_covariates,
   }
   results = list(p_val = p_val_nodr, trt_effect = trt_effect_nodr,
                  es_grid = es_grid, rho_grid = rho_grid, cov = cov,
-                 data = data, tx = tx, y = y, estimand = estimand)
+                 data = data, tx = tx, y = y, estimand = estimand,
+                 n_reps = n_reps)
   class(results) <- "ov"
   return(results)
 }
