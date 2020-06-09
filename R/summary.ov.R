@@ -11,11 +11,11 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
   trt_effect = rep(NA, nrow(temp$obs_cors))
   options(warn=-1)
   for(i in 1:nrow(temp$obs_cors)){
-    calculate_exact = OVtool::ov_sim(model_results = model_results,
+    calculate_exact = ov_sim(model_results = model_results,
                                      weight_covariates = OVtool_results$cov,
                                      rho_grid = temp$obs_cors$Cor_Outcome[i],
                                      es_grid=temp$obs_cors$ES[i],
-                                     n_reps = 10)
+                                     n_reps = 2)
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
   }

@@ -31,9 +31,9 @@ ov_sim <- function(model_results, weight_covariates,
   if(is.null(rho_grid) | (max(rho_grid) < max(jdp_test$Cor_Outcome))){
     if(length(es_grid) > 1){
       print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
+      rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
+      rho_grid = seq(0, rho_upper, by=0.05)
     }
-    rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
-    rho_grid = seq(0, rho_upper, by=0.05)
   }
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
