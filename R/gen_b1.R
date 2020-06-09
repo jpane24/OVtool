@@ -1,4 +1,21 @@
 gen_b1 <- function(y, tx, es, rho){
+
+  # first generate b1 -- to go in ov_sim
+  # b1_low_high = data.frame(expand.grid(es=es_grid, rho=rho_grid)) %>%
+  #   dplyr::mutate(negb1lim = NA,
+  #                 boneg = NA,
+  #                 b1lim=NA,
+  #                 b0pos=NA) %>%
+  #   data.frame()
+  # for(i in 1:nrow(b1_low_high)){
+  #   b1_low_high[i,3:6] = gen_b1(y=data[,y], tx = data[,tx],
+  #                               es = b1_low_high$es[i], rho = b1_low_high$rho[i])
+  # }
+  # b1_low = max(b1_low_high$b1_low)
+  # b1_high = min(b1_low_high$b1_high)
+  # b1_final = mean(c(b1_low, b1_high))
+  # # b1_final = runif(1, b1_low, b1_high); print(b1_final)
+
   ind <- which(tx == 1)
   if(length(unique(y[ind])) == 2){
     y[ind][which(y[ind]==1)] = runif(length(which(y[ind]==1)), min=1, max=2)
@@ -8,21 +25,10 @@ gen_b1 <- function(y, tx, es, rho){
     y[-ind][which(y[-ind]==0)] = runif(length(which(y[-ind]==0)), min=-1, max=0)
   }
 
-  # # Old way:
-  cdf1 <- ecdf(y[ind])
-  cdf0 <- ecdf(y[-ind])
-  ystar1 <- qnorm(cdf1(y[ind]))
-  ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
-  ystar0 <- qnorm(cdf0(y[which(tx==0)]))
-  ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
-
-  # # Potential New Way:
-  # cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
-  # cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
-  # set.seed(24)
-  # ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
-  # ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
-  # set.seed(Sys.time())
+  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
+  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
+  ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
@@ -55,18 +61,8 @@ gen_b1 <- function(y, tx, es, rho){
   # Take b1
   alpha = (A - Q)/((1-pi)*c0)
   beta = (-c1*pi)/((1-pi)*c0)
-  b1low = max(-b1lim, ((-b0lim - alpha) / beta))
-  b1high = min(b1lim, ((b0lim - alpha) / beta))
-
-  # temp1 = ((-b0lim - alpha) / beta)
-  # temp2 = ((b0lim - alpha) / beta)
-  # if(abs(temp1) >= abs(b1lim)){
-  #   b1low = max(-b1lim, temp2)
-  #   b1high = min(b1lim, temp1)
-  # } else{
-  #   b1low = max(-b1lim, temp1)
-  #   b1high = min(b1lim, temp2)
-  # }
+  boneg = ((-b0lim - alpha) / beta)
+  b0pos = ((b0lim - alpha) / beta)
 
   if(beta > 0){
     b1low = max(-b1lim, ((-b0lim - alpha) / beta))
@@ -77,5 +73,5 @@ gen_b1 <- function(y, tx, es, rho){
     b1high = min(b1lim, ((-b0lim - alpha) / beta))
   }
 
-  return(c(b1low, b1high))
+  return(c(-b1lim, boneg, b1lim, b0pos))
 }

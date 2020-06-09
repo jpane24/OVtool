@@ -18,7 +18,7 @@ Input from prep_for_plots
 }
   \item{col}{
 %%     ~~Describe \code{x} here~~
-If user wants color or black and white. Specify color with "color" or black and white "bw"
+If user wants color or black and white. Specify color with "color" or black and white "bw".
 }
 }
 \details{

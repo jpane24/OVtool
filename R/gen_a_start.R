@@ -1,5 +1,5 @@
 #### gen_a_start fn ####
-gen_a_start <- function(y, tx, es, rho, b1){
+gen_a_start <- function(y, tx, es, rho){
   ind <- which(tx == 1)
   if(length(unique(y[ind])) == 2){
     y[ind][which(y[ind]==1)] = runif(length(which(y[ind]==1)), min=1, max=2)
@@ -9,21 +9,10 @@ gen_a_start <- function(y, tx, es, rho, b1){
     y[-ind][which(y[-ind]==0)] = runif(length(which(y[-ind]==0)), min=-1, max=0)
   }
 
-  # Old way:
-  cdf1 <- ecdf(y[ind])
-  cdf0 <- ecdf(y[-ind])
-  ystar1 <- qnorm(cdf1(y[ind]))
-  ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
-  ystar0 <- qnorm(cdf0(y[which(tx==0)]))
-  ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
-
-  # # Potential New Way:
-  # cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
-  # cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
-  # set.seed(24)
-  # ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
-  # ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
-  # set.seed(Sys.time())
+  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
+  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
+  ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
@@ -57,35 +46,41 @@ gen_a_start <- function(y, tx, es, rho, b1){
   alpha = (A - Q)/((1-pi)*c0)
   beta = (-c1*pi)/((1-pi)*c0)
 
-  # if(beta > 0){
-  #   b1low = max(-b1lim, ((-b0lim - alpha) / beta))
-  #   b1high = min(b1lim, ((b0lim - alpha) / beta))
-  # }
-  # if(beta < 0){
-  #   b1low = max(-b1lim, ((b0lim - alpha) / beta))
-  #   b1high = min(b1lim, ((-b0lim - alpha) / beta))
-  # }
+  if(beta > 0){
+    b1low = max(-b1lim, ((-b0lim - alpha) / beta))
+    b1high = min(b1lim, ((b0lim - alpha) / beta))
+  }
+  if(beta < 0){
+    b1low = max(-b1lim, ((b0lim - alpha) / beta))
+    b1high = min(b1lim, ((-b0lim - alpha) / beta))
+  }
 
-  #b1 = runif(1, min = b1low, max = b1high)
-  #b1 = mean(c(b1low, b1high))
+  # set b1 to 0 unless b1 not in range.
+  if(b1low > 0 & b1high > 0){
+    b1 = b1low
+  } else if(b1low < 0 & b1high < 0){
+    b1 = b1high
+  } else{
+    b1 = 0
+  }
 
+  # solve for b0.
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
 
   ve1 <- 1 - b1^2 * var(ystar1)
   ve0 <- 1 - b0^2 * var(ystar0)
 
-  # redraw b1 if ve0 < 0
-  # while(ve0 < 0 | ve1 < 0){
-  #   if(abs(b1 - b1high) >=  (b1 - b1low)){
-  #     b1 = b1 + .01
-  #   } else{
-  #     b1 = b1 - .01
-  #   }
-  #   #b1 = runif(1, min = b1low, max = b1high);
-  #   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
-  #   ve1 <- 1 - b1^2 * var(ystar1)
-  #   ve0 <- 1 - b0^2 * var(ystar0)
-  # }
+  # redraw b1 if ve0 < 0 | ve1 < 0
+  while(ve0 < 0 | ve1 < 0){
+    if(abs(b1low - 0) < abs(b1high - 0)){
+      b1 = b1 + .01
+    } else{
+      b1 = b1 - .01
+    }
+    b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
+    ve1 <- 1 - b1^2 * var(ystar1)
+    ve0 <- 1 - b0^2 * var(ystar0)
+  }
   if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
   return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, ystar1 = ystar1,

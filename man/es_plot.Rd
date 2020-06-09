@@ -17,7 +17,7 @@ es_plot(prep, col)
 Input from prep_for_plots
 }
   \item{col}{
-If user wants color or black and white. Specify color with "color" or black and white "bw"
+If user wants color (a heat map layered with contours) or black and white (contours only). Specify the heat map with "color" or black and white "bw".
 }
 }
 \details{

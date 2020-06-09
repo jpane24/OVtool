@@ -26,9 +26,6 @@ es_plot = function(prep, col){
                                     xmax = Inf),
                        fill = "snow2",
                        alpha = 0.01) +
-    # heat map options
-    # ggplot2::geom_tile() +
-    # ggplot2::scale_fill_gradient(low="blue", high="orange") +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(limits = c(0,max(r1_df$rho_grid)), expand = c(0, 0)) +
     ggplot2::theme_linedraw() +
@@ -45,9 +42,9 @@ es_plot = function(prep, col){
                                 xmax = max(r1_df$es_grid)+.15,
                                 xmin = max(r1_df$es_grid)+.1)
 
-
-  if(col == "bw"){
-    v = v
+  if(col == "color"){
+    v = v + ggplot2::geom_tile() +
+      ggplot2::scale_fill_gradient(low="blue", high="orange")
   }
   return(v)
 }

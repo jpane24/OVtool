@@ -1,7 +1,7 @@
-\name{ov_simgrid}
-\alias{ov_simgrid}
+\name{ov_sim}
+\alias{ov_sim}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ov_simgrid
+\title{ov_sim
 %%  ~~function to do ... ~~
 }
 \description{
@@ -11,8 +11,8 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-ov_simgrid(model_results, weight_covariates, es_grid=NULL,
-rho_grid = seq(0, .45, by=0.05), n_reps = 101)
+ov_sim(model_results, weight_covariates, es_grid = seq(-.4, .4, by = 0.05),
+rho_grid = seq(0, .4, by = 0.05), n_reps = 50)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -27,8 +27,7 @@ rho_grid = seq(0, .45, by=0.05), n_reps = 101)
   Not required. A grid of effect sizes to simulate over
 }
   \item{rho_grid}{
-  Note required. A grid of correlations to simulate over this rho relates the correaltion between
-  the effect size.
+  Not required. A grid of correlations to simulate over; rho relates the correlation to the effect size.
 }
   \item{n_reps}{
   Number of repetitions to simulate over
@@ -39,7 +38,7 @@ rho_grid = seq(0, .45, by=0.05), n_reps = 101)
 }
 \value{
 %%  ~Describe the value returned
-ov_simgrid returns a list containing the following components:
+ov_sim returns a list containing the following components:
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}

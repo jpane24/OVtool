@@ -1,6 +1,7 @@
-#### ov_simgrid fn ####
-ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
-                       rho_grid = NULL, n_reps = 50){
+#### ov_sim fn ####
+ov_sim <- function(model_results, weight_covariates,
+                   es_grid = seq(-.4, .4, by = 0.05),
+                   rho_grid = seq(0, .4, by = 0.05), n_reps = 50){
   if(n_reps <= 1){"Please specify at least two (2) n_reps."}
   tx = model_results$tx
   y = model_results$y
@@ -19,10 +20,9 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
 
   # checks
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
-  if(max(table(data[,y])) > 1) warning("Ties in the outcome variable `y` may be problematic.")
 
   # determine reasonable grid to simulate over
-  if(is.null(es_grid) | is.null(rho_grid)){
+  if(is.null(es_grid)){
     jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
     if(is.null(es_grid)){
       es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 2)
@@ -30,24 +30,11 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
       es_grid = seq(es_lower, es_upper, by=0.05)
     }
     if(is.null(rho_grid) | (max(rho_grid) < max(jdp_test$Cor_Outcome))){
+      print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
       rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
       rho_grid = seq(0, rho_upper, by=0.05)
     }
   }
-
-  # first generate b1
-  b1_low_high = data.frame(expand.grid(es=es_grid, rho=rho_grid)) %>%
-    dplyr::mutate(b1_low = NA,
-                  b1_high = NA) %>%
-    data.frame()
-  for(i in 1:nrow(b1_low_high)){
-    b1_low_high[i,3:4] = gen_b1(y=data[,y], tx = data[,tx],
-                                es = b1_low_high$es[i], rho = b1_low_high$rho[i])
-  }
-  b1_low = max(b1_low_high$b1_low)
-  b1_high = min(b1_low_high$b1_high)
-  b1_final = mean(c(b1_low, b1_high))
-  # b1_final = runif(1, b1_low, b1_high); print(b1_final)
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
   p_val_nodr <- matrix(0,length(es_grid),length(rho_grid))
@@ -60,8 +47,7 @@ ov_simgrid <- function(model_results, weight_covariates, es_grid=NULL,
       for(k in 1:n_reps){
         if(k == 1){
           a_prep <- gen_a_start(y=data[,y], tx = data[,tx],
-                                es = es_grid[i], rho = rho_grid[j],
-                                b1 = b1_final)
+                                es = es_grid[i], rho = rho_grid[j])
         }
         a <- gen_a_finish(a_prep)
         data$w_new <- data$w_orig * a
