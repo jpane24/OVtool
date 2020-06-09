@@ -29,7 +29,6 @@ gen_a_start <- function(y, tx, es, rho){
   sd0 <- sqrt(v0)
 
   vU <- 1 + es^2*pi*(1-pi)
-  #vU <- es^2*pi*(1-pi) In pdf, there is no 1 +
 
   Y <- y - mean(y)
 

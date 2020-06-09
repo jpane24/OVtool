@@ -1,5 +1,5 @@
 #### P-value contour plot with points ####
-pval_point_plot = function(prep, col){
+pval_point_plot = function(prep, col = "color"){
   r1_df = prep$r1_df
   pvals = prep$pvals
   pval_lines = prep$pval_lines

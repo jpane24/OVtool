@@ -1,5 +1,5 @@
 #### Effect Size plot (no points) ####
-es_plot = function(prep, col){
+es_plot = function(prep, col="bw"){
   r1_df = prep$r1_df
   pvals = prep$pvals
   pval_lines = prep$pval_lines
