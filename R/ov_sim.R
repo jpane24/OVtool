@@ -22,18 +22,16 @@ ov_sim <- function(model_results, weight_covariates,
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
 
   # determine reasonable grid to simulate over
-  if(is.null(es_grid) | is.null(rho_grid)){
-    jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
-    if(is.null(es_grid)){
-      es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 2)
-      es_lower = -es_upper
-      es_grid = seq(es_lower, es_upper, by=0.05)
+  jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
+  if(is.null(es_grid)){
+    es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 2)
+    es_lower = -es_upper
+    es_grid = seq(es_lower, es_upper, by=0.05)
     }
-    if(is.null(rho_grid) | (max(rho_grid) < max(jdp_test$Cor_Outcome))){
-      print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
-      rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
-      rho_grid = seq(0, rho_upper, by=0.05)
-    }
+  if(is.null(rho_grid) | (max(rho_grid) < max(jdp_test$Cor_Outcome))){
+    print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
+    rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
+    rho_grid = seq(0, rho_upper, by=0.05)
   }
 
   trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
