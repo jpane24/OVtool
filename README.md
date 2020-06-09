@@ -2,7 +2,7 @@
 
 
 
-*Note: This is a work in progress – last updated 2020-06-09 11:09:10 –
+*Note: This is a work in progress – last updated 2020-06-09 12:17:14 –
 text needs updated*
 
 Introduction
@@ -72,19 +72,6 @@ code snippet prior to running the second line:
 
     # install.packages("devtools")
     devtools::install_github("jpane24/OVtool")
-
-    ## 
-    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp9OzWcq/remotesa8fd35554570/jpane24-OVtool-fbcbcb1/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp9OzWcq/remotesa8fd35554570/jpane24-OVtool-fbcbcb1/DESCRIPTION’
-    ##   ─  preparing ‘OVtool’:
-    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ##   ─  building ‘OVtool_1.0.0.tar.gz’
-    ##      Warning: invalid uid value replaced by that for user 'nobody'
-    ##    Warning: invalid gid value replaced by that for user 'nobody'
-    ##      
-    ## 
-
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a
@@ -293,6 +280,7 @@ on the methodology used by `OVtool`.
                                   rho_grid = seq(0, 0.40, by = 0.05),
                                   n_reps=50)
 
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded."
     ## [1] "6% Done!"
     ## [1] "12% Done!"
     ## [1] "18% Done!"
@@ -358,7 +346,7 @@ equals 0.079 and is significant with a p-value equal to 0.004. However,
 looking at this graphic alone will not give us an idea of how sensitive
 the effect is.
 
-    plot.ov(ovtool_results_twang, print_graphic = "2")
+    plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 
 <img src="README_files/figure-markdown_strict/fig2-1.png" style="display: block; margin: auto;" />
 
@@ -392,7 +380,7 @@ blue points are meant to give the analyst an idea (using observed
 covariates as an indicator) of what would cause a change in the
 interpretation of their results.*
 
-    plot.ov(ovtool_results_twang, print_graphic = "3")
+    plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 
 <img src="README_files/figure-markdown_strict/fig3-1.png" style="display: block; margin: auto;" />
 
@@ -419,17 +407,31 @@ the ov object:
 
     summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
 
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
+    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a
+    covariate has with the outcome. The rho grid was automatically expanded."
     ## [1] "Recommendation for reporting the sensitivity analyses"
     ## [1] "The sign of the estimated effect is expected to be robust to unobserved confounders that
     have the same strength of association with the treatment indicator and outcome that are seen in the
-    observed confounders. In the most extreme observed case, the estimated effect size is reduced by 74
+    observed confounders. In the most extreme observed case, the estimated effect size is reduced by 70
     percent."
     ## [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
-    in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.475. Significance at the 0.05 level would not be expected to
+    in 7 of the 8 observed confounders. In the most extreme observed case, the p-value would be
+    expected to increase from 0.004 to 0.412. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
-    treatment indicator and outcome as eps7p_0, sati_0, tss_0."
+    treatment indicator and outcome as eps7p_0."
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
