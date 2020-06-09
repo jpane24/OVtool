@@ -22,7 +22,7 @@ ov_sim <- function(model_results, weight_covariates,
   if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
 
   # determine reasonable grid to simulate over
-  if(is.null(es_grid)){
+  if(is.null(es_grid) | is.null(rho_grid)){
     jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
     if(is.null(es_grid)){
       es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 2)
