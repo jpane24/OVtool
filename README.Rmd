@@ -28,7 +28,7 @@ knit_hooks$set(output = function(x, options) {
 time = Sys.time()
 ```
 
-*Note: This is a work in progress -- last updated `r time` -- text needs updated*
+*Note: This is a work in progress.. This document was lasted upated `r time`*
 
 # Introduction
 
@@ -139,11 +139,11 @@ At this stage, researchers should begin to ask themselves if this effect is real
 
 * `weight_covariates`: a vector of column names representing the covariates used to produce the analysts propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)
 
-* `es_grid`: a vector on an effect size scale representing the association between an unobserved confounder (omitted variable) and the treatment indicator
+* `es_grid`: a vector on an effect size scale representing the association between the unobserved confounders (omitted variables) and the treatment indicator
 
 * `rho_grid`: a vector of correlations to simulate over. These correlations represent the correlation between the omitted variable and the outcome
 
-* `n_reps`: the number of repetitions at each grid point. The package defaults to 50 (Fifty repetitions should be sufficient but the analyst may need to reduce or increase the number of repetitions).
+* `n_reps`: the number of repetitions represents the number of times an unobserved confounder is simulated at each effect size and rho combination. The package defaults to 50. Fifty repetitions should be sufficient but the analyst may need to reduce or increase the number of repetitions.
 
 The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size and rho, respectively. We define the effect size on the x-axis to show the strength of the relationship between the simulated unobserved covariate (U) and the treatment group indicator; it is defined as the standardized mean difference in U for the treatment A and treatment B groups. Typical rules of thumb for effect sizes (Cohen's D) follow such that effect sizes greater than 0.2 would be considered small, 0.4 would be moderate and 0.6 would be large (Cohen, J., 1995). We define rho in this setting as the absolute correlation the unobserved covariate (U) has with the outcome of interest, with larger values indicating stronger relationships between U and the outcome. Please see Burgette et al. (in progress) for additional details on the methodology used by `OVtool`.  
 
@@ -159,7 +159,7 @@ ovtool_results_twang = ov_sim(model_results=results,
                               n_reps=50)
 ```
 
-In our example, `ov_sim` produced a warning stating ties in the outcome variable may be problematic. This warning allows the user to continue with their analysis but it is important for the analyst to understand that when generating the omitted variable (U), the empirical cumulative distribution function (CDF) for the outcome within each treatment is used. Many ties could lead to issues. Additionally, a note was printed to the screen informing the user that the tool expanded the size of the grid because the maximum rho value specified (0.4) was less than the maximum absolute correlation an observed covariate has with the outcome. To allow all observed covariates' effect size and rho values to be plotted on the second and third graphics, the tool autmatically will expand the rho grid. The grid values are not required; if es_grid and/or rho_grid is set to `NULL`, the tool will calculate reasonable values to simulate over. See Burgette et al. for details.
+In our example, `ov_sim` produced a warning stating ties in the outcome variable may be problematic. This warning allows the user to continue with their analysis but it is important for the analyst to understand that when generating the omitted variable (U), the empirical cumulative distribution function (CDF) for the outcome within each treatment is used. Many ties could lead to issues. Additionally, a note was printed to the screen informing the user that the tool expanded the size of the grid because the maximum rho value specified (0.4) was less than the maximum absolute correlation an observed covariate has with the outcome. To allow all observed covariates' effect size and rho values to be plotted on the second and third graphics, the tool autmatically will expand the rho grid. The grid values are not required; if es_grid and/or rho_grid is set to `NULL`, the tool will calculate reasonable values to simulate over. In other words, the tool will iterate over all observed covariate associations with the treatment indicator on an effect size scale to derive a reasonable range.
 
 A key assumption in this tool is the omitted variable is independent from all covariates included in the propensity score model; this assumption may result in correlations of the omitted variable that have a maximum bound below moderately sized correlations and results in unstable contour estimates outside of a particular threshold. Often the user will be able to observe this point because the contours will become unsmooth. Burgette et al. explain the implications of this assumption.
 
@@ -206,9 +206,6 @@ The devlopment of this tutorial was funded by the National Institute of Health (
 
 *Will update to link with text*
 
-CHIS (2005). California health interview survey (CHIS) 2003 Methodology
-Series. Los Angeles: UCLA Center for Health Policy Research.
-
 Cohen, J. (1995). The earth is round (p < .05): Rejoinder. American Psychologist, 50, 1103.
 
 Diamond, G., Godley, S. H., Liddle, H. A., Sampl, S., Webb, C., Tims, F. M., & Meyers, R. (2002). Five outpatient treatment models for adolescent marijuana use: a description of the Cannabis Youth Treatment Interventions. Addiction, 97, 70-83. 
@@ -218,15 +215,7 @@ Lumley, T (2020). "survey: analysis of complex survey samples." R package versio
 McCaffrey, D. F., Ridgeway, G., and Morral, A. R. (2004). Propensity score
 estimation with boosted regression for evaluating causal effects in observational studies. Psychological methods 9, 403.
 
-Miles, J. N., Parast, L., Babey, S. H., Griffin, B. A., and Saunders, J., M. (2017)
-. A propensity-score-weighted popualtion-based study of the health benefits
-of dogs and cats for children. Anthrozoos 30, 429-440.
-
 Ridgeway, G., McCaffrey, D., Morral, A., Burgette, L., and Griffin, B. A. (2020).
 Toolkit for Weighting and Analysis of Nonequivalent Groups: A tutorial for
 the twang package. Santa Monica, CA: RAND Corporation.
-
-Saunders, J., Parast, L., Babey, S. H., and Miles, J. V. (2017). Exploring the
-differences between pet and non-pet owners: Implications for human-animal
-interaction research and policy. PloS one
 

@@ -45,8 +45,8 @@ es_plot = function(prep, col="bw"){
       ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
                                                        gp = grid::gpar(cex = .75)),
                                  ymin = .1, ymax = .1,
-                                 xmax = max(r1_df$es_grid)+.15,
-                                 xmin = max(r1_df$es_grid)+.1)
+                                 xmax = max(r1_df$es_grid)+.1,
+                                 xmin = max(r1_df$es_grid)+.05)
   return(v)
 }
 
