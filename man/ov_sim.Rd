@@ -12,7 +12,7 @@ treatment effect and relevant p-value changes
 }
 \usage{
 ov_sim(model_results, weight_covariates, es_grid = seq(-.4, .4, by = 0.05),
-rho_grid = seq(0, .4, by = 0.05), n_reps = 50)
+rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -31,6 +31,9 @@ rho_grid = seq(0, .4, by = 0.05), n_reps = 50)
 }
   \item{n_reps}{
   Number of repetitions to simulate over
+}
+  \item{progress}{
+  Whether or not the function progress should print to screen. The default value is TRUE. If the user does not want the output to print to screen, they should set to FALSE.
 }
 }
 \details{

@@ -1,7 +1,8 @@
 #### ov_sim fn ####
 ov_sim <- function(model_results, weight_covariates,
                    es_grid = seq(-.4, .4, by = 0.05),
-                   rho_grid = seq(0, .4, by = 0.05), n_reps = 50){
+                   rho_grid = seq(0, .4, by = 0.05), n_reps = 50,
+                   progress = TRUE){
   if(n_reps <= 1){"Please specify at least two (2) n_reps."}
   tx = model_results$tx
   y = model_results$y
@@ -67,7 +68,7 @@ ov_sim <- function(model_results, weight_covariates,
       p_val_nodr[i,j] <- melded_summary$p.value
       trt_effect_nodr[i,j] <- melded_summary$estimate
     }
-    if(length(es_grid) >1){
+    if((length(es_grid) >1) & progress == TRUE){
       print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
     }
   }

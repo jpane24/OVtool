@@ -1,5 +1,5 @@
 #### summarize fn ####
-summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
+summary.ov <- function(OVtool_results, model_results, sig_level=0.05, progress = TRUE){
   temp = prep_for_plots(OVtool_results)
   raw_treat = OVtool_results$trt_effect[which(OVtool_results$es_grid<.000000001 & OVtool_results$es_grid>-.000000001),
                             which(OVtool_results$rho_grid==0)]
@@ -18,7 +18,9 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05){
                                      n_reps = OVtool_results$n_reps)
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
-    print(paste0(round(i/nrow(temp$obs_cors)*100,0), "% Done!"))
+    if(progress == TRUE){
+      print(paste0(round(i/nrow(temp$obs_cors)*100,0), "% Done!"))
+    }
   }
   options(warn=1)
 

@@ -8,21 +8,21 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-summary.ov(OVtool_results, model_results, sig_level)
+summary.ov(OVtool_results, model_results, sig_level = 0.05, progress = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{OVtool_results}{
-%%     ~~Describe \code{x} here~~
 The object returned from OVtool::ov_simgrid()
 }
   \item{model_results}{
-%%     ~~Describe \code{x} here~~
 The object returned from OVtool::outcome_model()
 }
   \item{sig_level}{
-%%     ~~Describe \code{x} here~~
 The alpha level with default 0.05
+}
+  \item{progress}{
+  Whether or not the function progress should print to screen. The default value is TRUE. If the user does not want the output to print to screen, they should set to FALSE.
 }
 }
 \details{
