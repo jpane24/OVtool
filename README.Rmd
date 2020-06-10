@@ -1,7 +1,7 @@
 ---
 title: "OVtool - Omitted Variable tool"
 author: Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey
-output: html_document
+output: md_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
@@ -191,7 +191,7 @@ Finally, we can interpret this graphic by running the summary command on the ov 
 summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
 ```
 
-The `OVtool` gives a recommendation on how to report findings regarding the direction of the treatment effect and statistical significance. An analyst could take the results produced by `summary.ov()` and plug them into a manuscript. In summary, the sign of the estimated effect is expected to be robust to unobserved confounders that have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by 69 percent. However, statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
+The `OVtool` gives a recommendation on how to report findings regarding the direction of the treatment effect and statistical significance. An analyst could take the results produced by `summary.ov()` and plug them into a manuscript. In summary, the sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by 69 percent. However, statistical significance at the 0.05 level is only expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
 expected to increase from 0.004 to 0.405. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`, `sati_0`, `tss_0`.
 
 # Conclusion
