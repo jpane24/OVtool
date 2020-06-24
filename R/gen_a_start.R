@@ -54,8 +54,9 @@ gen_a_start <- function(y, tx, es, rho){
   beta = (-c1*pi)/((1-pi)*c0)
 
   # NEW #
-  # b1 = rho
   b1 = alpha / (1-beta) # this will set b1 equal to b0
+  # b1 = -alpha / (beta+1) # this will set b1 equal to -b0
+
 
   # if(beta > 0){
   #   b1low = max(-b1lim, ((-b0lim - alpha) / beta))
