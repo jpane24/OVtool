@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-09 20:39:23*
+2020-06-23 23:37:53*
 
 Introduction
 ============
@@ -71,7 +71,7 @@ package, make sure you uncomment and run the first line of the following
 code snippet prior to running the second line:
 
     # install.packages("devtools")
-    devtools::install_github("jpane24/OVtool")
+    devtools::install_github("jpane24/OVtool", ref="temporary")
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a
@@ -282,9 +282,9 @@ used by `OVtool`.
                                                       "sati_0", "ada_0",
                                                       "recov_0", "tss_0", 
                                                       "mhtrt_0", "dss9_0"),
-                                  es_grid = seq(-0.4, 0.4, by = 0.05),
+                                  es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05),
-                                  n_reps=50)
+                                  n_reps=25)
 
     ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded."
     ## [1] "6% Done!"
@@ -356,6 +356,30 @@ the effect is.
 
     plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
 <img src="README_files/figure-markdown_strict/fig2-1.png" style="display: block; margin: auto;" />
 
     ## [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
@@ -389,6 +413,30 @@ covariates as an indicator) of what would cause a change in the
 interpretation of their results.*
 
     plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning: stat_contour(): Zero contours were generated
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
 
 <img src="README_files/figure-markdown_strict/fig3-1.png" style="display: block; margin: auto;" />
 
@@ -427,13 +475,11 @@ the ov object:
     ## [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of association with the treatment indicator and outcome that are
     seen in the observed confounders. In the most extreme observed case, the estimated effect size is
-    reduced by 69 percent."
+    reduced by 0 percent."
     ## [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
-    in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.405. Significance at the 0.05 level would not be expected to
-    be preserved for unobserved confounders that have the same strength of association with the
-    treatment indicator and outcome as eps7p_0, sati_0, tss_0."
+    in the observed confounders. In the most extreme observed case, the p-value would be expected to
+    increase from 0.004 to 0.006."
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
