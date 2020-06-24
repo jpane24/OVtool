@@ -1,5 +1,5 @@
 #### gen_a_start fn ####
-gen_a_start2 <- function(y, tx, es, rho){
+gen_a_start <- function(y, tx, es, rho){
   ind <- which(tx == 1)
   if(length(unique(y[ind])) == 2){
     y[ind][which(y[ind]==1)] = runif(length(which(y[ind]==1)), min=1, max=2)
