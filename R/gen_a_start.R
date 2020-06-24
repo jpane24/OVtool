@@ -36,8 +36,7 @@ gen_a_start <- function(y, tx, es, rho){
   sd1 <- sqrt(v1)
   sd0 <- sqrt(v0)
 
-  # vU <- 1 + es^2*pi*(1-pi)
-  vU <- es^2*pi*(1-pi)
+  vU <- 1 + es^2*pi*(1-pi)   # vU <- es^2*pi*(1-pi)
 
   Y <- y - mean(y)
 
@@ -56,7 +55,7 @@ gen_a_start <- function(y, tx, es, rho){
 
   # NEW #
   # b1 = rho
-  b1 = alpha / (1-beta)
+  b1 = alpha / (1-beta) # this will set b1 equal to b0
 
   # if(beta > 0){
   #   b1low = max(-b1lim, ((-b0lim - alpha) / beta))
@@ -77,7 +76,7 @@ gen_a_start <- function(y, tx, es, rho){
   # }
 
   # solve for b0.
-  b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
+  b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0) # b1 will be equal to b0.
   ve1 <- 1 - b1^2 * var(ystar1)
   ve0 <- 1 - b0^2 * var(ystar0)
 
