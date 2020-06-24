@@ -10,17 +10,17 @@ gen_a_start <- function(y, tx, es, rho){
   }
 
   # old
-  # cdf1 <- ecdf(y[ind])
-  # cdf0 <- ecdf(y[-ind])
-  # ystar1 <- qnorm(cdf1(y[ind]))
-  # ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
-  # ystar0 <- qnorm(cdf0(y[which(tx==0)]))
-  # ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
+  cdf1 <- ecdf(y[ind])
+  cdf0 <- ecdf(y[-ind])
+  ystar1 <- qnorm(cdf1(y[ind]))
+  ystar1 <- ifelse(ystar1==Inf, max(ystar1[which(ystar1 < Inf)]), ystar1)
+  ystar0 <- qnorm(cdf0(y[which(tx==0)]))
+  ystar0 <- ifelse(ystar0==Inf, max(ystar0[which(ystar0 < Inf)]), ystar0)
 
-  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
-  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
-  ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
-  ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
+  # cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
+  # cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
+  # ystar1 = qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
+  # ystar0 = qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
