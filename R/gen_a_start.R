@@ -77,9 +77,9 @@ gen_a_start <- function(y, tx, es, rho){
   # }
 
   # solve for b0.
-  # b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0) # b1 will be equal to b0.
-  # ve1 <- 1 - b1^2 * var(ystar1)
-  # ve0 <- 1 - b0^2 * var(ystar0)
+  b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0) # b1 will be equal to b0.
+  ve1 <- 1 - b1^2 * var(ystar1)
+  ve0 <- 1 - b0^2 * var(ystar0)
 
   # redraw b1 if ve0 < 0 | ve1 < 0
   # while(ve0 < 0 | ve1 < 0){
