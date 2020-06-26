@@ -11,7 +11,8 @@ gen_a_finish <- function(a_res){
   U[ind] <- U1
   U[-ind] <- U0
 
-  a <- (1+exp(-1 * a_res$es * U)) / a_res$pi
+  a[ind] <- a_res$pi * (1+exp(-1 * a_res$es * U))
+  a[-ind] <- a_res$pi * (1+exp(a_res$es * U))
   # a_2 <- a_res$pi * (1 + exp( (-log(a_res$pi/(1-a_res$pi))) +
   #                              ( a_res$es^2 * (1-2*a_res$pi) / 2) -
   #                               ( a_res$es * U )))
