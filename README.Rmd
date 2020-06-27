@@ -1,7 +1,7 @@
 ---
 title: "OVtool - Omitted Variable tool"
 author: Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey
-output: html_document
+output: md_document
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
@@ -156,7 +156,7 @@ ovtool_results_twang = ov_sim(model_results=results,
                                                   "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05),
-                              n_reps=5,
+                              n_reps=30,
                               progress = TRUE)
 ```
 
