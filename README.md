@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-27 09:30:07*
+2020-06-27 10:30:34*
 
 Introduction
 ============
@@ -72,6 +72,19 @@ code snippet prior to running the second line:
 
     # install.packages("devtools")
     devtools::install_github("jpane24/OVtool", ref="temporary")
+
+    ## 
+    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp4BiuQR/remotes507a746263cd/jpane24-OVtool-efe1b8b/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp4BiuQR/remotes507a746263cd/jpane24-OVtool-efe1b8b/DESCRIPTION’ (353ms)
+    ##   ─  preparing ‘OVtool’:
+    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    ##   ─  checking for LF line-endings in source and make files and shell scripts
+    ##   ─  checking for empty or unneeded directories
+    ##   ─  building ‘OVtool_1.0.0.tar.gz’
+    ##      Warning: invalid uid value replaced by that for user 'nobody'
+    ##    Warning: invalid gid value replaced by that for user 'nobody'
+    ##      
+    ## 
+
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a
@@ -284,7 +297,7 @@ used by `OVtool`.
                                                       "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05),
-                                  n_reps=30,
+                                  n_reps=50,
                                   progress = TRUE)
 
     ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded."
@@ -428,11 +441,11 @@ the ov object:
     ## [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of association with the treatment indicator and outcome that are
     seen in the observed confounders. In the most extreme observed case, the estimated effect size is
-    reduced by 88 percent."
+    reduced by 87 percent."
     ## [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.740. Significance at the 0.05 level would not be expected to
+    expected to increase from 0.004 to 0.722. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
     treatment indicator and outcome as eps7p_0, sati_0, tss_0."
 

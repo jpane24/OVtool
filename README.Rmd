@@ -156,7 +156,7 @@ ovtool_results_twang = ov_sim(model_results=results,
                                                   "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05),
-                              n_reps=30,
+                              n_reps=50,
                               progress = TRUE)
 ```
 
