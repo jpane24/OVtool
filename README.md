@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-29 11:30:35*
+2020-06-29 13:11:56*
 
 Introduction
 ============
@@ -71,20 +71,7 @@ package, make sure you uncomment and run the first line of the following
 code snippet prior to running the second line:
 
     # install.packages("devtools")
-    devtools::install_github("jpane24/OVtool", ref="temporary")
-
-    ## 
-    ##      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpwYV39W/remotes2f996f0ee3d2/jpane24-OVtool-e5a4aa6/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpwYV39W/remotes2f996f0ee3d2/jpane24-OVtool-e5a4aa6/DESCRIPTION’ (375ms)
-    ##   ─  preparing ‘OVtool’:
-    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ##   ─  building ‘OVtool_1.0.0.tar.gz’
-    ##      Warning: invalid uid value replaced by that for user 'nobody'
-    ##    Warning: invalid gid value replaced by that for user 'nobody'
-    ##      
-    ## 
-
+    devtools::install_github("jpane24/OVtool")
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a

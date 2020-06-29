@@ -368,7 +368,7 @@ summary {
 </div>
 
 
-<p><em>Note: This is a work in progress.. This document was lasted upated 2020-06-29 12:28:48</em></p>
+<p><em>Note: This is a work in progress.. This document was lasted upated 2020-06-29 13:32:27</em></p>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (<code>OVtool</code>) package was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This package includes graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (in preparation) describe the methodology behind the primary function in this package, <code>ov_sim()</code>. This document presents syntax for the implementation of the <code>ov_sim()</code> function and provides an example of how to interpret the packages’ graphical output.</p>
@@ -381,38 +381,8 @@ summary {
 <p>Past research has indicated there are many influential confounders when analyzing adolescents’ emotional problems, some included in this synthetic dataset (Diamond et al.). These variables were measured at baseline: emotional problem scale (<code>eps7p_0</code>), adjusted days abstinent (any in past 90) (<code>ada_0</code>), substance frequency scale (<code>sfs8p_0</code>), substance abuse treatment index (<code>sati_0</code>), in recovery (<code>recov_0</code>), traumatic stress scale (<code>tss_0</code>), mental health treatment in the past 90 days (<code>mhtrt_0</code>), and the depressive symptom scale (<code>dss9_0</code>). </p>
 <p>We begin by loading the development version of the package from <a href="https://github.com/">GitHub</a>. If you haven’t installed the devtools package, make sure you uncomment and run the first line of the following code snippet prior to running the second line:</p>
 <pre class="r"><code># install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;jpane24/OVtool&quot;, ref=&quot;temporary&quot;)</code></pre>
-<pre><code>## 
-##   
-   checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp1JbmWT/remotes3d70330ccb7d/jpane24-OVtool-8273fa2/DESCRIPTION’ ...
-  
-✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp1JbmWT/remotes3d70330ccb7d/jpane24-OVtool-8273fa2/DESCRIPTION’ (377ms)
-## 
-  
-─  preparing ‘OVtool’:
-## 
-  
-   checking DESCRIPTION meta-information ...
-  
-✓  checking DESCRIPTION meta-information
-## 
-  
-─  checking for LF line-endings in source and make files and shell scripts
-## 
-  
-─  checking for empty or unneeded directories
-## 
-  
-─  building ‘OVtool_1.0.0.tar.gz’
-## 
-  
-   Warning: invalid uid value replaced by that for user 'nobody'
-##    Warning: invalid gid value replaced by that for user 'nobody'
-## 
-  
-   
-## </code></pre>
-<pre class="r"><code>library(OVtool)</code></pre>
+devtools::install_github(&quot;jpane24/OVtool&quot;)
+library(OVtool)</code></pre>
 <p>We can load the synthetic dataset and make our treatment variable a binary indicator of 0’s and 1’s:</p>
 <pre class="r"><code>data(sud) 
 sud$treat = ifelse(sud$treat == &quot;A&quot;, 1, 0)</code></pre>
