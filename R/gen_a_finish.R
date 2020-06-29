@@ -25,7 +25,7 @@ gen_a_finish <- function(a_res){
                    (a_res$es * U[-ind]))
 
   a[ind] <- a_res$pi * (1 + expTx)
-  a[-ind] <- (1 - a_res$pi) * ((expCntrl) / ((1 + expCntrl)))
+  a[-ind] <- (1 - a_res$pi) * (((1 + expCntrl)) / (expCntrl))
 
   return(a)
 }
