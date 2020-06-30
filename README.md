@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-29 13:11:56*
+2020-06-30 09:22:58*
 
 Introduction
 ============
@@ -306,30 +306,44 @@ used by `OVtool`.
     ## [1] "94% Done!"
     ## [1] "100% Done!"
 
-In our example, `ov_sim` produced a warning stating ties in the outcome
-variable may be problematic. This warning allows the user to continue
-with their analysis but it is important for the analyst to understand
-that when generating the omitted variable (U), the empirical cumulative
-distribution function (CDF) for the outcome within each treatment is
-used. Many ties could lead to issues. Additionally, a note was printed
-to the screen informing the user that the tool expanded the size of the
-grid because the maximum rho value specified (0.4) was less than the
-maximum absolute correlation an observed covariate has with the outcome.
-To allow all observed covariates’ effect size and rho values to be
-plotted on the second and third graphics, the tool autmatically will
-expand the rho grid. The grid values are not required; if es\_grid
-and/or rho\_grid is set to `NULL`, the tool will calculate reasonable
-values to simulate over. In other words, the tool will iterate over all
-observed covariate associations with the treatment indicator on an
-effect size scale to derive a reasonable range.
+In our example, `ov_sim` produced a note saying “The maximum rho value
+you specified is less than the maximum absolute correlation an observed
+covariate has with the outcome. The rho grid was automatically
+expanded.” The grid was expanded to ensure all `weight_covariates` could
+be seen on the contour plot. If the user does not want the grid
+expanded, they can leave out the observed covariates used in the
+propensity score model that have an absolute correlation with the
+outcome that is greater than the maximum rho value the user specifies.
+In the tutorial, if we did not want the rho grid expanded, we could
+specify
+`weight_covariates = c("sfs8p_0", "sati_0", "ada_0", "recov_0", "mhtrt_0")`.
+We dropped `eps_7p_0`, `dss9_0`, and `tss_0` because they all had
+absolute correlations with the outcome that are greater than 0.4.
 
-A key assumption in this tool is the omitted variable is independent
-from all covariates included in the propensity score model; this
-assumption may result in correlations of the omitted variable that have
-a maximum bound below moderately sized correlations and results in
-unstable contour estimates outside of a particular threshold. Often the
-user will be able to observe this point because the contours will become
-unsmooth. Burgette et al. explain the implications of this assumption.
+The grid values are not required; if es\_grid and/or rho\_grid are set
+to `NULL`, the tool will calculate reasonable values to simulate over.
+In other words, the tool will iterate over all observed covariate
+associations with the treatment indicator on an effect size scale to
+derive a reasonable range. This process uses an OVtool inner function
+called `find_esgrid()`.
+
+There are a few methodological assumptions that are important for an
+analyst to understand.
+
+First, when generating the omitted variable (U), the empirical
+cumulative distribution function (CDF) for the outcome within each
+treatment is used. When multiple ties are present, the tool handles this
+by randomly ranking multiple ties. For example, imagine a scenario where
+you have ten observations (shown in rank order) and the first two
+observations are 0s. As opposed to assigning the two zeroes a value of
+0.2, the tool will randomly assign the rank of the two zeroes and assign
+the first observation with 0.1 and the second observation with 0.2. This
+process is repeated for each effect size and rho combination `n_reps`
+times.
+
+Another key assumption this method draws upon is that the omitted
+variable is independent from all observed covariates included in the
+propensity score model.
 
 To visualize our results, the `plot.ov` function will produce three
 graphics. The first graphic (Figure 1) plots the treatment effect
@@ -374,12 +388,12 @@ scale at three months and an absolute association of approximately 0.17
 effect size difference between the two treatment groups (magnitude of
 its relationship with the treatment indicator). In this case, not all of
 the observed covariate relationships with the outcome and the treatment
-indicator are to the right of the 0.05 p-value threshold so the analyst
+indicator are less than the 0.05 p-value threshold so the analyst
 potentially has results that are sensitive to an unobserved confounder.
-If the blue points all existed to the right of the 0.05 p-value contour,
-then unobserved confounders with similar associations would retain the
-significant effect and allow the user to conclude that the results are
-reasonably robust.
+If the blue points all existed in contours greater than the 0.05 p-value
+contour, then unobserved confounders with similar associations would
+retain the significant effect and allow the user to conclude that the
+results are reasonably robust.
 
 *Note: When the outcome model shows a significant effect, for all
 observed covariates, regardless of the sign of the association effect
@@ -439,19 +453,19 @@ the ov object:
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
 analyst could take the results produced by `summary.ov()` and plug them
-into a manuscript. In summary, the sign of the estimated effect is
-expected to remain consistent when simulated unobserved confounders have
-the same strength of association with the treatment indicator and
-outcome that are seen in the observed confounders. In the most extreme
-observed case, the estimated effect size is reduced by 69 percent.
-However, statistical significance at the 0.05 level is only expected to
-be robust to unobserved confounders with strengths of associations with
-the treatment indicator and outcome that are seen in 5 of the 8 observed
-confounders. In the most extreme observed case, the p-value would be
-expected to increase from 0.004 to 0.405. Significance at the 0.05 level
-would not be expected to be preserved for unobserved confounders that
-have the same strength of association with the treatment indicator and
-outcome as `eps7p_0`, `sati_0`, `tss_0`.
+into a manuscript. The sign of the estimated effect is expected to
+remain consistent when simulated unobserved confounders have the same
+strength of association with the treatment indicator and outcome that
+are seen in the observed confounders. In the most extreme observed case,
+the estimated effect size is reduced by 83 percent. However, statistical
+significance at the 0.05 level is expected to be robust to unobserved
+confounders with strengths of associations with the treatment indicator
+and outcome that are seen in 5 of the 8 observed confounders. In the
+most extreme observed case, the p-value would be expected to increase
+from 0.004 to 0.628. Significance at the 0.05 level would not be
+expected to be preserved for unobserved confounders that have the same
+strength of association with the treatment indicator and outcome as
+`eps7p_0`, `sati_0`, `tss_0`.
 
 Conclusion
 ==========
@@ -468,11 +482,15 @@ effects using ps methods.
 Acknowledgements
 ================
 
-The devlopment of this tutorial was funded by the National Institute of
-Health (R01DA045049; PIs: Griffin/McCaffrey). We thank (fill in). This
-tutorial uses a synthetic dataset of youth receiving two unidentified
-treatments from the GAIN; running on the true dataset will produce
-different results.
+The devlopment of this tutorial was supported by funding from grant
+R01DA045049 (PIs: Griffin/McCaffrey) from the National Institute on Drug
+Abuse. It was also supported by the Center for Substance Abuse Treatment
+(CSAT), Substance Abuse and Mental Health Services Administration
+(SAMHA). The authors thank these agencies, grantees, and their
+participants for agreeing to share their data to support creation of the
+synthetic dataset used in this analysis. This tutorial uses a synthetic
+dataset of youth receiving two unidentified treatments from the GAIN;
+running on the true dataset will produce different results.
 
 References
 ==========
