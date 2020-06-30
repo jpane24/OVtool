@@ -1,6 +1,9 @@
 outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights,
                           treatment, outcome, model_covariates,
                           estimand = "ATE"){
+  if(estimand == "ATT"){
+    stop("At the moment OVtool only handles the ATE estimand. It will handle ATT shortly.")
+  }
   set.seed(24)
   if(class(ps_object)!="ps"){
     if(missing(data) | missing(weights) | missing(treatment) | missing(outcome) | missing(model_covariates)){

@@ -81,7 +81,7 @@ The relevant variables in this analysis are:
 
 * `dss9_0`: depressive symptom scale at baseline
 
-In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. The OVtool also handles binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand.
+In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. **The OVtool will handle (binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand in the near future.**
 
 ## Continous Outcome: Average Treatment Effect (ATE)
 
