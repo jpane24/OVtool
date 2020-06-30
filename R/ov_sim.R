@@ -25,14 +25,14 @@ ov_sim <- function(model_results, weight_covariates,
   # determine reasonable grid to simulate over
   jdp_test=find_esgrid(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand)
   if(is.null(es_grid)){
-    es_upper = round(max(jdp_test$ES) + 5*10^(-1-1), 2)
+    es_upper = .05 * ceiling(max(jdp_test$ES)/.05)
     es_lower = -es_upper
     es_grid = seq(es_lower, es_upper, by=0.05)
     }
   if(is.null(rho_grid) | (max(rho_grid) < max(jdp_test$Cor_Outcome))){
     if(length(es_grid) > 1){
       print("Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.")
-      rho_upper = round(max(jdp_test$Cor_Outcome) + 5*10^(-1-1), 2)
+      rho_upper = .05 * ceiling(max(jdp_test$Cor_Outcome)/.05)
       rho_grid = seq(0, rho_upper, by=0.05)
     }
   }
@@ -46,8 +46,8 @@ ov_sim <- function(model_results, weight_covariates,
   for(i in 1:length(es_grid)){
     for(j in 1:length(rho_grid)){
       for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=data[,y], tx = data[,tx],
-                                es = es_grid[i], rho = rho_grid[j])
+        a_prep <- gen_a_start(y=data[,y], tx = data[,tx],
+                              es = es_grid[i], rho = rho_grid[j])
         a <- gen_a_finish(a_prep)
         data$w_new <- data$w_orig * a
         design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)
