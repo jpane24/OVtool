@@ -4,12 +4,17 @@ ov_sim <- function(model_results, weight_covariates,
                    rho_grid = seq(0, .4, by = 0.05), n_reps = 50,
                    progress = TRUE){
   if(n_reps <= 1){"Please specify at least two (2) n_reps. For example: n_reps = 50"}
-  if(any(rho_grid <0) | any(rho_grid > 1)){
-    stop("Please specify a rho grid between 0 and 1. For example: rho_grid = seq(0, .45, by = 0.05)")
+  if(!is.null(rho_grid)){
+    if(any(rho_grid <0) | any(rho_grid > 1)){
+      stop("Please specify a rho grid between 0 and 1. For example: rho_grid = seq(0, .45, by = 0.05)")
+    }
   }
-  if(any(abs(es_grid) > 1)){
-    stop("This tool only considers small to moderate correlations. An effect size of 1 corresponds to a correlation of 0.44. Please reduce the size of your grid. For example: rho_grid = seq(-.4, .4, by = 0.05)")
+  if(!is.null(es_grid)){
+    if(any(abs(es_grid) > 1)){
+      stop("This tool only considers small to moderate correlations. An effect size of 1 corresponds to a correlation of 0.44. Please reduce the size of your grid. For example: rho_grid = seq(-.4, .4, by = 0.05)")
+    }
   }
+
   tx = model_results$tx
   y = model_results$y
   data = model_results$data
