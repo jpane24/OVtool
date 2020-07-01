@@ -16,13 +16,13 @@ plot.ov <- function(x, col="color", print_graphic="1") {
 
   # .pardefault <- graphics::par(no.readonly=TRUE)
   if(print_graphic == "1"){
-    grid::grid.draw(plot_1)
+    suppressWarnings(grid::grid.draw(plot_1))
   } else if(print_graphic == "2"){
-    grid::grid.draw(plot_2)
+    suppressWarnings(grid::grid.draw(plot_2))
     if(prep_plots$text_high!=""){print(prep_plots$text_high)}
     if(prep_plots$text_high_es!=""){print(prep_plots$text_high_es)}
   } else if(print_graphic == "3"){
-    grid::grid.draw(plot_3)
+    suppressWarnings(grid::grid.draw(plot_3))
     if(prep_plots$text_high!=""){print(prep_plots$text_high)}
     if(prep_plots$text_high_es!=""){print(prep_plots$text_high_es)}
   }

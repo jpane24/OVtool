@@ -48,13 +48,13 @@ es_point_plot = function(prep, col = "color"){
                           labels = pvals) +
     ggplot2::geom_point(data = obs_cors, col=color[[1]][2],
                         ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL)) +
-    metR::geom_text_contour(ggplot2::aes(z=trt_effect), stroke=.2, check_overlap = T) +
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
                                       gp = grid::gpar(cex = .75)),
                       ymin = .1, ymax = .1, xmax = max(r1_df$es_grid)+.1, xmin=max(r1_df$es_grid)+.05)  +
     ggrepel::geom_text_repel(data = obs_cors,
                              ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
-                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
+    metR::geom_text_contour(ggplot2::aes(z=trt_effect), stroke=.2, check_overlap = T)
 
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),

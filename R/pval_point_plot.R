@@ -34,7 +34,6 @@ pval_point_plot = function(prep, col = "color"){
     ggplot2::geom_hline(yintercept=max(r1_df$rho_grid)) +
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association with Treatment Indicator\n(effect size scale)") +
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("Pvalue contours") +
-    metR::geom_text_contour(stroke=.2) +
     ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[1]),
                  color = color[[1]][1], breaks=pvals[1]) +
     ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = es_grid, y = rho_grid, z = p_val, linetype=pval_lines[2]),
@@ -53,7 +52,8 @@ pval_point_plot = function(prep, col = "color"){
           legend.key.size =  grid::unit(0.5, "in")) +
     ggrepel::geom_text_repel(data=obs_cors,
                     ggplot2::aes(x = ES, y = Cor_Outcome_Actual, z = NULL, label = cov),
-                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2])
+                    box.padding = grid::unit(0.45, "lines"), col=color[[1]][2]) +
+    metR::geom_text_contour(stroke=.2, check_overlap = T)
 
   if(col=="bw"){
     v2 = v2 + ggplot2::theme_bw() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
