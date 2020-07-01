@@ -368,7 +368,7 @@ summary {
 </div>
 
 
-<p><em>Note: This is a work in progress.. This document was lasted upated 2020-06-30 09:35:57</em></p>
+<p><em>Note: This is a work in progress.. This document was lasted upated 2020-06-30 20:26:48</em></p>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (<code>OVtool</code>) package was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This package includes graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (in preparation) describe the methodology behind the primary function in this package, <code>ov_sim()</code>. This document presents syntax for the implementation of the <code>ov_sim()</code> function and provides an example of how to interpret the packages’ graphical output.</p>
@@ -399,7 +399,7 @@ sud$treat = ifelse(sud$treat == &quot;A&quot;, 1, 0)</code></pre>
 <li><p><code>mhtrt_0</code>: mental health treatment in the past 90 days at baseline</p></li>
 <li><p><code>dss9_0</code>: depressive symptom scale at baseline</p></li>
 </ul>
-<p>In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. The OVtool also handles binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand.</p>
+<p>In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. <strong>The OVtool will handle (binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand in the near future.</strong></p>
 <div id="continous-outcome-average-treatment-effect-ate" class="section level2">
 <h2>Continous Outcome: Average Treatment Effect (ATE)</h2>
 <p>The <code>OVtool</code> can either take a vector of weights estimated using any method or a ps object produced by <code>TWANG</code> (Ridgeway et al., 2020). We begin walking through the OVtool by estimating weights using <code>ps()</code> from the <code>TWANG</code> package prior to running the outcome model using <code>outcome_model()</code> from the <code>OVtool</code> package. The <code>outcome_model</code> function calls <code>svyglm</code> from the <code>survey</code> package in R (<a href="http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf">survey</a>) to produce outcome model results. The chunk of code below demonstrates how to specify your propensity score model and generate your propensity score weights using the <code>TWANG</code> package.</p>
@@ -491,8 +491,8 @@ summary(results$mod_results)</code></pre>
 <p>At this stage, researchers should begin to ask themselves if this effect is real and how sensitive it is. Our tool is used to help answer these sort of logical next step questions. The next snippet of code presents the main function in <code>OVtool</code>: <code>ov_sim()</code>. This function requires results from <code>outcome_model()</code> plus additional parameters including:</p>
 <ul>
 <li><p><code>weight_covariates</code>: a vector of column names representing the covariates used to produce the analysts propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)</p></li>
-<li><p><code>es_grid</code>: a vector on an effect size scale representing the association between the unobserved confounders (omitted variables) and the treatment indicator</p></li>
-<li><p><code>rho_grid</code>: a vector of correlations to simulate over. These correlations represent the correlation between the omitted variable and the outcome</p></li>
+<li><p><code>es_grid</code>: a vector on an effect size scale representing the association between the unobserved confounders (omitted variables) and the treatment indicator.</p></li>
+<li><p><code>rho_grid</code>: a vector of absolute correlations to simulate over. These correlations represent the absolute correlation between the omitted variable and the outcome</p></li>
 <li><p><code>n_reps</code>: the number of repetitions represents the number of times an unobserved confounder is simulated at each effect size and rho combination. The package defaults to 50. Fifty repetitions should be sufficient but the analyst may need to reduce or increase the number of repetitions.</p></li>
 </ul>
 <p>The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size and rho, respectively. We define the effect size on the x-axis to show the strength of the relationship between the simulated unobserved covariate (U) and the treatment group indicator; it is defined as the standardized mean difference in U for the treatment A and treatment B groups. Typical rules of thumb for effect sizes (Cohen’s D) follow such that effect sizes greater than 0.2 would be considered small, 0.4 would be moderate and 0.6 would be large (Cohen, J., 1995). We define rho in this setting as the absolute correlation the unobserved covariate (U) has with the outcome of interest, with larger values indicating stronger relationships between U and the outcome. Please see Burgette et al. (in progress) for additional details on the methodology used by <code>OVtool</code>.</p>
@@ -503,11 +503,17 @@ ovtool_results_twang = ov_sim(model_results=results,
                                                   &quot;recov_0&quot;, &quot;tss_0&quot;, 
                                                   &quot;mhtrt_0&quot;, &quot;dss9_0&quot;),
                               es_grid = NULL,
-                              rho_grid = seq(0, 0.40, by = 0.05),
-                              n_reps=50,
+                              rho_grid = seq(0, 0.40, by = 0.05), 
+                              n_reps = 50,
                               progress = TRUE)</code></pre>
-<pre><code>## [1] &quot;Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded.&quot;
-## [1] &quot;6% Done!&quot;
+<pre><code>## Warning in ov_sim(model_results = results, weight_covariates = c(&quot;eps7p_0&quot;, :
+## You specified a rho grid whose maximum value is less than the maximum absolute
+## correlation at least one observed covariate has with the outcome. The rho grid
+## was automatically expanded to include all weight_covariates specified in the
+## relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
+## you must exclude the following variables from the weight_covariates argument:
+## eps7p_0, tss_0, dss9_0.</code></pre>
+<pre><code>## [1] &quot;6% Done!&quot;
 ## [1] &quot;12% Done!&quot;
 ## [1] &quot;18% Done!&quot;
 ## [1] &quot;24% Done!&quot;
@@ -524,10 +530,10 @@ ovtool_results_twang = ov_sim(model_results=results,
 ## [1] &quot;88% Done!&quot;
 ## [1] &quot;94% Done!&quot;
 ## [1] &quot;100% Done!&quot;</code></pre>
-<p>In our example, <code>ov_sim</code> produced a note saying “The maximum rho value you specified is less than the maximum absolute correlation an observed covariate has with the outcome. The rho grid was automatically expanded.” The grid was expanded to ensure all <code>weight_covariates</code> could be seen on the contour plot. If the user does not want the grid expanded, they can leave out the observed covariates used in the propensity score model that have an absolute correlation with the outcome that is greater than the maximum rho value the user specifies. In the tutorial, if we did not want the rho grid expanded, we could specify <code>weight_covariates = c(&quot;sfs8p_0&quot;, &quot;sati_0&quot;, &quot;ada_0&quot;, &quot;recov_0&quot;, &quot;mhtrt_0&quot;)</code>. We dropped <code>eps_7p_0</code>, <code>dss9_0</code>, and <code>tss_0</code> because they all had absolute correlations with the outcome that are greater than 0.4.</p>
-<p>The grid values are not required; if es_grid and/or rho_grid are set to <code>NULL</code>, the tool will calculate reasonable values to simulate over. In other words, the tool will iterate over all observed covariate associations with the treatment indicator on an effect size scale to derive a reasonable range. This process uses an OVtool inner function called <code>find_esgrid()</code>.</p>
+<p>In our example, <code>ov_sim</code> produced a warning saying “You specified a rho grid whose maximum value is less than the maximum absolute correlation at least one observed covariate has with the outcome. The rho grid was automatically expanded to include all weight_covariates specified in the relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then you must exclude the following variables from the weight_covariates argument: eps7p_0, tss_0, dss9_0.” The grid was expanded to ensure all <code>weight_covariates</code> could be seen on the contour plot. If the user does not want the grid expanded, they can leave out the observed covariates used in the propensity score model that have an absolute correlation with the outcome that is greater than the maximum rho value the user specifies (<code>eps_7p_0</code>, <code>dss9_0</code>, and <code>tss_0</code>).</p>
+<p>The grid values are not required; if es_grid and/or rho_grid are set to <code>NULL</code>, the tool will calculate reasonable values to simulate over. For this tutorial we set <code>es_grid</code> to NULL. The tool then iterated over all observed covariate associations with the treatment indicator on an effect size scale to derive a reasonable range.</p>
 <p>There are a few methodological assumptions that are important for an analyst to understand.</p>
-<p>First, when generating the omitted variable (U), the empirical cumulative distribution function (CDF) for the outcome within each treatment is used. When multiple ties are present, the tool handles this by randomly ranking multiple ties. For example, imagine a scenario where you have ten observations (shown in rank order) and the first two observations are 0s. As opposed to assigning the two zeroes a value of 0.2, the tool will randomly assign the rank of the two zeroes and assign the first observation with 0.1 and the second observation with 0.2. This process is repeated for each effect size and rho combination <code>n_reps</code> times.</p>
+<p>First, when generating the omitted variable (U), the empirical cumulative distribution function (CDF) for the outcome within each treatment is used. When multiple ties are present, the tool handles this by randomly ranking multiple ties. For example, imagine a scenario where you have ten observations (shown in rank order) and the first two observations are 0s. The tool will randomly assign the rank of the two zeroes and assign the first observation with 0.1 and the second observation with 0.2 as opposed to assigning the two zeroes a value of 0.2. This process is repeated for each effect size and rho combination <code>n_reps</code> times.</p>
 <p>Another key assumption this method draws upon is that the omitted variable is independent from all observed covariates included in the propensity score model.</p>
 <p>To visualize our results, the <code>plot.ov</code> function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter <code>col</code> as <code>&quot;color&quot;</code>, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the p-value contours with the column names submitted to <code>weight_covariates</code> plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlayed and covariate labels. The <code>col</code> options for Figures 2 and 3 are <code>&quot;bw&quot;</code> and <code>&quot;color&quot;</code> which produce a black and white and colored contour graphic, respectively.</p>
 <pre class="r"><code>plot.ov(ovtool_results_twang, print_graphic = &quot;1&quot;, col = &quot;bw&quot;)</code></pre>

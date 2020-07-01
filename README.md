@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-30 09:22:58*
+2020-06-30 20:10:43*
 
 Introduction
 ============
@@ -106,9 +106,10 @@ The relevant variables in this analysis are:
 -   `dss9_0`: depressive symptom scale at baseline
 
 In the next section, we will show how our method works with the average
-treatment effect (ATE) using a continuous outcome. The OVtool also
-handles binary outcomes and weights that were estimated using the
-average treatment effect on the treated (ATT) estimand.
+treatment effect (ATE) using a continuous outcome. **The OVtool will
+handle (binary outcomes and weights that were estimated using the
+average treatment effect on the treated (ATT) estimand in the near
+future.**
 
 Continous Outcome: Average Treatment Effect (ATE)
 -------------------------------------------------
@@ -250,11 +251,11 @@ results from `outcome_model()` plus additional parameters including:
 
 -   `es_grid`: a vector on an effect size scale representing the
     association between the unobserved confounders (omitted variables)
-    and the treatment indicator
+    and the treatment indicator.
 
--   `rho_grid`: a vector of correlations to simulate over. These
-    correlations represent the correlation between the omitted variable
-    and the outcome
+-   `rho_grid`: a vector of absolute correlations to simulate over.
+    These correlations represent the absolute correlation between the
+    omitted variable and the outcome
 
 -   `n_reps`: the number of repetitions represents the number of times
     an unobserved confounder is simulated at each effect size and rho
@@ -283,11 +284,18 @@ used by `OVtool`.
                                                       "recov_0", "tss_0", 
                                                       "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
-                                  rho_grid = seq(0, 0.40, by = 0.05),
-                                  n_reps=50,
+                                  rho_grid = seq(0, 0.40, by = 0.05), 
+                                  n_reps = 50,
                                   progress = TRUE)
 
-    ## [1] "Note: The maximum rho value you specified is less than the maximum absolute correlation a covariate has with the outcome. The rho grid was automatically expanded."
+    ## Warning in ov_sim(model_results = results, weight_covariates = c("eps7p_0", :
+    ## You specified a rho grid whose maximum value is less than the maximum absolute
+    ## correlation at least one observed covariate has with the outcome. The rho grid
+    ## was automatically expanded to include all weight_covariates specified in the
+    ## relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
+    ## you must exclude the following variables from the weight_covariates argument:
+    ## eps7p_0, tss_0, dss9_0.
+
     ## [1] "6% Done!"
     ## [1] "12% Done!"
     ## [1] "18% Done!"
@@ -306,26 +314,24 @@ used by `OVtool`.
     ## [1] "94% Done!"
     ## [1] "100% Done!"
 
-In our example, `ov_sim` produced a note saying “The maximum rho value
-you specified is less than the maximum absolute correlation an observed
-covariate has with the outcome. The rho grid was automatically
-expanded.” The grid was expanded to ensure all `weight_covariates` could
-be seen on the contour plot. If the user does not want the grid
-expanded, they can leave out the observed covariates used in the
-propensity score model that have an absolute correlation with the
-outcome that is greater than the maximum rho value the user specifies.
-In the tutorial, if we did not want the rho grid expanded, we could
-specify
-`weight_covariates = c("sfs8p_0", "sati_0", "ada_0", "recov_0", "mhtrt_0")`.
-We dropped `eps_7p_0`, `dss9_0`, and `tss_0` because they all had
-absolute correlations with the outcome that are greater than 0.4.
+In our example, `ov_sim` produced a warning saying “You specified a rho
+grid whose maximum value is less than the maximum absolute correlation
+at least one observed covariate has with the outcome. The rho grid was
+automatically expanded to include all weight\_covariates specified in
+the relevant graphics. If you want the rho grid range to remain from 0
+to 0.4 then you must exclude the following variables from the
+weight\_covariates argument: eps7p\_0, tss\_0, dss9\_0.” The grid was
+expanded to ensure all `weight_covariates` could be seen on the contour
+plot. If the user does not want the grid expanded, they can leave out
+the observed covariates used in the propensity score model that have an
+absolute correlation with the outcome that is greater than the maximum
+rho value the user specifies (`eps_7p_0`, `dss9_0`, and `tss_0`).
 
 The grid values are not required; if es\_grid and/or rho\_grid are set
 to `NULL`, the tool will calculate reasonable values to simulate over.
-In other words, the tool will iterate over all observed covariate
-associations with the treatment indicator on an effect size scale to
-derive a reasonable range. This process uses an OVtool inner function
-called `find_esgrid()`.
+For this tutorial we set `es_grid` to NULL. The tool then iterated over
+all observed covariate associations with the treatment indicator on an
+effect size scale to derive a reasonable range.
 
 There are a few methodological assumptions that are important for an
 analyst to understand.
@@ -335,11 +341,11 @@ cumulative distribution function (CDF) for the outcome within each
 treatment is used. When multiple ties are present, the tool handles this
 by randomly ranking multiple ties. For example, imagine a scenario where
 you have ten observations (shown in rank order) and the first two
-observations are 0s. As opposed to assigning the two zeroes a value of
-0.2, the tool will randomly assign the rank of the two zeroes and assign
-the first observation with 0.1 and the second observation with 0.2. This
-process is repeated for each effect size and rho combination `n_reps`
-times.
+observations are 0s. The tool will randomly assign the rank of the two
+zeroes and assign the first observation with 0.1 and the second
+observation with 0.2 as opposed to assigning the two zeroes a value of
+0.2. This process is repeated for each effect size and rho combination
+`n_reps` times.
 
 Another key assumption this method draws upon is that the omitted
 variable is independent from all observed covariates included in the
