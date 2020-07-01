@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-30 20:10:43*
+2020-06-30 23:38:58*
 
 Introduction
 ============
@@ -68,10 +68,15 @@ days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`).
 We begin by loading the development version of the package from
 [GitHub](https://github.com/). If you haven’t installed the devtools
 package, make sure you uncomment and run the first line of the following
-code snippet prior to running the second line:
+code snippet prior to running the second line. *Note: installing OVtool
+may require a large number of other package installations if they are
+not already installed on your machine. To avoid conflicts, we recommend
+you restart your R session after running:*
+`devtools::install_github("jpane24/OVtool")`
 
     # install.packages("devtools")
-    devtools::install_github("jpane24/OVtool")
+    devtools::install_github("jpane24/OVtool") 
+    # we recommend restarting your R session after running the previous line of code for the first time on your machine. 
     library(OVtool)
 
 We can load the synthetic dataset and make our treatment variable a
