@@ -70,11 +70,11 @@ ov_sim <- function(model_results, weight_covariates,
 
   trt_effect_nodr <- matrix(0,length(es_grid), length(rho_grid))
   p_val_nodr <- matrix(0,length(es_grid), length(rho_grid))
-  std_error <- matrix(0, length(es_grid), length(rho_grid))
+  std_error_nodr <- matrix(0, length(es_grid), length(rho_grid))
   pValHd <- esHd <- StdError <- rep(NA, n_reps)
   # create w_new and set it to the original weights for now
   data$w_new = data$w_orig
-  
+
   for(i in 1:length(es_grid)){
     for(j in 1:length(rho_grid)){
       for(k in 1:n_reps){
