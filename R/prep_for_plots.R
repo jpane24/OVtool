@@ -163,9 +163,7 @@ prep_for_plots <- function(r1){
 
   obs_cors = obs_cors %>%
     dplyr::mutate(ES = dplyr::case_when(abs(ES) > max(r1$es_grid, na.rm=T) ~ max(r1$es_grid, na.rm=T)*(ES/abs(ES)), TRUE ~ ES))
-  # temporary line of code
-  # cov = gsub('_.*','',cov))
-
+  
   return(list(r1=r1, r1_df=r1_df, obs_cors=obs_cors, text_high=text_high,
               text_high_es=text_high_es, pvals=pvals, pval_lines=pval_lines, raw = raw))
 

@@ -55,6 +55,8 @@ ov_sim returns a list containing the following components:
 \item{tx}{column name in data representing the treatment indicator}
 \item{y}{column name in data representing the outcome}
 \item{estimand}{estimand used}
+\item{n_reps}{number of repetitions to simulate over}
+\item{std.error}{matrix of standard errors for each grid point}
 }
 \references{
 %% ~put references to the literature/web site here ~

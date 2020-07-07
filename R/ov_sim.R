@@ -68,12 +68,13 @@ ov_sim <- function(model_results, weight_covariates,
     }
   }
 
-  trt_effect_nodr <- matrix(0,length(es_grid),length(rho_grid))
-  p_val_nodr <- matrix(0,length(es_grid),length(rho_grid))
+  trt_effect_nodr <- matrix(0,length(es_grid), length(rho_grid))
+  p_val_nodr <- matrix(0,length(es_grid), length(rho_grid))
+  std_error <- matrix(0, length(es_grid), length(rho_grid))
   pValHd <- esHd <- StdError <- rep(NA, n_reps)
   # create w_new and set it to the original weights for now
   data$w_new = data$w_orig
-
+  
   for(i in 1:length(es_grid)){
     for(j in 1:length(rho_grid)){
       for(k in 1:n_reps){
@@ -96,6 +97,7 @@ ov_sim <- function(model_results, weight_covariates,
                p.value = 2 * pnorm(abs(statistic),lower.tail = FALSE))
       p_val_nodr[i,j] <- melded_summary$p.value
       trt_effect_nodr[i,j] <- melded_summary$estimate
+      std_error_nodr[i,j] <- melded_summary$std.error
     }
     if((length(es_grid) >1) & progress == TRUE){
       print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
@@ -105,7 +107,7 @@ ov_sim <- function(model_results, weight_covariates,
   results = list(p_val = p_val_nodr, trt_effect = trt_effect_nodr,
                  es_grid = es_grid, rho_grid = rho_grid, cov = cov,
                  data = data, tx = tx, y = y, estimand = estimand,
-                 n_reps = n_reps)
+                 n_reps = n_reps, std.error = std.error)
   class(results) <- "ov"
   return(results)
 }
