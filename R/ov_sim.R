@@ -163,7 +163,7 @@ ov_sim <- function(model_results, weight_covariates,
         print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
       }
     }
-    store_results = bind_rows(sim_archive, store_results)
+    store_results = dplyr::bind_rows(sim_archive, store_results)
   }
   results = list(p_val = p_val_nodr, trt_effect = trt_effect_nodr,
                  es_grid = es_grid, rho_grid = rho_grid, cov = cov,
