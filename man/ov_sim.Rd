@@ -12,8 +12,8 @@ treatment effect and relevant p-value changes
 }
 \usage{
 ov_sim(model_results, weight_covariates, es_grid = seq(-.4, .4, by = 0.05),
-rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE)
-
+rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE, add = FALSE,
+sim_archive = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,6 +34,12 @@ rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE)
 }
   \item{progress}{
   Whether or not the function progress should print to screen. The default value is TRUE. If the user does not want the output to print to screen, they should set to FALSE.
+}
+\item{add}{
+Default is FALSE. This is set to true if the user is running additional repetitions after the first call to ov_sim
+}
+\item{sim_archive}{
+Default is NULL
 }
 }
 \details{
@@ -57,6 +63,7 @@ ov_sim returns a list containing the following components:
 \item{estimand}{estimand used}
 \item{n_reps}{number of repetitions to simulate over}
 \item{std.error}{matrix of standard errors for each grid point}
+\item{es_se_raw}{matrix that stores each repetitions results at every grid point}
 }
 \references{
 %% ~put references to the literature/web site here ~

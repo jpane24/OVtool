@@ -150,14 +150,14 @@ The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size
 
 ```{r, ov_sim}
 # Run OVtool (with weights (not a ps object))
-ovtool_results_twang = ov_sim(model_results=results, 
+ovtool_results_twang = ov_sim2(model_results=results, 
                               weight_covariates=c("eps7p_0", "sfs8p_0",
                                                   "sati_0", "ada_0",
                                                   "recov_0", "tss_0", 
                                                   "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
-                              n_reps = 50,
+                              n_reps = 2,
                               progress = TRUE)
 ```
 
