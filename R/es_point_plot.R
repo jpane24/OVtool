@@ -17,7 +17,7 @@ es_point_plot = function(prep, col = "color"){
 
   v3 <- ggplot2::ggplot(r1_df, ggplot2::aes(x = .data$es_grid, y = .data$rho_grid,
                                             z = .data$trt_effect)) +
-    ggplot2::geom_rect(ggplot2::aes(ymin = max(.data$rho_grid),
+    ggplot2::geom_rect(ggplot2::aes(ymin = max(r1_df$rho_grid),
                                     ymax = Inf,
                                     xmin = -Inf,
                                     xmax = Inf),
@@ -31,9 +31,9 @@ es_point_plot = function(prep, col = "color"){
                        alpha = 0.01) +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(limits = c(0,max(c(obs_cors$Cor_Outcome_Actual,
-                                                   .data$rho_grid))),expand = c(0, 0)) +
+                                                   r1_df$rho_grid))),expand = c(0, 0)) +
     ggplot2::theme_linedraw() +
-    ggplot2::geom_hline(yintercept=max(.data$rho_grid)) +
+    ggplot2::geom_hline(yintercept=max(r1_df$rho_grid)) +
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association with Treatment Indicator\n(effect size scale)") +
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
