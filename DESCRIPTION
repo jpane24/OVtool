@@ -24,6 +24,7 @@ Imports:
 	rlang,
 	survey,
 	stats,
+	tibble,
 	tidyselect,
 	twang, 
 	varhandle
