@@ -3,7 +3,7 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-07-28 12:34:45*
+2020-07-28 13:03:02*
 
 # Introduction
 
@@ -460,11 +460,10 @@ standardized mean difference on the given covariates between the two
 groups).
 
 Finally, we can interpret this graphic by running the summary command on
-the ov
-object:
+the ov object:
 
 ``` r
-summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
+summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
     ## [1] "12% Done!"
