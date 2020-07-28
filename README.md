@@ -2,10 +2,10 @@
 
 
 
-*Note: This is a work in progress.. This document was lasted upated
-2020-07-28 13:03:02*
-
 # Introduction
+
+*Note: This is a work in progress.. This document was lasted upated
+2020-07-28 14:09:49*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -146,27 +146,27 @@ ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
 bal.table(ps.twang); # summary(ps.twang)
 ```
 
-    ## $unw
-    ##          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    ## eps7p_0  0.256  0.196  0.219  0.192      0.187  5.937 0.000 0.103   0.000
-    ## sfs8p_0 11.253 13.134 10.571 12.162      0.054  1.703 0.089 0.045   0.032
-    ## sati_0   8.233 22.128  2.145 10.658      0.345 11.088 0.000 0.121   0.000
-    ## ada_0   48.748 33.400 54.236 32.454     -0.166 -5.271 0.000 0.081   0.000
-    ## recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
-    ## tss_0    2.277  3.525  1.924  3.115      0.106  3.365 0.001 0.043   0.050
-    ## mhtrt_0  0.290  0.513  0.256  0.484      0.069  2.188 0.029 0.028   0.413
-    ## dss9_0   2.750  2.604  2.638  2.492      0.044  1.390 0.165 0.023   0.666
-    ## 
-    ## $ks.max.ATE
-    ##          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    ## eps7p_0  0.238  0.193  0.232  0.192      0.033  1.015 0.310 0.023   0.697
-    ## sfs8p_0 10.830 12.609 10.675 12.324      0.012  0.385 0.700 0.012   0.999
-    ## sati_0   5.302 17.852  4.087 15.449      0.069  1.955 0.051 0.024   0.641
-    ## ada_0   51.585 32.900 52.540 32.849     -0.029 -0.886 0.376 0.020   0.849
-    ## recov_0  0.247  0.431  0.240  0.427      0.017  0.506 0.613 0.007   1.000
-    ## tss_0    2.094  3.345  2.024  3.244      0.021  0.656 0.512 0.014   0.990
-    ## mhtrt_0  0.271  0.502  0.274  0.500     -0.006 -0.171 0.865 0.004   1.000
-    ## dss9_0   2.678  2.551  2.684  2.528     -0.002 -0.075 0.941 0.008   1.000
+    #> $unw
+    #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
+    #> eps7p_0  0.256  0.196  0.219  0.192      0.187  5.937 0.000 0.103   0.000
+    #> sfs8p_0 11.253 13.134 10.571 12.162      0.054  1.703 0.089 0.045   0.032
+    #> sati_0   8.233 22.128  2.145 10.658      0.345 11.088 0.000 0.121   0.000
+    #> ada_0   48.748 33.400 54.236 32.454     -0.166 -5.271 0.000 0.081   0.000
+    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
+    #> tss_0    2.277  3.525  1.924  3.115      0.106  3.365 0.001 0.043   0.050
+    #> mhtrt_0  0.290  0.513  0.256  0.484      0.069  2.188 0.029 0.028   0.413
+    #> dss9_0   2.750  2.604  2.638  2.492      0.044  1.390 0.165 0.023   0.666
+    #> 
+    #> $ks.max.ATE
+    #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
+    #> eps7p_0  0.238  0.193  0.232  0.192      0.033  1.015 0.310 0.023   0.697
+    #> sfs8p_0 10.830 12.609 10.675 12.324      0.012  0.385 0.700 0.012   0.999
+    #> sati_0   5.302 17.852  4.087 15.449      0.069  1.955 0.051 0.024   0.641
+    #> ada_0   51.585 32.900 52.540 32.849     -0.029 -0.886 0.376 0.020   0.849
+    #> recov_0  0.247  0.431  0.240  0.427      0.017  0.506 0.613 0.007   1.000
+    #> tss_0    2.094  3.345  2.024  3.244      0.021  0.656 0.512 0.014   0.990
+    #> mhtrt_0  0.271  0.502  0.274  0.500     -0.006 -0.171 0.865 0.004   1.000
+    #> dss9_0   2.678  2.551  2.684  2.528     -0.002 -0.075 0.941 0.008   1.000
 
 The output produced by the code snippet above demonstrates that `TWANG`
 does a reasonable job of balancing. There are additional diagnostics we
@@ -215,31 +215,31 @@ results = outcome_model(ps_object = NULL,
 summary(results$mod_results)
 ```
 
-    ## 
-    ## Call:
-    ## svyglm(formula = formula, design = design_u)
-    ## 
-    ## Survey design:
-    ## survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
-    ## 
-    ## Coefficients:
-    ##               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -0.7079871  0.0649876 -10.894  < 2e-16 ***
-    ## treat        0.0785796  0.0275254   2.855  0.00433 ** 
-    ## eps7p_0      1.6332282  0.1180704  13.833  < 2e-16 ***
-    ## sfs8p_0      0.0023047  0.0020310   1.135  0.25654    
-    ## sati_0       0.0017325  0.0012363   1.401  0.16119    
-    ## ada_0       -0.0000504  0.0007587  -0.066  0.94704    
-    ## recov_0     -0.0693833  0.0314387  -2.207  0.02737 *  
-    ## tss_0        0.0312059  0.0068902   4.529 6.10e-06 ***
-    ## mhtrt_0      0.2694083  0.0355520   7.578 4.34e-14 ***
-    ## dss9_0       0.0489996  0.0078452   6.246 4.66e-10 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.6890915)
-    ## 
-    ## Number of Fisher Scoring iterations: 2
+    #> 
+    #> Call:
+    #> svyglm(formula = formula, design = design_u)
+    #> 
+    #> Survey design:
+    #> survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
+    #> 
+    #> Coefficients:
+    #>               Estimate Std. Error t value Pr(>|t|)    
+    #> (Intercept) -0.7079871  0.0649876 -10.894  < 2e-16 ***
+    #> treat        0.0785796  0.0275254   2.855  0.00433 ** 
+    #> eps7p_0      1.6332282  0.1180704  13.833  < 2e-16 ***
+    #> sfs8p_0      0.0023047  0.0020310   1.135  0.25654    
+    #> sati_0       0.0017325  0.0012363   1.401  0.16119    
+    #> ada_0       -0.0000504  0.0007587  -0.066  0.94704    
+    #> recov_0     -0.0693833  0.0314387  -2.207  0.02737 *  
+    #> tss_0        0.0312059  0.0068902   4.529 6.10e-06 ***
+    #> mhtrt_0      0.2694083  0.0355520   7.578 4.34e-14 ***
+    #> dss9_0       0.0489996  0.0078452   6.246 4.66e-10 ***
+    #> ---
+    #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    #> 
+    #> (Dispersion parameter for gaussian family taken to be 0.6890915)
+    #> 
+    #> Number of Fisher Scoring iterations: 2
 
 The outcome model results show an adjusted treatment effect estimate
 that accounts for confounding from observed covariates between youth in
@@ -300,31 +300,31 @@ ovtool_results_twang = ov_sim(model_results=results,
                               progress = TRUE)
 ```
 
-    ## Warning in ov_sim(model_results = results, weight_covariates = c("eps7p_0", :
-    ## You specified a rho grid whose maximum value is less than the maximum absolute
-    ## correlation at least one observed covariate has with the outcome. The rho grid
-    ## was automatically expanded to include all weight_covariates specified in the
-    ## relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
-    ## you must exclude the following variables from the weight_covariates argument:
-    ## eps7p_0, tss_0, dss9_0.
+    #> Warning in ov_sim(model_results = results, weight_covariates = c("eps7p_0", :
+    #> You specified a rho grid whose maximum value is less than the maximum absolute
+    #> correlation at least one observed covariate has with the outcome. The rho grid
+    #> was automatically expanded to include all weight_covariates specified in the
+    #> relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
+    #> you must exclude the following variables from the weight_covariates argument:
+    #> eps7p_0, tss_0, dss9_0.
 
-    ## [1] "6% Done!"
-    ## [1] "12% Done!"
-    ## [1] "18% Done!"
-    ## [1] "24% Done!"
-    ## [1] "29% Done!"
-    ## [1] "35% Done!"
-    ## [1] "41% Done!"
-    ## [1] "47% Done!"
-    ## [1] "53% Done!"
-    ## [1] "59% Done!"
-    ## [1] "65% Done!"
-    ## [1] "71% Done!"
-    ## [1] "76% Done!"
-    ## [1] "82% Done!"
-    ## [1] "88% Done!"
-    ## [1] "94% Done!"
-    ## [1] "100% Done!"
+    #> [1] "6% Done!"
+    #> [1] "12% Done!"
+    #> [1] "18% Done!"
+    #> [1] "24% Done!"
+    #> [1] "29% Done!"
+    #> [1] "35% Done!"
+    #> [1] "41% Done!"
+    #> [1] "47% Done!"
+    #> [1] "53% Done!"
+    #> [1] "59% Done!"
+    #> [1] "65% Done!"
+    #> [1] "71% Done!"
+    #> [1] "76% Done!"
+    #> [1] "82% Done!"
+    #> [1] "88% Done!"
+    #> [1] "94% Done!"
+    #> [1] "100% Done!"
 
 ``` r
 # if you want to add repetitions, run the following line. You may change mo
@@ -379,14 +379,13 @@ names submitted to `weight_covariates` plotted by their raw rho and
 effect size. The third graphic (Figure 3) plots the treatment effect
 contours with the p-value contour overlayed and covariate labels. The
 `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce
-a black and white and colored contour graphic,
-respectively.
+a black and white and colored contour graphic, respectively.
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
 ```
 
-<img src="OVtool_files/figure-markdown_strict/fig1-1.png" style="display: block; margin: auto;" />
+<img src="inst/fig1-1.png" style="display: block; margin: auto;" />
 
 The y-axis in Figure 1 represents the unobserved confounder’s absolute
 correlation with the outcome and the x-axis is the association between
@@ -396,15 +395,15 @@ grid. The PS weighted treatment effect of Treatment A versus Treatment B
 equals 0.079 and is significant with a p-value equal to 0.004. However,
 looking at this graphic alone will not give us an idea of how sensitive
 the effect is.
-
+    
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 ```
 
-<img src="OVtool_files/figure-markdown_strict/fig2-1.png" style="display: block; margin: auto;" />
+<img src="inst/fig2-1.png" style="display: block; margin: auto;" />
 
-    ## [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
+    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 Figure 2 is a different variation of Figure 1, but only shows the
@@ -433,15 +432,15 @@ the magnitude to go with the direction of the significant effect. The
 blue points are meant to give the analyst an idea (using observed
 covariates as an indicator) of what would cause a change in the
 interpretation of their
-results.*
+    results.*
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 ```
 
-<img src="OVtool_files/figure-markdown_strict/fig3-1.png" style="display: block; margin: auto;" />
+<img src="inst/fig3-1.png" style="display: block; margin: auto;" />
 
-    ## [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
+    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 Figure 3, combines Figure 1 and Figure 2 into one graphic. Again, the
@@ -466,20 +465,20 @@ the ov object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    ## [1] "12% Done!"
-    ## [1] "25% Done!"
-    ## [1] "38% Done!"
-    ## [1] "50% Done!"
-    ## [1] "62% Done!"
-    ## [1] "75% Done!"
-    ## [1] "88% Done!"
-    ## [1] "100% Done!"
-    ## [1] "Recommendation for reporting the sensitivity analyses"
-    ## [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
+    #> [1] "12% Done!"
+    #> [1] "25% Done!"
+    #> [1] "38% Done!"
+    #> [1] "50% Done!"
+    #> [1] "62% Done!"
+    #> [1] "75% Done!"
+    #> [1] "88% Done!"
+    #> [1] "100% Done!"
+    #> [1] "Recommendation for reporting the sensitivity analyses"
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of association with the treatment indicator and outcome that are
     seen in the observed confounders. In the most extreme observed case, the estimated effect size is
     reduced by 84 percent."
-    ## [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
     expected to increase from 0.004 to 0.643. Significance at the 0.05 level would not be expected to

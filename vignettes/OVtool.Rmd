@@ -4,9 +4,9 @@ author: "Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaf
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Package OVtool}
+  %\VignetteIndexEntry{The tidy tools manifesto}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 header-includes:
 - \usepackage[T1]{fontenc}
 - \usepackage{courier}
@@ -18,7 +18,9 @@ header-includes:
 # word_document
 # pdf_document
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.path = "inst/",
+                      comment = "#>")
 hook_output = knit_hooks$get('output')
 knit_hooks$set(output = function(x, options) {
   # this hook is used only when the linewidth option is not NULL
@@ -33,9 +35,9 @@ knit_hooks$set(output = function(x, options) {
 time = Sys.time()
 ```
 
-*Note: This is a work in progress.. This document was lasted upated `r time`*
-
 # Introduction
+
+*Note: This is a work in progress.. This document was lasted upated `r time`*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`) package was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This package includes graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (in preparation) describe the methodology behind the primary function in this package, `ov_sim()`. This document presents syntax for the implementation of the `ov_sim()` function and provides an example of how to interpret the packages' graphical output.
 
