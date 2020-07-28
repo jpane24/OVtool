@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-07-28 16:06:26*
+2020-07-28 16:15:32*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -78,9 +78,9 @@ devtools::install_github("jpane24/OVtool")
 ```
 
     #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2MVftF/remotes635d4c651ac/jpane24-OVtool-50373c1/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2MVftF/remotes635d4c651ac/jpane24-OVtool-50373c1/DESCRIPTION’
+    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpKAnwq6/remotes68ab3cf39abd/jpane24-OVtool-ed7197c/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpKAnwq6/remotes68ab3cf39abd/jpane24-OVtool-ed7197c/DESCRIPTION’
     #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    #>      checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
     #>   ─  checking for LF line-endings in source and make files and shell scripts
     #>   ─  checking for empty or unneeded directories
     #>   ─  building ‘OVtool_1.0.0.tar.gz’
@@ -416,12 +416,6 @@ the effect is.
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 ```
 
-    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
-    
-    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
-    
-    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
-
 <img src="inst/fig2-1.png" style="display: block; margin: auto;" />
 
     #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
@@ -458,12 +452,6 @@ interpretation of their
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 ```
-
-    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
-    
-    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
-    
-    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
 
 <img src="inst/fig3-1.png" style="display: block; margin: auto;" />
 
