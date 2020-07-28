@@ -14,6 +14,7 @@ A dataset containing substance use disorder and mental health measures for adole
 \format{
   A data frame with 4000 observations on the following 29 variables.
   \describe{
+  \item{\code{treat}}{treatment indicator}
   \item{\code{tss_0}}{Traumatic Stress Scale, baseline}
   \item{\code{tss_3}}{Traumatic Stress Scale, recorded at 3-months}
   \item{\code{tss_6}}{Traumatic Stress Scale, recorded at 6-months}
@@ -45,11 +46,7 @@ A dataset containing substance use disorder and mental health measures for adole
   }
 }
 \source{
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
 Global Appraisal of Individual Needs biopsychosocial assessment instrument - GAIN - Dennis, Titus et al. 2003
-}
-\references{
-%%  ~~ possibly secondary sources and usages ~~
 }
 \examples{
 data(sud)

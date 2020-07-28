@@ -3,10 +3,9 @@
 
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-06-30 23:38:58*
+2020-07-28 12:34:45*
 
-Introduction
-============
+# Introduction
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -26,8 +25,7 @@ models. It will estimate the potential impact of the unobserved
 counfounders on both the estimated treatment or exposure effects as well
 as on the statistical significance of an analysis.
 
-Example: Synthetic Data
-=======================
+# Example: Synthetic Data
 
 This package is demonstrated using a synthetic data set that was derived
 from a large scale observational study on youth in substance use
@@ -63,7 +61,7 @@ baseline: emotional problem scale (`eps7p_0`), adjusted days abstinent
 (any in past 90) (`ada_0`), substance frequency scale (`sfs8p_0`),
 substance abuse treatment index (`sati_0`), in recovery (`recov_0`),
 traumatic stress scale (`tss_0`), mental health treatment in the past 90
-days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`).
+days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`). 
 
 We begin by loading the development version of the package from
 [GitHub](https://github.com/). If you haven’t installed the devtools
@@ -74,41 +72,45 @@ not already installed on your machine. To avoid conflicts, we recommend
 you restart your R session after running:*
 `devtools::install_github("jpane24/OVtool")`
 
-    # install.packages("devtools")
-    devtools::install_github("jpane24/OVtool") 
-    # we recommend restarting your R session after running the previous line of code for the first time on your machine. 
-    library(OVtool)
+``` r
+# install.packages("devtools")
+devtools::install_github("jpane24/OVtool") 
+# we recommend restarting your R session after running the previous line of code for the first time on your machine. 
+library(OVtool)
+```
 
 We can load the synthetic dataset and make our treatment variable a
 binary indicator of 0’s and 1’s:
 
-    data(sud) 
-    sud$treat = ifelse(sud$treat == "A", 1, 0)
+``` r
+data(sud) 
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+```
 
 The relevant variables in this analysis are:
 
--   **Treatment indicator** `treat`: indicates treatment type where 1 is
+  - **Treatment indicator** `treat`: indicates treatment type where 1 is
     Treatment “A” and 0 is Treatment “B”
 
--   **Outcome of interest** `eps7p_3`: emotional problem scale at
+  - **Outcome of interest** `eps7p_3`: emotional problem scale at
     3-months
 
--   `eps7p_0`: emotional problem scale at baseline
+  - `eps7p_0`: emotional problem scale at baseline
 
--   `sfs8p_0`: substance frequency scale 8-item version at baseline
+  - `sfs8p_0`: substance frequency scale 8-item version at baseline
 
--   `sati_0`: substance abuse treatment index at baseline
+  - `sati_0`: substance abuse treatment index at baseline
 
--   `ada_0`: adjusted days abstinent at baseline
+  - `ada_0`: adjusted days abstinent at baseline
 
--   `recov_0`: indicates whether the adolescent was in recovery at
+  - `recov_0`: indicates whether the adolescent was in recovery at
     baseline, where 1 is in recovery and 0 is not in recovery
 
--   `tss_0`: traumatic stress scale at baseline
+  - `tss_0`: traumatic stress scale at baseline
 
--   `mhtrt_0`: mental health treatment in the past 90 days at baseline
+  - `mhtrt_0`: mental health treatment in the past 90 days at baseline
 
--   `dss9_0`: depressive symptom scale at baseline
+  - `dss9_0`: depressive symptom scale at baseline
 
 In the next section, we will show how our method works with the average
 treatment effect (ATE) using a continuous outcome. **The OVtool will
@@ -116,8 +118,7 @@ handle (binary outcomes and weights that were estimated using the
 average treatment effect on the treated (ATT) estimand in the near
 future.**
 
-Continous Outcome: Average Treatment Effect (ATE)
--------------------------------------------------
+## Continous Outcome: Average Treatment Effect (ATE)
 
 The `OVtool` can either take a vector of weights estimated using any
 method or a ps object produced by `TWANG` (Ridgeway et al., 2020). We
@@ -130,18 +131,20 @@ to produce outcome model results. The chunk of code below demonstrates
 how to specify your propensity score model and generate your propensity
 score weights using the `TWANG` package.
 
-    ## Create Formula
-    my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
-                              tss_0 + mhtrt_0 + dss9_0)
+``` r
+## Create Formula
+my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
+                          tss_0 + mhtrt_0 + dss9_0)
 
-    ## Get weights
-    sud = data.frame(sud)
-    library(twang)
-    ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
-                   stop.method = "ks.max", verbose=F, ks.exact = T)
+## Get weights
+sud = data.frame(sud)
+library(twang)
+ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
+               stop.method = "ks.max", verbose=F, ks.exact = T)
 
-    # Check Balance
-    bal.table(ps.twang); # summary(ps.twang)
+# Check Balance
+bal.table(ps.twang); # summary(ps.twang)
+```
 
     ## $unw
     ##          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
@@ -178,9 +181,9 @@ results for their outcome model. There are two options the researcher
 can take to input the relevant information to get their outcome results
 using `outcome_model()`.
 
--   Input a `ps.object` from `TWANG` and a `stop.method` (e.g.
+  - Input a `ps.object` from `TWANG` and a `stop.method` (e.g.
     `"ks.max"`) or
--   Input a vector of `weights`, a data frame containing the `data`
+  - Input a vector of `weights`, a data frame containing the `data`
     used, and the column name representing the treatment indicator,
     `treatment`.
 
@@ -189,26 +192,28 @@ a vector of covariates to be included in the final outcome model.
 Recall: `outcome_model()` calls `svyglm()` from the survey package to
 run the outcome model.
 
-    # Get weights (not needed if user inserts a ps object in OVTool)
-    sud$w_twang = ps.twang$w$ks.max.ATE
+``` r
+# Get weights (not needed if user inserts a ps object in OVTool)
+sud$w_twang = ps.twang$w$ks.max.ATE
 
-    # Run Models -- first standardize outcome
-    sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
+# Run Models -- first standardize outcome
+sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
-    # Run outcome model (function in OVtool that calls survey::svyglm)
-    results = outcome_model(ps_object = NULL,
-                            stop.method = NULL, 
-                            data = sud,
-                            weights = sud$w_twang, 
-                            treatment = "treat",
-                            outcome = "eps7p_3_std", 
-                            model_covariates = c("eps7p_0", "sfs8p_0",
-                                                 "sati_0", "ada_0",
-                                                 "recov_0", "tss_0",
-                                                 "mhtrt_0", "dss9_0"),
-                            estimand = "ATE")
+# Run outcome model (function in OVtool that calls survey::svyglm)
+results = outcome_model(ps_object = NULL,
+                        stop.method = NULL, 
+                        data = sud,
+                        weights = sud$w_twang, 
+                        treatment = "treat",
+                        outcome = "eps7p_3_std", 
+                        model_covariates = c("eps7p_0", "sfs8p_0",
+                                             "sati_0", "ada_0",
+                                             "recov_0", "tss_0",
+                                             "mhtrt_0", "dss9_0"),
+                        estimand = "ATE")
 
-    summary(results$mod_results)
+summary(results$mod_results)
+```
 
     ## 
     ## Call:
@@ -249,20 +254,20 @@ sort of logical next step questions. The next snippet of code presents
 the main function in `OVtool`: `ov_sim()`. This function requires
 results from `outcome_model()` plus additional parameters including:
 
--   `weight_covariates`: a vector of column names representing the
+  - `weight_covariates`: a vector of column names representing the
     covariates used to produce the analysts propensity score weights
     (these may or may not be the same as the list of covariates used for
     the outcome model)
 
--   `es_grid`: a vector on an effect size scale representing the
+  - `es_grid`: a vector on an effect size scale representing the
     association between the unobserved confounders (omitted variables)
     and the treatment indicator.
 
--   `rho_grid`: a vector of absolute correlations to simulate over.
+  - `rho_grid`: a vector of absolute correlations to simulate over.
     These correlations represent the absolute correlation between the
     omitted variable and the outcome
 
--   `n_reps`: the number of repetitions represents the number of times
+  - `n_reps`: the number of repetitions represents the number of times
     an unobserved confounder is simulated at each effect size and rho
     combination. The package defaults to 50. Fifty repetitions should be
     sufficient but the analyst may need to reduce or increase the number
@@ -282,16 +287,18 @@ indicating stronger relationships between U and the outcome. Please see
 Burgette et al. (in progress) for additional details on the methodology
 used by `OVtool`.
 
-    # Run OVtool (with weights (not a ps object))
-    ovtool_results_twang = ov_sim(model_results=results, 
-                                  weight_covariates=c("eps7p_0", "sfs8p_0",
-                                                      "sati_0", "ada_0",
-                                                      "recov_0", "tss_0", 
-                                                      "mhtrt_0", "dss9_0"),
-                                  es_grid = NULL,
-                                  rho_grid = seq(0, 0.40, by = 0.05), 
-                                  n_reps = 50,
-                                  progress = TRUE)
+``` r
+# Run OVtool (with weights (not a ps object))
+ovtool_results_twang = ov_sim(model_results=results, 
+                              weight_covariates=c("eps7p_0", "sfs8p_0",
+                                                  "sati_0", "ada_0",
+                                                  "recov_0", "tss_0", 
+                                                  "mhtrt_0", "dss9_0"),
+                              es_grid = NULL,
+                              rho_grid = seq(0, 0.40, by = 0.05), 
+                              n_reps = 2,
+                              progress = TRUE)
+```
 
     ## Warning in ov_sim(model_results = results, weight_covariates = c("eps7p_0", :
     ## You specified a rho grid whose maximum value is less than the maximum absolute
@@ -318,6 +325,13 @@ used by `OVtool`.
     ## [1] "88% Done!"
     ## [1] "94% Done!"
     ## [1] "100% Done!"
+
+``` r
+# if you want to add repetitions, run the following line. You may change mo
+# ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
+#                                 model_results = results,
+#                                 more_reps = 3)
+```
 
 In our example, `ov_sim` produced a warning saying “You specified a rho
 grid whose maximum value is less than the maximum absolute correlation
@@ -365,11 +379,14 @@ names submitted to `weight_covariates` plotted by their raw rho and
 effect size. The third graphic (Figure 3) plots the treatment effect
 contours with the p-value contour overlayed and covariate labels. The
 `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce
-a black and white and colored contour graphic, respectively.
+a black and white and colored contour graphic,
+respectively.
 
-    plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
+``` r
+plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
+```
 
-<img src="README_files/figure-markdown_strict/fig1-1.png" style="display: block; margin: auto;" />
+<img src="OVtool_files/figure-markdown_strict/fig1-1.png" style="display: block; margin: auto;" />
 
 The y-axis in Figure 1 represents the unobserved confounder’s absolute
 correlation with the outcome and the x-axis is the association between
@@ -380,9 +397,12 @@ equals 0.079 and is significant with a p-value equal to 0.004. However,
 looking at this graphic alone will not give us an idea of how sensitive
 the effect is.
 
-    plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 
-<img src="README_files/figure-markdown_strict/fig2-1.png" style="display: block; margin: auto;" />
+``` r
+plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
+```
+
+<img src="OVtool_files/figure-markdown_strict/fig2-1.png" style="display: block; margin: auto;" />
 
     ## [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
@@ -404,7 +424,7 @@ potentially has results that are sensitive to an unobserved confounder.
 If the blue points all existed in contours greater than the 0.05 p-value
 contour, then unobserved confounders with similar associations would
 retain the significant effect and allow the user to conclude that the
-results are reasonably robust.
+results are reasonably robust. 
 
 *Note: When the outcome model shows a significant effect, for all
 observed covariates, regardless of the sign of the association effect
@@ -412,11 +432,14 @@ size difference between the two treatment groups, we force the sign of
 the magnitude to go with the direction of the significant effect. The
 blue points are meant to give the analyst an idea (using observed
 covariates as an indicator) of what would cause a change in the
-interpretation of their results.*
+interpretation of their
+results.*
 
-    plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
+``` r
+plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
+```
 
-<img src="README_files/figure-markdown_strict/fig3-1.png" style="display: block; margin: auto;" />
+<img src="OVtool_files/figure-markdown_strict/fig3-1.png" style="display: block; margin: auto;" />
 
     ## [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
@@ -437,9 +460,12 @@ standardized mean difference on the given covariates between the two
 groups).
 
 Finally, we can interpret this graphic by running the summary command on
-the ov object:
+the ov
+object:
 
-    summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
+``` r
+summary.ov(OVtool_results = ovtool_results_twang, model_results = results)
+```
 
     ## [1] "12% Done!"
     ## [1] "25% Done!"
@@ -453,11 +479,11 @@ the ov object:
     ## [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of association with the treatment indicator and outcome that are
     seen in the observed confounders. In the most extreme observed case, the estimated effect size is
-    reduced by 83 percent."
+    reduced by 84 percent."
     ## [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.628. Significance at the 0.05 level would not be expected to
+    expected to increase from 0.004 to 0.643. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
     treatment indicator and outcome as eps7p_0, sati_0, tss_0."
 
@@ -478,8 +504,7 @@ expected to be preserved for unobserved confounders that have the same
 strength of association with the treatment indicator and outcome as
 `eps7p_0`, `sati_0`, `tss_0`.
 
-Conclusion
-==========
+# Conclusion
 
 There is continuously a call for work on assessing the sensitivity of
 research findings. To our knowledge, this is a novel approach to
@@ -490,8 +515,7 @@ that users will use our tool when they are trying to analyze how
 sensitive their results are to omitted variables when estimating causal
 effects using ps methods.
 
-Acknowledgements
-================
+# Acknowledgements
 
 The devlopment of this tutorial was supported by funding from grant
 R01DA045049 (PIs: Griffin/McCaffrey) from the National Institute on Drug
@@ -503,12 +527,11 @@ synthetic dataset used in this analysis. This tutorial uses a synthetic
 dataset of youth receiving two unidentified treatments from the GAIN;
 running on the true dataset will produce different results.
 
-References
-==========
+# References
 
 *Will update to link with text*
 
-Cohen, J. (1995). The earth is round (p &lt; .05): Rejoinder. American
+Cohen, J. (1995). The earth is round (p \< .05): Rejoinder. American
 Psychologist, 50, 1103.
 
 Diamond, G., Godley, S. H., Liddle, H. A., Sampl, S., Webb, C., Tims, F.

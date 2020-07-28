@@ -1,5 +1,5 @@
 #### Plotting Package for OV ####
-plot.ov <- function(x, col="color", print_graphic="1") {
+plot.ov <- function(x, col="color", print_graphic="1", ...) {
   prep_plots = prep_for_plots(x)
 
   #### some defaults ####

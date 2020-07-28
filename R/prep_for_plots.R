@@ -24,7 +24,7 @@ prep_for_plots <- function(r1){
   pvals = dplyr::case_when(max_pval >= .10 ~ c(.05, .01, .1),
                            max_pval < .1 & max_pval >= .05 ~ c(.05, .01, NA),
                            max_pval < .05 & max_pval >= .01 ~ c(.01, .001, NA),
-                           max_pval < .01 ~ c(.001, NA, NA)); pvals = pvals[complete.cases(pvals)]
+                           max_pval < .01 ~ c(.001, NA, NA)); pvals = pvals[stats::complete.cases(pvals)]
   pvals = sort(pvals)
 
   pval_lines = dplyr::case_when(max_pval >= .10 ~ c("dotdash", "dotted", "solid"),
@@ -77,13 +77,13 @@ prep_for_plots <- function(r1){
   # y-axis of plot (correlation between covariates and treatment)
   obs_cors = rep(NA, count_cols)
   for(i in 1:length(obs_cors)){
-    obs_cors[i] = abs(cor(model_matrix[,i],
+    obs_cors[i] = abs(stats::cor(model_matrix[,i],
                           r1$data[,r1$y],"pairwise.complete.obs"))
   }
 
   # x-axis of plot (effect size)
   mean_noNA = function(x){return(mean(x, na.rm=T))}
-  sd_noNA = function(x){return(sd(x, na.rm=T))}
+  sd_noNA = function(x){return(stats::sd(x, na.rm=T))}
 
   temp_treat = data.frame(r1$data[,r1$tx]); names(temp_treat) = r1$tx
   model_matrix_wTx = dplyr::bind_cols(temp_treat, model_matrix)
@@ -163,7 +163,7 @@ prep_for_plots <- function(r1){
 
   obs_cors = obs_cors %>%
     dplyr::mutate(ES = dplyr::case_when(abs(ES) > max(r1$es_grid, na.rm=T) ~ max(r1$es_grid, na.rm=T)*(ES/abs(ES)), TRUE ~ ES))
-  
+
   return(list(r1=r1, r1_df=r1_df, obs_cors=obs_cors, text_high=text_high,
               text_high_es=text_high_es, pvals=pvals, pval_lines=pval_lines, raw = raw))
 

@@ -5,7 +5,7 @@
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Data preparation for producing the graphics and summary results.
 }
 \usage{
 prep_for_plots(r1)
@@ -16,9 +16,6 @@ prep_for_plots(r1)
 %%     ~~Describe \code{x} here~~
 An object returned from sim_grid
 }
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
 %%  ~Describe the value returned
@@ -33,23 +30,3 @@ prep_for_plots returns a list containing the following components:
 \item{raw}{a character with the raw effect and pvalue from the outcome model}
 
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-%\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

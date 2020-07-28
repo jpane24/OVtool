@@ -1,10 +1,10 @@
 #### summarize fn ####
-summary.ov <- function(OVtool_results, model_results, sig_level=0.05, progress = TRUE){
-  temp = prep_for_plots(OVtool_results)
-  raw_treat = OVtool_results$trt_effect[which(OVtool_results$es_grid<.000000001 & OVtool_results$es_grid>-.000000001),
-                            which(OVtool_results$rho_grid==0)]
-  raw_pval = OVtool_results$p_val[which(OVtool_results$es_grid<.000000001 & OVtool_results$es_grid>-.000000001),
-                      which(OVtool_results$rho_grid==0)]
+summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, ...){
+  temp = prep_for_plots(object)
+  raw_treat = object$trt_effect[which(object$es_grid<.000000001 & object$es_grid>-.000000001),
+                            which(object$rho_grid==0)]
+  raw_pval = object$p_val[which(object$es_grid<.000000001 & object$es_grid>-.000000001),
+                      which(object$rho_grid==0)]
 
   # Find effects and pvalues
   pvals = rep(NA, nrow(temp$obs_cors))
@@ -12,10 +12,10 @@ summary.ov <- function(OVtool_results, model_results, sig_level=0.05, progress =
   options(warn=-1)
   for(i in 1:nrow(temp$obs_cors)){
     calculate_exact = ov_sim(model_results = model_results,
-                                     weight_covariates = OVtool_results$cov,
+                                     weight_covariates = object$cov,
                                      rho_grid = temp$obs_cors$Cor_Outcome[i],
                                      es_grid=temp$obs_cors$ES[i],
-                                     n_reps = OVtool_results$n_reps)
+                                     n_reps = object$n_reps)
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
     if(progress == TRUE){

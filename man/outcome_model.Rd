@@ -11,7 +11,8 @@ use the model object returned from this function and call ov_simgrid to check
 the sensitivity of your findings.
 }
 \usage{
-outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment, outcome, model_covariates, estimand = "ATE")
+outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment,
+outcome, model_covariates, estimand = "ATE")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -45,9 +46,6 @@ outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment, outc
   "ATE" or "ATT"
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
 %%  ~Describe the value returned
 outcome_model returns a list containing the following components:
@@ -67,22 +65,6 @@ outcome_model returns a list containing the following components:
 
 }
 \references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+Lumley T (2020). “survey: analysis of complex survey samples.” R package version 4.0.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-%\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

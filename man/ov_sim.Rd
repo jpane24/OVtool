@@ -42,9 +42,6 @@ Default is FALSE. This is set to true if the user is running additional repetiti
 Default is NULL
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
 %%  ~Describe the value returned
 ov_sim returns a list containing the following components:
@@ -65,23 +62,4 @@ ov_sim returns a list containing the following components:
 \item{std.error}{matrix of standard errors for each grid point}
 \item{es_se_raw}{matrix that stores each repetitions results at every grid point}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-%\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

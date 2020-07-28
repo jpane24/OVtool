@@ -4,17 +4,17 @@ find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y
   obs_cors = rep(NA, length(my_data[,my_cov]))
   for(i in 1:length(obs_cors)){
     if(is.factor(my_data[,my_cov[i]])){
-      obs_cors[i] = abs(cor(as.numeric(my_data[,my_cov[i]]),
+      obs_cors[i] = abs(stats::cor(as.numeric(my_data[,my_cov[i]]),
                             my_data[,outcome],"pairwise.complete.obs"))
     } else {
-      obs_cors[i] = abs(cor(as.numeric(as.character(my_data[,my_cov[i]])),
+      obs_cors[i] = abs(stats::cor(as.numeric(as.character(my_data[,my_cov[i]])),
                             my_data[,outcome],"pairwise.complete.obs"))
     }
   }
 
   # x-axis of plot (effect size)
   mean_noNA = function(x){return(mean(x, na.rm=T))}
-  sd_noNA = function(x){return(sd(x, na.rm=T))}
+  sd_noNA = function(x){return(stats::sd(x, na.rm=T))}
   mean_sd_bygroup = my_data %>%
     dplyr::select(.data[[treatment]], my_cov) %>%
     dplyr::mutate_if(is.factor, as.numeric) %>%
