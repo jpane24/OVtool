@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-07-28 16:15:32*
+2020-07-28 16:42:17*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -78,9 +78,9 @@ devtools::install_github("jpane24/OVtool")
 ```
 
     #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpKAnwq6/remotes68ab3cf39abd/jpane24-OVtool-ed7197c/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpKAnwq6/remotes68ab3cf39abd/jpane24-OVtool-ed7197c/DESCRIPTION’
+    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmpc0bp8w/remotes69d9d89f63c/jpane24-OVtool-186c8fd/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmpc0bp8w/remotes69d9d89f63c/jpane24-OVtool-186c8fd/DESCRIPTION’ (404ms)
     #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
+    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
     #>   ─  checking for LF line-endings in source and make files and shell scripts
     #>   ─  checking for empty or unneeded directories
     #>   ─  building ‘OVtool_1.0.0.tar.gz’
@@ -311,7 +311,7 @@ ovtool_results_twang = ov_sim(model_results=results,
                                                   "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
-                              n_reps = 2,
+                              n_reps = 50,
                               progress = TRUE)
 ```
 
@@ -340,13 +340,6 @@ ovtool_results_twang = ov_sim(model_results=results,
     #> [1] "88% Done!"
     #> [1] "94% Done!"
     #> [1] "100% Done!"
-
-``` r
-# if you want to add repetitions, run the following line. You may change mo
-# ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
-#                                 model_results = results,
-#                                 more_reps = 3)
-```
 
 In our example, `ov_sim` produced a warning saying “You specified a rho
 grid whose maximum value is less than the maximum absolute correlation
@@ -421,33 +414,12 @@ plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
     #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
-Figure 2 is a different variation of Figure 1, but only shows the
-p-value contours with an additional dimension, covariate labels. Recall:
-if a covariate had a raw correlation that was outside the range of the
-graphic limits, the tool informed the user that the rho grid was
-expanded. The blue dots and their labels on the plot represent the
-observed covariates correlations with the outcome (y-axis) and treatment
-indicator (x-axis). For instance, `ada_0` and the outcome have
-approximately a 0.18 absolute correlation with the emotional problem
-scale at three months and an absolute association of approximately 0.17
-effect size difference between the two treatment groups (magnitude of
-its relationship with the treatment indicator). In this case, not all of
-the observed covariate relationships with the outcome and the treatment
-indicator are less than the 0.05 p-value threshold so the analyst
-potentially has results that are sensitive to an unobserved confounder.
-If the blue points all existed in contours greater than the 0.05 p-value
-contour, then unobserved confounders with similar associations would
-retain the significant effect and allow the user to conclude that the
-results are reasonably robust. 
-
-*Note: When the outcome model shows a significant effect, for all
-observed covariates, regardless of the sign of the association effect
-size difference between the two treatment groups, we force the sign of
-the magnitude to go with the direction of the significant effect. The
-blue points are meant to give the analyst an idea (using observed
-covariates as an indicator) of what would cause a change in the
-interpretation of their
-    results.*
+Figure 2 is a different variation of Figure 1, but now adds p-value
+contours. This graphic will allow the user to see what treatment effect
+on the effect size scale will switch the significance level at critical
+p-values (i.e. 0.05). This graphic will now give the user an idea of how
+sensitive the effect is.
+    
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
@@ -458,20 +430,52 @@ plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
     #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
-Figure 3, combines Figure 1 and Figure 2 into one graphic. Again, the
-y-axis in Figure 3 still represents rho, the absolute value of the
-correlation between the right-hand side variable and the outcome. The
-x-axis represents the association with the treatment indicator on the
-effect size scale. Plotted at the bottom of the figure margin is the PS
-weighted treatment effect size (0.079) and associated p-value of 0.004.
-The solid black contours represent the effect size (treatment effect)
-contour lines and the red lines (sometimes dashed) represent the p-value
-threshold. The key on the right side of the graphic shows where various
-p-value cutoff lines are, including p = 0.05. The blue points on the
-plot represent the observed covariate correlations with the outcome and
-effect size associations with the treatment indicator (e.g.,
-standardized mean difference on the given covariates between the two
-groups).
+Figure 3 adds a final dimension (observed covariate labels) to Figure 2.
+Similar to Figures 1 and 2, plotted at the bottom of the figure margin
+is the PS weighted treatment effect size (0.079) and associated p-value
+of 0.004. The solid black contours represent the effect size (treatment
+effect) contour lines and the red lines (sometimes dashed) represent the
+p-value threshold. The key on the right side of the graphic shows where
+various p-value cutoff lines are, including p = 0.05. The blue points on
+the plot represent the observed covariate correlations with the outcome
+(y-axis) and effect size associations with the treatment indicator
+(x-axis). For instance, `ada_0` and the outcome have approximately a
+0.18 absolute correlation with the emotional problem scale at three
+months and an absolute association of approximately 0.17 effect size
+difference between the two treatment groups (magnitude of its
+relationship with the treatment indicator). In this case, not all of the
+observed covariate relationships with the outcome and the treatment
+indicator are less than the 0.05 p-value threshold so the analyst
+potentially has results that are sensitive to an unobserved confounder.
+If the blue points all existed in contours greater than the 0.05 p-value
+contour, then unobserved confounders with similar associations would
+retain the significant effect and allow the user to conclude that the
+results are reasonably robust.
+
+*Note: When the outcome model shows a significant effect, for all
+observed covariates, regardless of the sign of the association effect
+size difference between the two treatment groups, we force the sign of
+the magnitude to go with the direction of the significant effect. The
+blue points are meant to give the analyst an idea (using observed
+covariates as an indicator) of what would cause a change in the
+interpretation of their results.*
+
+These results were produced with 50 simulations (`n_reps`) of the
+unobserved confounder. If the contours are rigid or the user wants to
+add simulations, they can call `add_reps` and specify the number
+(`more_reps`) of additional simulations. Once this is completed, a user
+can recreate the plots. Example code to add
+repetitions:
+
+``` r
+# If you want to add repetitions, run the following line. You may change mo
+# ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
+#                                 model_results = results,
+#                                 more_reps = 3)
+#
+# Recreate Graphic
+# plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
+```
 
 Finally, we can interpret this graphic by running the summary command on
 the ov object:
@@ -492,11 +496,11 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of association with the treatment indicator and outcome that are
     seen in the observed confounders. In the most extreme observed case, the estimated effect size is
-    reduced by 83 percent."
+    reduced by 82 percent."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.641. Significance at the 0.05 level would not be expected to
+    expected to increase from 0.004 to 0.619. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
     treatment indicator and outcome as eps7p_0, sati_0, tss_0."
 
