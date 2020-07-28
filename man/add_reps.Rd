@@ -44,8 +44,4 @@ add_reps returns an updated object returned from OVtool::ov_simgrid()
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
-\examples{
-## The function is currently defined as
-function (x)
-{
-  }
+
