@@ -104,7 +104,7 @@ ov_sim <- function(model_results, weight_covariates,
                                               t(combine$se.mi))) %>%
           purrr::set_names(c("estimate", "std.error")) %>%
           data.frame() %>%
-          tibble::rownames_to_column(.data, var = "term") %>%
+          tibble::rownames_to_column(var = "term") %>%
           tibble::as_tibble() %>%
           dplyr::select(.data$term, tidyselect::everything()) %>%
           dplyr::mutate(statistic = .data$estimate / .data$std.error,
