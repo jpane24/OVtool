@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-07-28 15:39:58*
+2020-07-28 16:06:26*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,6 +75,21 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool") 
+```
+
+    #> 
+    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2MVftF/remotes635d4c651ac/jpane24-OVtool-50373c1/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2MVftF/remotes635d4c651ac/jpane24-OVtool-50373c1/DESCRIPTION’
+    #>   ─  preparing ‘OVtool’:
+    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    #>   ─  checking for LF line-endings in source and make files and shell scripts
+    #>   ─  checking for empty or unneeded directories
+    #>   ─  building ‘OVtool_1.0.0.tar.gz’
+    #>      Warning: invalid uid value replaced by that for user 'nobody'
+    #>    Warning: invalid gid value replaced by that for user 'nobody'
+    #>      
+    #> 
+
+``` r
 # we recommend restarting your R session after running the previous line of code for the first time on your machine. 
 library(OVtool)
 ```
@@ -401,6 +416,12 @@ the effect is.
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 ```
 
+    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
+    
+    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
+    
+    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
+
 <img src="inst/fig2-1.png" style="display: block; margin: auto;" />
 
     #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
@@ -437,6 +458,12 @@ interpretation of their
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 ```
+
+    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
+    
+    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
+    
+    #> Warning in max(.data$rho_grid): no non-missing arguments to max; returning -Inf
 
 <img src="inst/fig3-1.png" style="display: block; margin: auto;" />
 
@@ -477,11 +504,11 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of association with the treatment indicator and outcome that are
     seen in the observed confounders. In the most extreme observed case, the estimated effect size is
-    reduced by 84 percent."
+    reduced by 83 percent."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.643. Significance at the 0.05 level would not be expected to
+    expected to increase from 0.004 to 0.641. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
     treatment indicator and outcome as eps7p_0, sati_0, tss_0."
 

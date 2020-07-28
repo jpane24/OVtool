@@ -15,7 +15,7 @@ es_plot = function(prep, col="bw"){
   #### ES with p-value overlay (no points) ####
   v <- ggplot2::ggplot(r1_df, ggplot2::aes(x = .data$es_grid, y = .data$rho_grid,
                                            z = .data$trt_effect, fill = .data$trt_effect)) +
-    ggplot2::geom_rect(ggplot2::aes(ymin = max(.data$rho_grid),
+    ggplot2::geom_rect(ggplot2::aes(ymin = max(r1_df$rho_grid),
                                     ymax = Inf,
                                     xmin = -Inf,
                                     xmax = Inf),
@@ -28,7 +28,7 @@ es_plot = function(prep, col="bw"){
                        fill = "snow2",
                        alpha = 0.01) +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
-    ggplot2::scale_y_continuous(limits = c(0,max(.data$rho_grid)), expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(limits = c(0,max(r1_df$rho_grid)), expand = c(0, 0)) +
     ggplot2::theme_linedraw()
     if(col == "color"){
       v = v + ggplot2::geom_tile() +
