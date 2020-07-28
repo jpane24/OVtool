@@ -7,7 +7,7 @@ ov_sim <- function(model_results, weight_covariates,
                    sim_archive = NULL){
   tx = model_results$tx
   y = model_results$y
-  data = model_results$data
+  dta = model_results$data
   estimand = model_results$estimand
 
   # covariates
@@ -34,11 +34,11 @@ ov_sim <- function(model_results, weight_covariates,
       }
     }
 
-    if(!all(data[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
+    if(!all(dta[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
 
     # determine reasonable grid to simulate over
     if(length(es_grid) != 1){
-      jdp_test=find_esgrid(my_data = data,
+      jdp_test=find_esgrid(my_data = dta,
                            my_cov = cov,
                            treatment = tx,
                            outcome = y,
@@ -83,16 +83,16 @@ ov_sim <- function(model_results, weight_covariates,
     }
     store_results$esHd = NA; store_results$StdError = NA
     # create w_new and set it to the original weights for now
-    data$w_new = data$w_orig
+    dta$w_new = dta$w_orig
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=data[,y], tx = data[,tx],
+          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
                                 es = es_grid[i], rho = rho_grid[j])
           a <- gen_a_finish(a_prep)
-          data$w_new <- data$w_orig * a
-          design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)
+          dta$w_new <- dta$w_orig * a
+          design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
           esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
           StdError[k] <- summary(glm0_u_nodr)$coefficients[tx,2]
@@ -103,10 +103,10 @@ ov_sim <- function(model_results, weight_covariates,
         melded_summary <- as.data.frame(cbind(t(combine$q.mi),
                                               t(combine$se.mi))) %>%
           purrr::set_names(c("estimate", "std.error")) %>%
-          dplyr::mutate(term = rownames(.)) %>%
-          dplyr::select(term, tidyselect::everything()) %>%
-          dplyr::mutate(statistic = estimate / std.error,
-                        p.value = 2 * stats::pnorm(abs(statistic),lower.tail = FALSE))
+          dplyr::mutate(term = rownames(.data)) %>%
+          dplyr::select(.data$term, tidyselect::everything()) %>%
+          dplyr::mutate(statistic = .data$estimate / .data$std.error,
+                        p.value = 2 * stats::pnorm(abs(.data$statistic),lower.tail = FALSE))
         p_val_nodr[i,j] <- melded_summary$p.value
         trt_effect_nodr[i,j] <- melded_summary$estimate
         std_error_nodr[i,j] <- melded_summary$std.error
@@ -128,16 +128,16 @@ ov_sim <- function(model_results, weight_covariates,
       store_results = dplyr::bind_rows(store_results, temp_store)
     }
     store_results$esHd = NA; store_results$StdError = NA
-    data$w_new = data$w_orig
+    dta$w_new = dta$w_orig
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=data[,y], tx = data[,tx],
+          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
                                 es = es_grid[i], rho = rho_grid[j])
           a <- gen_a_finish(a_prep)
-          data$w_new <- data$w_orig * a
-          design_u <- survey::svydesign(ids=~1, weights=~w_new, data=data)
+          dta$w_new <- dta$w_orig * a
+          design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
           esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
           StdError[k] <- summary(glm0_u_nodr)$coefficients[tx,2]
@@ -151,10 +151,10 @@ ov_sim <- function(model_results, weight_covariates,
         melded_summary <- as.data.frame(cbind(t(combine$q.mi),
                                               t(combine$se.mi))) %>%
           purrr::set_names(c("estimate", "std.error")) %>%
-          dplyr::mutate(term = rownames(.)) %>%
-          dplyr::select(term, tidyselect::everything()) %>%
-          dplyr::mutate(statistic = estimate / std.error,
-                        p.value = 2 * stats::pnorm(abs(statistic),lower.tail = FALSE))
+          dplyr::mutate(term = rownames(.data)) %>%
+          dplyr::select(.data$term, tidyselect::everything()) %>%
+          dplyr::mutate(statistic = .data$estimate / .data$std.error,
+                        p.value = 2 * stats::pnorm(abs(.data$statistic),lower.tail = FALSE))
         p_val_nodr[i,j] <- melded_summary$p.value
         trt_effect_nodr[i,j] <- melded_summary$estimate
         std_error_nodr[i,j] <- melded_summary$std.error
@@ -167,7 +167,7 @@ ov_sim <- function(model_results, weight_covariates,
   }
   results = list(p_val = p_val_nodr, trt_effect = trt_effect_nodr,
                  es_grid = es_grid, rho_grid = rho_grid, cov = cov,
-                 data = data, tx = tx, y = y, estimand = estimand,
+                 data = dta, tx = tx, y = y, estimand = estimand,
                  n_reps = n_reps, std.error = std_error_nodr,
                  es_se_raw = store_results)
   class(results) <- "ov"

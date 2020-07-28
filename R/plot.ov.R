@@ -4,7 +4,7 @@ plot.ov <- function(x, col="color", print_graphic="1", ...) {
 
   #### some defaults ####
   plot_1 = es_plot(prep=prep_plots, col=col)
-  plot_2 = pval_point_plot(prep=prep_plots, col=col)
+  plot_2 = add_pvals_plot(prep=prep_plots, col=col)
   plot_3 = es_point_plot(prep=prep_plots,col=col)
 
   plot_1 <- suppressWarnings(ggplot2::ggplotGrob(plot_1))

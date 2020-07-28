@@ -13,8 +13,9 @@ es_plot = function(prep, col="bw"){
 
   ## Parallel coordinates plot of cluster means
   #### ES with p-value overlay (no points) ####
-  v <- ggplot2::ggplot(r1_df, ggplot2::aes(es_grid, rho_grid, z=trt_effect, fill = trt_effect)) +
-    ggplot2::geom_rect(ggplot2::aes(ymin = max(rho_grid),
+  v <- ggplot2::ggplot(r1_df, ggplot2::aes(x = .data$es_grid, y = .data$rho_grid,
+                                           z = .data$trt_effect, fill = .data$trt_effect)) +
+    ggplot2::geom_rect(ggplot2::aes(ymin = max(.data$rho_grid),
                                     ymax = Inf,
                                     xmin = -Inf,
                                     xmax = Inf),
@@ -27,7 +28,7 @@ es_plot = function(prep, col="bw"){
                        fill = "snow2",
                        alpha = 0.01) +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
-    ggplot2::scale_y_continuous(limits = c(0,max(r1_df$rho_grid)), expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(limits = c(0,max(.data$rho_grid)), expand = c(0, 0)) +
     ggplot2::theme_linedraw()
     if(col == "color"){
       v = v + ggplot2::geom_tile() +
@@ -41,7 +42,8 @@ es_plot = function(prep, col="bw"){
                      legend.text = ggplot2::element_text(size = 10),
                      legend.key.size =  grid::unit(0.5, "in"),
                      plot.margin = ggplot2::unit(c(1,7,1,1), "lines")) +
-      ggplot2::annotation_custom(grob = grid::textGrob(label = raw, vjust = 3,
+      ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
+                                                       vjust = 3,
                                                        gp = grid::gpar(cex = .75)),
                                  ymin = .1, ymax = .1,
                                  xmax = max(r1_df$es_grid)+.1,

@@ -1,5 +1,5 @@
 #### setup es grid ####
-find_esgrid = function(my_data = data, my_cov = cov, treatment = tx, outcome = y, my_estimand = estimand){
+find_esgrid = function(my_data, my_cov, treatment, outcome, my_estimand){
   # y-axis of plot (correlation between covariates and outcome)
   obs_cors = rep(NA, length(my_data[,my_cov]))
   for(i in 1:length(obs_cors)){

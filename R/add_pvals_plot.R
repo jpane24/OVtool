@@ -1,5 +1,5 @@
-#### Treatment effect plot with points ####
-es_point_plot = function(prep, col = "color"){
+#### P-value contour plot with points ####
+add_pvals_plot = function(prep, col = "color"){
   r1_df = prep$r1_df
   pvals = prep$pvals
   pval_lines = prep$pval_lines
@@ -37,43 +37,32 @@ es_point_plot = function(prep, col = "color"){
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association with Treatment Indicator\n(effect size scale)") +
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-          legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
-          legend.key.size =  grid::unit(0.5, "in")) +
+                   legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
+                   legend.key.size =  grid::unit(0.5, "in")) +
     ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
                                                      y = .data$rho_grid,
                                                      z = .data$p_val,
                                                      linetype=pval_lines[1]),
-                 color = color[[1]][1], breaks=pvals[1], size=1.25) +
+                          color = color[[1]][1], breaks=pvals[1], size=1.25) +
     ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
                                                      y = .data$rho_grid,
                                                      z = .data$p_val,
                                                      linetype=pval_lines[2]),
-                 color = color[[1]][1], breaks=pvals[2], size=1.25) +
+                          color = color[[1]][1], breaks=pvals[2], size=1.25) +
     ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
                                                      y = .data$rho_grid,
                                                      z = .data$p_val,
                                                      linetype=pval_lines[3]),
-                 color = color[[1]][1], breaks=pvals[3], size=1.25) +
+                          color = color[[1]][1], breaks=pvals[3], size=1.25) +
     ggplot2::scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
-                          labels = pvals) +
-    ggplot2::geom_point(data = obs_cors, col=color[[1]][2],
-                        ggplot2::aes(x = .data$ES,
-                                     y = .data$Cor_Outcome_Actual,
-                                     z = NULL)) +
+                                   labels = pvals) +
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
                                                      vjust = 3,
                                                      gp = grid::gpar(cex = .75)),
-                      ymin = .1,
-                      ymax = .1,
-                      xmax = max(r1_df$es_grid)+.1,
-                      xmin=max(r1_df$es_grid)+.05)  +
-    ggrepel::geom_text_repel(data = obs_cors,
-                             ggplot2::aes(x = .data$ES,
-                                          y = .data$Cor_Outcome_Actual,
-                                          z = NULL,
-                                          label = .data$cov),
-                    box.padding = grid::unit(0.45, "lines"),
-                    col=color[[1]][2]) +
+                               ymin = .1,
+                               ymax = .1,
+                               xmax = max(r1_df$es_grid)+.1,
+                               xmin=max(r1_df$es_grid)+.05)  +
     metR::geom_text_contour(ggplot2::aes(z=.data$trt_effect),
                             stroke=.2,
                             check_overlap = T)
@@ -87,4 +76,5 @@ es_point_plot = function(prep, col = "color"){
   }
   return(v3)
 }
+
 

@@ -1,14 +1,14 @@
-\name{pval_point_plot}
-\alias{pval_point_plot}
+\name{add_pvals_plot}
+\alias{add_pvals_plot}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{pval_point_plot
+\title{add_pvals_plot
 %%  ~~function to do ... ~~
 }
 \description{
 Plot of effect size contours with pvalue overlay
 }
 \usage{
-pval_point_plot(prep, col = "color")
+add_pvals_plot(prep, col = "color")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
