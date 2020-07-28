@@ -2,29 +2,30 @@ Package: OVtool
 Type: Package
 Title: Omitted Variable tool
 Version: 1.0.0
-Author: Joseph D. Pane, Lane F. Burgette, Beth Ann Griffin, and Daniel F. McCaffrey
+Author: Lane F. Burgette, Beth Ann Griffin, Joseph D. Pane, and Daniel F. McCaffrey
 Maintainer: Joseph D. Pane <josephp@rand.org>
 Description: This tool was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This tool produces graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (2020) describe the methodology behind the primary function in this package, ov_simgrid.
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
+  Amelia,
+  EnvStats,
 	dplyr, 
-	ggplot2, 
+	ggplot2,
+	ggrepel,
+	glue,
+	knitr,
 	magrittr,
+	metR,
+	purrr,
 	rlang,
 	survey,
-	twang, 
-	ggrepel, 
-	metR,
-	glue,
 	tidyselect,
-	purrr,
-	Amelia,
-	knitr,
-	varhandle,
-	EnvStats
+	twang, 
+	varhandle
 Depends:
+  R (>= 2.10),
   grid 
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

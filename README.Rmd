@@ -157,13 +157,13 @@ ovtool_results_twang = ov_sim(model_results=results,
                                                   "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
-                              n_reps = 2,
+                              n_reps = 50,
                               progress = TRUE)
 
 # if you want to add repetitions, run the following line. You may change mo
-ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
-                                model_results = results,
-                                more_reps = 3)
+# ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
+#                                 model_results = results,
+#                                 more_reps = 3)
 ```
 
 In our example, `ov_sim` produced a warning saying "You specified a rho grid whose maximum value is less than the maximum absolute correlation at least one observed covariate has with the outcome. The rho grid was automatically expanded to include all weight_covariates specified in the relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then you must exclude the following variables from the weight_covariates argument: eps7p_0, tss_0, dss9_0." The grid was expanded to ensure all `weight_covariates` could be seen on the contour plot. If the user does not want the grid expanded, they can leave out the observed covariates used in the propensity score model that have an absolute correlation with the outcome that is greater than the maximum rho value the user specifies (`eps_7p_0`, `dss9_0`, and `tss_0`). 
