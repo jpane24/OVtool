@@ -4,7 +4,7 @@
 
 # Introduction
 
-*Note: This is a work in progress.. This document was lasted upated
+*Note: This is a work in progress.. This document was last updated
 2020-07-28 16:42:17*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
