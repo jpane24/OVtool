@@ -11,7 +11,7 @@ use the model object returned from this function and call ov_simgrid to check
 the sensitivity of your findings.
 }
 \usage{
-outcome_model(ps_object = NULL, stop.method=NULL, data, weights, treatment,
+outcome_model(ps_object = NULL, stop.method=NULL, data, weights=NULL, treatment,
 outcome, model_covariates, estimand = "ATE")
 }
 %- maybe also 'usage' for other objects documented here.

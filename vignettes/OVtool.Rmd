@@ -248,8 +248,13 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                                       "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
-                                  n_reps = 5,
+                                  n_reps = 15,
                                   progress = TRUE)
+ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
+                                    model_results = results_att,
+                                    more_reps = 100)
+# 100 so far... going to do 100 more.
+
 # Graphics 
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")

@@ -1,4 +1,4 @@
-outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights,
+outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights=NULL,
                           treatment, outcome, model_covariates,
                           estimand = "ATE"){
   if(!(estimand %in% c("ATT", "ATE"))){
