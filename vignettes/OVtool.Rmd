@@ -164,7 +164,7 @@ ovtool_results_twang = ov_sim(model_results=results,
                                                   "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
-                              n_reps = 50,
+                              n_reps = 5,
                               progress = TRUE)
 
 ```
@@ -224,22 +224,41 @@ treatment indicator and outcome as `eps7p_0`, `sati_0`, `tss_0`.
 
 # Continous Outcome: Average Treatment Effect on the Treated (ATT)
 ```{r, ATT}
-# ps.twang <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
-#                stop.method = "ks.max", verbose=F, ks.exact = T)
-# 
-# sud$w_twang = ps.twang$w$ks.max.ATT
-# 
-# results = outcome_model(ps_object = NULL,
-#                         stop.method = NULL, 
-#                         data = sud,
-#                         weights = sud$w_twang, 
-#                         treatment = "treat",
-#                         outcome = "eps7p_3_std", 
-#                         model_covariates = c("eps7p_0", "sfs8p_0",
-#                                              "sati_0", "ada_0",
-#                                              "recov_0", "tss_0",
-#                                              "mhtrt_0", "dss9_0"),
-#                         estimand = "ATT")
+ps.twang <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
+               stop.method = "ks.max", verbose=F, ks.exact = T)
+
+sud$w_twang = ps.twang$w$ks.max.ATT
+bal.table(ps.twang); # summary(ps.twang)
+
+
+results_att = outcome_model(ps_object = NULL,
+                            stop.method = NULL,
+                            data = sud,
+                            weights = sud$w_twang,
+                            treatment = "treat",
+                            outcome = "eps7p_3_std",
+                            model_covariates = c("eps7p_0", "sfs8p_0",
+                                                 "sati_0", "ada_0",
+                                                 "recov_0", "tss_0",
+                                                 "mhtrt_0", "dss9_0"),
+                            estimand = "ATT")
+
+ovtool_results_twang_att = ov_sim(model_results=results_att, 
+                                  weight_covariates=c("eps7p_0", "sfs8p_0",
+                                                      "sati_0", "ada_0",
+                                                      "recov_0", "tss_0", 
+                                                      "mhtrt_0", "dss9_0"),
+                                  es_grid = NULL,
+                                  rho_grid = seq(0, 0.40, by = 0.05), 
+                                  n_reps = 5,
+                                  progress = TRUE)
+# Graphics 
+plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
+plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
+plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
+
+# Summary results
+summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
 # Conclusion
