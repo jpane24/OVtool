@@ -9,12 +9,15 @@
 This function will generate a at finish.
 }
 \usage{
-gen_a_finish(a_res)
+gen_a_finish(a_res, my_estimand)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{a_res}{
 A list of values returned by gen_a_start
+}
+  \item{my_estimand}{
+"ATE" or "ATT"
 }
 }
 \value{
