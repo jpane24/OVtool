@@ -652,12 +652,13 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> [1] "92% Done!"
     #> [1] "100% Done!"
 
-We have found that the number of repetitions needed in the ATT setting
-is greater than in the ATE setting. Once we observe our graphical
-results, if the contours do not look smooth, we recommend calling
-`OVtool::add_reps` and specifying `more_reps` to the number of
-additional simulations of the unobserved confounder you desire. For the
-sake of this tutorial we will stick with what we have, 200.
+The number of repetitions needed for simulating the unobserved
+confounder in this example is greater in the ATT setting than
+the ATE setting. Even once we observe our graphical results from
+200 repetitions, the contours do not look smooth. We recommend 
+calling the `OVtool::add_reps` function and specifying 
+`more_reps` to the number of additional simulations of the 
+unobserved confounder you desire.
 
 ``` r
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
@@ -665,11 +666,11 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 
 <img src="inst/fig1_att-1.png" style="display: block; margin: auto;" />
 
-The contours shown in Figure 4 are relatively smooth but we would like
-to smooth them out if possible by simulating our unobserved confounder
-an additional 200 times. The user can do this by running the following
-lines of
-code.
+The contours shown in the figure above are relatively smooth but 
+adding additional repetitions of the simulated unobserved confounder
+may smooth the out the bumps in the contours. In this example we 
+choose to simulate our unobserved confounder an additional 200 
+times. The user can do this by running the following line of code:
 
 ``` r
 # If you want to add repetitions, run the following line. You may change more_reps
@@ -732,6 +733,8 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is 101 percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.988. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+
+The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strengthof association with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case, `eps7p_0`, the estimated effect size is 101 percent of the original, but in the opposite direction. The sign of testimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`. Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.988. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`, `sfs8p_0`, `sati_0`, `ada_0`, `tss_0`, `mhtrt_0`, and `dss9_0`.
 
 # Conclusion
 
