@@ -62,7 +62,7 @@ add_pvals_plot = function(prep, col = "color"){
                                ymin = .1,
                                ymax = .1,
                                xmax = max(r1_df$es_grid)+.1,
-                               xmin=max(r1_df$es_grid)+.05)  +
+                               xmin=max(r1_df$es_grid)+.02)  +
     metR::geom_text_contour(ggplot2::aes(z=.data$trt_effect),
                             stroke=.2,
                             check_overlap = T)

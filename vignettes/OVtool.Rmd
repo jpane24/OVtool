@@ -281,8 +281,9 @@ The contours shown in Figure 4 are relatively smooth but we would like to smooth
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
                                     more_reps = 200)
+```
 
-# Recreate Graphic
+```{r, fig2_att_new, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 ```
 
