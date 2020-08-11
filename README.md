@@ -4,8 +4,8 @@
 
 # Introduction
 
-*Note: This is a work in progress.. This document was last updated
-2020-07-28 16:42:17*
+*Note: This is a work in progress.. This document was lasted upated
+2020-08-10 19:03:44*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,21 +75,6 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool") 
-```
-
-    #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmpc0bp8w/remotes69d9d89f63c/jpane24-OVtool-186c8fd/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmpc0bp8w/remotes69d9d89f63c/jpane24-OVtool-186c8fd/DESCRIPTION’ (404ms)
-    #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    #>   ─  checking for LF line-endings in source and make files and shell scripts
-    #>   ─  checking for empty or unneeded directories
-    #>   ─  building ‘OVtool_1.0.0.tar.gz’
-    #>      Warning: invalid uid value replaced by that for user 'nobody'
-    #>    Warning: invalid gid value replaced by that for user 'nobody'
-    #>      
-    #> 
-
-``` r
 # we recommend restarting your R session after running the previous line of code for the first time on your machine. 
 library(OVtool)
 ```
@@ -129,9 +114,7 @@ The relevant variables in this analysis are:
 
 In the next section, we will show how our method works with the average
 treatment effect (ATE) using a continuous outcome. **The OVtool will
-handle (binary outcomes and weights that were estimated using the
-average treatment effect on the treated (ATT) estimand in the near
-future.**
+handle binary outcomes in the near future.**
 
 ## Continous Outcome: Average Treatment Effect (ATE)
 
@@ -468,7 +451,7 @@ can recreate the plots. Example code to add
 repetitions:
 
 ``` r
-# If you want to add repetitions, run the following line. You may change mo
+# If you want to add repetitions, run the following line. You may change more_reps
 # ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
 #                                 model_results = results,
 #                                 more_reps = 3)
@@ -520,6 +503,221 @@ from 0.004 to 0.628. Significance at the 0.05 level would not be
 expected to be preserved for unobserved confounders that have the same
 strength of association with the treatment indicator and outcome as
 `eps7p_0`, `sati_0`, `tss_0`.
+
+In the next section, we will show how our method works with the average
+treatment effect on the treated (ATT) using a continuous outcome. **As
+mentioned above, the OVtool will handle binary outcomes in the near
+future.**
+
+# Continous Outcome: Average Treatment Effect on the Treated (ATT)
+
+Perhaps the user is interested in the average treatment effect on the
+treated. The tool operates very similarly in the ATT setting. We will
+briefly show the steps needed to run the ATT version of the tool for
+continuous treatments below. Largely the only difference between ATE and
+ATT is the user must specify the correct estimand when (1) generating
+their weights and (2) running their outcome model.
+
+``` r
+# Propensity score weights:
+ps.twang_att <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
+               stop.method = "ks.max", verbose=F, ks.exact = T)
+bal.table(ps.twang_att)
+```
+
+    #> $unw
+    #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
+    #> eps7p_0  0.256  0.196  0.219  0.192      0.185  5.937 0.000 0.103   0.000
+    #> sfs8p_0 11.253 13.134 10.571 12.162      0.052  1.703 0.089 0.045   0.032
+    #> sati_0   8.233 22.128  2.145 10.658      0.275 11.088 0.000 0.121   0.000
+    #> ada_0   48.748 33.400 54.236 32.454     -0.164 -5.271 0.000 0.081   0.000
+    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
+    #> tss_0    2.277  3.525  1.924  3.115      0.100  3.365 0.001 0.043   0.050
+    #> mhtrt_0  0.290  0.513  0.256  0.484      0.067  2.188 0.029 0.028   0.413
+    #> dss9_0   2.750  2.604  2.638  2.492      0.043  1.390 0.165 0.023   0.666
+    #> 
+    #> $ks.max.ATT
+    #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
+    #> eps7p_0  0.256  0.196  0.249  0.193      0.034  1.024 0.306 0.026   0.561
+    #> sfs8p_0 11.253 13.134 11.016 12.677      0.018  0.544 0.587 0.020   0.866
+    #> sati_0   8.233 22.128  6.376 19.312      0.084  1.939 0.053 0.035   0.214
+    #> ada_0   48.748 33.400 50.291 33.318     -0.046 -1.349 0.177 0.028   0.478
+    #> recov_0  0.246  0.431  0.229  0.420      0.039  1.207 0.227 0.017   0.953
+    #> tss_0    2.277  3.525  2.263  3.432      0.004  0.114 0.909 0.015   0.980
+    #> mhtrt_0  0.290  0.513  0.307  0.521     -0.032 -0.909 0.363 0.016   0.978
+    #> dss9_0   2.750  2.604  2.832  2.589     -0.031 -0.912 0.362 0.021   0.811
+
+Notice that the only difference here is we use `estimand = ATT` to
+estimate the propensity score weights using TWANG. Again, we have
+reasonable balance. In fact, all of our standardized effect size
+differences are less than 0.1.
+
+``` r
+results_att = outcome_model(ps_object = ps.twang_att,
+                            stop.method = "ks.max",
+                            data = sud,
+                            weights = NULL, # weights to NULL
+                            treatment = "treat",
+                            outcome = "eps7p_3_std",
+                            model_covariates = c("eps7p_0", "sfs8p_0",
+                                                 "sati_0", "ada_0",
+                                                 "recov_0", "tss_0",
+                                                 "mhtrt_0", "dss9_0"),
+                            estimand = "ATT")
+summary(results_att$mod_results)
+```
+
+    #> 
+    #> Call:
+    #> svyglm(formula = formula, design = design_u)
+    #> 
+    #> Survey design:
+    #> survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
+    #> 
+    #> Coefficients:
+    #>               Estimate Std. Error t value Pr(>|t|)    
+    #> (Intercept) -0.7196504  0.0666856 -10.792  < 2e-16 ***
+    #> treat        0.0669815  0.0298823   2.242   0.0250 *  
+    #> eps7p_0      1.6224090  0.1216548  13.336  < 2e-16 ***
+    #> sfs8p_0      0.0028975  0.0021227   1.365   0.1723    
+    #> sati_0       0.0020634  0.0012422   1.661   0.0968 .  
+    #> ada_0        0.0002657  0.0007851   0.338   0.7351    
+    #> recov_0     -0.0756167  0.0332064  -2.277   0.0228 *  
+    #> tss_0        0.0338415  0.0072709   4.654 3.36e-06 ***
+    #> mhtrt_0      0.2549506  0.0360198   7.078 1.72e-12 ***
+    #> dss9_0       0.0489526  0.0080671   6.068 1.41e-09 ***
+    #> ---
+    #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    #> 
+    #> (Dispersion parameter for gaussian family taken to be 0.7221675)
+    #> 
+    #> Number of Fisher Scoring iterations: 2
+
+Again, the only difference in the call to the outcome\_model function is
+specifying the correct `estimand`. Under the ATT setting, our effect
+size is 0.07 with a p-value of 0.025. We now want to understand how
+sensitive our result is to unobserved confounders.
+
+Below we will run the `ov_sim` function; we notice that in our call to
+`ov_sim` the parameters remain the same. The `estimand` parameter is
+stored in `results_att` and carried forward throughout the remainder of
+the analysis.
+
+``` r
+ovtool_results_twang_att = ov_sim(model_results=results_att, 
+                                  weight_covariates=c("eps7p_0", "sfs8p_0",
+                                                      "sati_0", "ada_0",
+                                                      "recov_0", "tss_0", 
+                                                      "mhtrt_0", "dss9_0"),
+                                  es_grid = NULL,
+                                  rho_grid = seq(0, 0.40, by = 0.05), 
+                                  n_reps = 200,
+                                  progress = TRUE)
+```
+
+    #> Warning in ov_sim(model_results = results_att, weight_covariates =
+    #> c("eps7p_0", : You specified a rho grid whose maximum value is less than
+    #> the maximum absolute correlation at least one observed covariate has
+    #> with the outcome. The rho grid was automatically expanded to include all
+    #> weight_covariates specified in the relevant graphics. If you want the rho grid
+    #> range to remain from 0 to 0.4 then you must exclude the following variables from
+    #> the weight_covariates argument: eps7p_0, tss_0, dss9_0.
+
+    #> [1] "8% Done!"
+    #> [1] "15% Done!"
+    #> [1] "23% Done!"
+    #> [1] "31% Done!"
+    #> [1] "38% Done!"
+    #> [1] "46% Done!"
+    #> [1] "54% Done!"
+    #> [1] "62% Done!"
+    #> [1] "69% Done!"
+    #> [1] "77% Done!"
+    #> [1] "85% Done!"
+    #> [1] "92% Done!"
+    #> [1] "100% Done!"
+
+We have found that the number of repetitions needed in the ATT setting
+is greater than in the ATE setting. Once we observe our graphical
+results, if the contours do not look smooth, we recommend calling
+`OVtool::add_reps` and specifying `more_reps` to the number of
+additional simulations of the unobserved confounder you desire. For the
+sake of this tutorial we will stick with what we have, 200.
+
+``` r
+plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
+```
+
+<img src="inst/fig1_att-1.png" style="display: block; margin: auto;" />
+
+The contours shown in Figure 4 are relatively smooth but we would like
+to smooth them out if possible by simulating our unobserved confounder
+an additional 200 times. The user can do this by running the following
+lines of
+code.
+
+``` r
+# If you want to add repetitions, run the following line. You may change more_reps
+ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
+                                    model_results = results_att,
+                                    more_reps = 200)
+```
+
+    #> [1] "8% Done!"
+    #> [1] "15% Done!"
+    #> [1] "23% Done!"
+    #> [1] "31% Done!"
+    #> [1] "38% Done!"
+    #> [1] "46% Done!"
+    #> [1] "54% Done!"
+    #> [1] "62% Done!"
+    #> [1] "69% Done!"
+    #> [1] "77% Done!"
+    #> [1] "85% Done!"
+    #> [1] "92% Done!"
+    #> [1] "100% Done!"
+
+``` r
+# Recreate Graphic
+plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
+```
+
+![](inst/addreps_att-1.png)
+
+``` r
+plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
+```
+
+<img src="inst/fig2_att-1.png" style="display: block; margin: auto;" />
+
+    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
+
+``` r
+plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
+```
+
+<img src="inst/fig3_att-1.png" style="display: block; margin: auto;" />
+
+    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
+
+Finally, we will run the `summary.ov` function to get the tool’s
+recommendations.
+
+``` r
+summary.ov(object = ovtool_results_twang_att, model_results = results_att)
+```
+
+    #> [1] "12% Done!"
+    #> [1] "25% Done!"
+    #> [1] "38% Done!"
+    #> [1] "50% Done!"
+    #> [1] "62% Done!"
+    #> [1] "75% Done!"
+    #> [1] "88% Done!"
+    #> [1] "100% Done!"
+    #> [1] "Recommendation for reporting the sensitivity analyses"
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is 101 percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.988. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
 

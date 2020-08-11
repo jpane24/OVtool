@@ -89,7 +89,7 @@ The relevant variables in this analysis are:
 
 * `dss9_0`: depressive symptom scale at baseline
 
-In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. **The OVtool will handle (binary outcomes and weights that were estimated using the average treatment effect on the treated (ATT) estimand in the near future.**
+In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. **The OVtool will handle binary outcomes in the near future.**
 
 ## Continous Outcome: Average Treatment Effect (ATE)
 
@@ -204,7 +204,7 @@ Figure 3 adds a final dimension (observed covariate labels) to Figure 2. Similar
 These results were produced with 50 simulations (`n_reps`) of the unobserved confounder. If the contours are rigid or the user wants to add simulations, they can call `add_reps` and specify the number (`more_reps`) of additional simulations. Once this is completed, a user can recreate the plots. Example code to add repetitions:
 
 ```{r, addreps}
-# If you want to add repetitions, run the following line. You may change mo
+# If you want to add repetitions, run the following line. You may change more_reps
 # ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
 #                                 model_results = results,
 #                                 more_reps = 3)
@@ -222,13 +222,22 @@ summary.ov(object = ovtool_results_twang, model_results = results)
 The `OVtool` gives a recommendation on how to report findings regarding the direction of the treatment effect and statistical significance. An analyst could take the results produced by `summary.ov()` and plug them into a manuscript. The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by 83 percent. However, statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.004 to 0.628. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the
 treatment indicator and outcome as `eps7p_0`, `sati_0`, `tss_0`.
 
+In the next section, we will show how our method works with the average treatment effect on the treated (ATT) using a continuous outcome. **As mentioned above, the OVtool will handle binary outcomes in the near future.**
+
 # Continous Outcome: Average Treatment Effect on the Treated (ATT)
+
+Perhaps the user is interested in the average treatment effect on the treated. The tool operates very similarly in the ATT setting. We will briefly show the steps needed to run the ATT version of the tool for continuous treatments below. Largely the only difference between ATE and ATT is the user must specify the correct estimand when (1) generating their weights and (2) running their outcome model. 
+
 ```{r, ATT}
+# Propensity score weights:
 ps.twang_att <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
-bal.table(ps.twang_att); # summary(ps.twang)
-plot(ps.twang_att, 3)
+bal.table(ps.twang_att)
+```
 
+Notice that the only difference here is we use `estimand = ATT` to estimate the propensity score weights using TWANG. Again, we have reasonable balance. In fact, all of our standardized effect size differences are less than 0.1. 
+
+```{r, outcome_att}
 results_att = outcome_model(ps_object = ps.twang_att,
                             stop.method = "ks.max",
                             data = sud,
@@ -240,7 +249,14 @@ results_att = outcome_model(ps_object = ps.twang_att,
                                                  "recov_0", "tss_0",
                                                  "mhtrt_0", "dss9_0"),
                             estimand = "ATT")
+summary(results_att$mod_results)
+```
 
+Again, the only difference in the call to the outcome_model function is specifying the correct `estimand`. Under the ATT setting, our effect size is 0.07 with a p-value of 0.025. We now want to understand how sensitive our result is to unobserved confounders. 
+
+ Below we will run the `ov_sim` function; we notice that in our call to `ov_sim` the parameters remain the same. The `estimand` parameter is stored in `results_att` and carried forward throughout the remainder of the analysis.
+
+```{r, ovsim_att}
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
                                   weight_covariates=c("eps7p_0", "sfs8p_0",
                                                       "sati_0", "ada_0",
@@ -248,19 +264,39 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                                       "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
-                                  n_reps = 15,
+                                  n_reps = 200,
                                   progress = TRUE)
+```
+
+We have found that the number of repetitions needed in the ATT setting is greater than in the ATE setting. Once we observe our graphical results, if the contours do not look smooth, we recommend calling `OVtool::add_reps` and specifying `more_reps` to the number of additional simulations of the unobserved confounder you desire. For the sake of this tutorial we will stick with what we have, 200. 
+
+```{r, fig1_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
+plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
+```
+
+The contours shown in Figure 4 are relatively smooth but we would like to smooth them out if possible by simulating our unobserved confounder an additional 200 times. The user can do this by running the following lines of code.
+
+```{r, addreps_att}
+# If you want to add repetitions, run the following line. You may change more_reps
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
-                                    more_reps = 100)
-# 100 so far... going to do 100 more.
+                                    more_reps = 200)
 
-# Graphics 
+# Recreate Graphic
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
-plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
-plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
+```
 
-# Summary results
+```{r, fig2_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
+plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
+```
+
+```{r, fig3_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
+plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
+```
+
+Finally, we will run the `summary.ov` function to get the tool's recommendations.
+
+```{r, summary_att}
 summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
