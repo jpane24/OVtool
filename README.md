@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-08-10 20:58:19*
+2020-08-11 08:30:09*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -613,10 +613,10 @@ specifying the correct `estimand`. Under the ATT setting, our effect
 size is 0.07 with a p-value of 0.025. We now want to understand how
 sensitive our result is to unobserved confounders.
 
-Below we will run the `ov_sim` function; we notice that in our call to
-`ov_sim` the parameters remain the same. The `estimand` parameter is
-stored in `results_att` and carried forward throughout the remainder of
-the analysis.
+Below we will run the `ov_sim` function, noticing that the parameters
+in our function call to `ov_sim` remain the same. The `estimand` 
+parameter is stored in `results_att` and is carried forward throughout 
+the remainder of the analysis.
 
 ``` r
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
