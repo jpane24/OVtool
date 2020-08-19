@@ -36,7 +36,9 @@ gen_a_finish <- function(a_res, my_estimand){
     # a[-ind] = ((1 - a_res$pi) / (a_res$pi)) * (att_num / att_denom)
 
     # new
-    a[ind] = 1
+    a[ind] = ((1 - a_res$pi) / a_res$pi) * exp((log(a_res$pi / (1 - a_res$pi))) -
+                                                 (a_res$es^2 * (1 - 2*a_res$pi) / 2) +
+                                                 (a_res$es * U[ind]))
     a[-ind] = ((1 - a_res$pi) / a_res$pi) * exp((log(a_res$pi / (1 - a_res$pi))) -
                                                   (a_res$es^2 * (1 - 2*a_res$pi) / 2) +
                                                   (a_res$es * U[-ind]))
