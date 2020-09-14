@@ -1,5 +1,5 @@
 #### gen_a_start fn ####
-gen_a_start <- function(y, tx, es, rho){
+gen_a_start <- function(y, tx, es, rho, my_estimand){
   ind <- which(tx == 1)
   if(length(unique(y[ind])) == 2){
     y[ind][which(y[ind]==1)] = stats::runif(length(which(y[ind]==1)), min=1, max=2)
@@ -53,7 +53,12 @@ gen_a_start <- function(y, tx, es, rho){
     b1low = max(-b1lim, ((b0lim - alpha) / beta))
     b1high = min(b1lim, ((-b0lim - alpha) / beta))
   }
-  b1 = stats::runif(1, b1low, b1high)
+  # temporary line 57
+  if(my_estimand == "ATT"){
+    b1 = 0
+  } else{
+    b1 = stats::runif(1, b1low, b1high)
+  }
 
   # solve for b0.
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
