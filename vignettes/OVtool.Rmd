@@ -268,7 +268,7 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                   progress = TRUE)
 ```
 
-We have found that the number of repetitions needed in the ATT setting is greater than in the ATE setting. Once we observe our graphical results, if the contours do not look smooth, we recommend calling `OVtool::add_reps` and specifying `more_reps` to the number of additional simulations of the unobserved confounder you desire. For the sake of this tutorial we will stick with what we have, 200. 
+We have found that the number of repetitions needed in the ATT setting is greater than in the ATE setting. Once we observe our graphical results, if the contours do not look smooth, we recommend calling `OVtool::add_reps` and specifying `more_reps` to the number of additional simulations of the unobserved confounder you desire.
 
 ```{r, fig1_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")

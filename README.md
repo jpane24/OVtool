@@ -5,14 +5,14 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-08-11 08:30:09*
+2020-09-21 11:08:53*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
 omitted variables when estimating causal effects using propensity score
 (PS) weighting. This package includes graphics and summary results that
 will enable a researcher to quantify the impact an omitted variable
-would have on their results. Burgette et al. (in preparation) describe
+would have on their results. Burgette et al. (in preparation) describe
 the methodology behind the primary function in this package, `ov_sim()`.
 This document presents syntax for the implementation of the `ov_sim()`
 function and provides an example of how to interpret the packages’
@@ -75,21 +75,6 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool") 
-```
-
-    #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmpr3Kadg/remotes1698f6c96971f/jpane24-OVtool-8e2740f/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmpr3Kadg/remotes1698f6c96971f/jpane24-OVtool-8e2740f/DESCRIPTION’
-    #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    #>   ─  checking for LF line-endings in source and make files and shell scripts
-    #>   ─  checking for empty or unneeded directories
-    #>   ─  building ‘OVtool_1.0.0.tar.gz’
-    #>      Warning: invalid uid value replaced by that for user 'nobody'
-    #>    Warning: invalid gid value replaced by that for user 'nobody'
-    #>      
-    #> 
-
-``` r
 # we recommend restarting your R session after running the previous line of code for the first time on your machine. 
 library(OVtool)
 ```
@@ -194,8 +179,8 @@ results for their outcome model. There are two options the researcher
 can take to input the relevant information to get their outcome results
 using `outcome_model()`.
 
-  - Input a `ps.object` from `TWANG` and a `stop.method` (e.g.
-    `"ks.max"`) or
+  - Input a `ps.object` from `TWANG` and a `stop.method`
+    (e.g. `"ks.max"`) or
   - Input a vector of `weights`, a data frame containing the `data`
     used, and the column name representing the treatment indicator,
     `treatment`.
@@ -297,7 +282,7 @@ small, 0.4 would be moderate and 0.6 would be large (Cohen, J., 1995).
 We define rho in this setting as the absolute correlation the unobserved
 covariate (U) has with the outcome of interest, with larger values
 indicating stronger relationships between U and the outcome. Please see
-Burgette et al. (in progress) for additional details on the methodology
+Burgette et al. (in progress) for additional details on the methodology
 used by `OVtool`.
 
 ``` r
@@ -400,8 +385,7 @@ scale. The black lines represent effect size contours that run along the
 grid. The PS weighted treatment effect of Treatment A versus Treatment B
 equals 0.079 and is significant with a p-value equal to 0.004. However,
 looking at this graphic alone will not give us an idea of how sensitive
-the effect is.
-    
+the effect is. 
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
@@ -416,8 +400,7 @@ Figure 2 is a different variation of Figure 1, but now adds p-value
 contours. This graphic will allow the user to see what treatment effect
 on the effect size scale will switch the significance level at critical
 p-values (i.e. 0.05). This graphic will now give the user an idea of how
-sensitive the effect is.
-    
+sensitive the effect is. 
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
@@ -462,8 +445,7 @@ These results were produced with 50 simulations (`n_reps`) of the
 unobserved confounder. If the contours are rigid or the user wants to
 add simulations, they can call `add_reps` and specify the number
 (`more_reps`) of additional simulations. Once this is completed, a user
-can recreate the plots. Example code to add
-repetitions:
+can recreate the plots. Example code to add repetitions:
 
 ``` r
 # If you want to add repetitions, run the following line. You may change more_reps
@@ -613,10 +595,10 @@ specifying the correct `estimand`. Under the ATT setting, our effect
 size is 0.07 with a p-value of 0.025. We now want to understand how
 sensitive our result is to unobserved confounders.
 
-Below we will run the `ov_sim` function, noticing that the parameters
-in our function call to `ov_sim` remain the same. The `estimand` 
-parameter is stored in `results_att` and is carried forward throughout 
-the remainder of the analysis.
+Below we will run the `ov_sim` function; we notice that in our call to
+`ov_sim` the parameters remain the same. The `estimand` parameter is
+stored in `results_att` and carried forward throughout the remainder of
+the analysis.
 
 ``` r
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
@@ -626,7 +608,7 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                                       "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
-                                  n_reps = 200,
+                                  n_reps = 50,
                                   progress = TRUE)
 ```
 
@@ -652,13 +634,11 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> [1] "92% Done!"
     #> [1] "100% Done!"
 
-The number of repetitions needed for simulating the unobserved
-confounder in this example is greater in the ATT setting than
-the ATE setting. Even once we observe our graphical results from
-200 repetitions, the contours do not look smooth. We recommend 
-calling the `OVtool::add_reps` function and specifying 
-`more_reps` to the number of additional simulations of the 
-unobserved confounder you desire.
+We have found that the number of repetitions needed in the ATT setting
+is greater than in the ATE setting. Once we observe our graphical
+results, if the contours do not look smooth, we recommend calling
+`OVtool::add_reps` and specifying `more_reps` to the number of
+additional simulations of the unobserved confounder you desire.
 
 ``` r
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
@@ -666,11 +646,10 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 
 <img src="inst/fig1_att-1.png" style="display: block; margin: auto;" />
 
-The contours shown in the figure above are relatively smooth but 
-adding additional repetitions of the simulated unobserved confounder
-may smooth the out the bumps in the contours. In this example we 
-choose to simulate our unobserved confounder an additional 200 
-times. The user can do this by running the following line of code:
+The contours shown in Figure 4 are relatively smooth but we would like
+to smooth them out if possible by simulating our unobserved confounder
+an additional 200 times. The user can do this by running the following
+lines of code.
 
 ``` r
 # If you want to add repetitions, run the following line. You may change more_reps
@@ -731,10 +710,8 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is 101 percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.988. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
-
-The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strengthof association with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case, `eps7p_0`, the estimated effect size is 101 percent of the original, but in the opposite direction. The sign of testimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`. Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.988. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`, `sfs8p_0`, `sati_0`, `ada_0`, `tss_0`, `mhtrt_0`, and `dss9_0`.
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by 96 percent."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.953. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
 
