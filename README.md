@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted upated
-2020-09-21 11:08:53*
+2020-09-21 13:06:08*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,7 +75,8 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool") 
-# we recommend restarting your R session after running the previous line of code for the first time on your machine. 
+# we recommend restarting your R session after running the previous line of code
+# for the first time on your machine.
 library(OVtool)
 ```
 
