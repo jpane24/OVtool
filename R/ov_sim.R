@@ -88,7 +88,7 @@ ov_sim <- function(model_results, weight_covariates,
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start2(y=dta[,y], tx = dta[,tx],
+          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
                                 es = es_grid[i], rho = rho_grid[j],
                                 my_estimand = estimand)
           a <- gen_a_finish(a_res=a_prep, my_estimand=estimand)
@@ -136,7 +136,7 @@ ov_sim <- function(model_results, weight_covariates,
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start2(y=dta[,y], tx = dta[,tx],
+          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
                                 es = es_grid[i], rho = rho_grid[j],
                                 my_estimand = estimand)
           a <- gen_a_finish(a_res=a_prep, my_estimand = estimand)
