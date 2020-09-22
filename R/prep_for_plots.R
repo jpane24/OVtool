@@ -98,10 +98,24 @@ prep_for_plots <- function(r1){
   es_cov = rep(NA, ncol(model_matrix))
   es_cov_actual = rep(NA, ncol(model_matrix))
   if(r1$estimand == "ATE"){
-    for(i in 1:ncol(model_matrix)){
-      # denominator for ATE
-      diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", colnames(model_matrix[i]), "_fn1$"), colnames(mean_sd_bygroup))]])
-      denom_ATE = sqrt(sum(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", colnames(model_matrix[i]), "_fn2$"), colnames(mean_sd_bygroup))]]^2)/2)
+    if(ncol(model_matrix)>1){
+      for(i in 1:ncol(model_matrix)){
+        # denominator for ATE
+        diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", colnames(model_matrix[i]), "_fn1$"), colnames(mean_sd_bygroup))]])
+        denom_ATE = sqrt(sum(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", colnames(model_matrix[i]), "_fn2$"), colnames(mean_sd_bygroup))]]^2)/2)
+        if(raw_pval >= .05){
+          es_cov[i] = (diff_means/denom_ATE)
+        } else if(raw_pval < .05 & length(which(r1$p_val[r1$es_grid>0,]>.05)) >
+                  length(which(r1$p_val[r1$es_grid<0,]>.05))){
+          es_cov[i] = abs(diff_means/denom_ATE)
+        } else{
+          es_cov[i] = -1*abs(diff_means/denom_ATE)
+        }
+        es_cov_actual[i] = (diff_means/denom_ATE)
+      }
+    } else{
+      diff_means = diff(mean_sd_bygroup$fn1)
+      denom_ATE = sqrt(sum(mean_sd_bygroup$fn2^2)/2)
       if(raw_pval >= .05){
         es_cov[i] = (diff_means/denom_ATE)
       } else if(raw_pval < .05 & length(which(r1$p_val[r1$es_grid>0,]>.05)) >
@@ -113,12 +127,26 @@ prep_for_plots <- function(r1){
       es_cov_actual[i] = (diff_means/denom_ATE)
     }
   } else if(r1$estimand == "ATT"){
-    for(i in 1:ncol(model_matrix)){
-      #trt = trt = r1$tx
-      diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", colnames(model_matrix[i]), "_fn1$"), colnames(mean_sd_bygroup))]])
-      treat_only = mean_sd_bygroup %>% dplyr::filter(.data[[r1$tx]] == 1) %>% data.frame()
-      denom_ATT = treat_only[,colnames(treat_only)[grep(paste0("^", colnames(model_matrix[i]), "_fn2$"),
-                                                        colnames(treat_only))]]
+    if(ncol(model_matrix)>1){
+      for(i in 1:ncol(model_matrix)){
+        #trt = trt = r1$tx
+        diff_means = diff(mean_sd_bygroup[,colnames(mean_sd_bygroup)[grep(paste0("^", colnames(model_matrix[i]), "_fn1$"), colnames(mean_sd_bygroup))]])
+        treat_only = mean_sd_bygroup %>% dplyr::filter(.data[[r1$tx]] == 1) %>% data.frame()
+        denom_ATT = treat_only[,colnames(treat_only)[grep(paste0("^", colnames(model_matrix[i]), "_fn2$"),
+                                                          colnames(treat_only))]]
+        if(raw_pval >= .05){
+          es_cov[i] = (diff_means/denom_ATT)
+        } else if(raw_pval < .05 & length(which(r1$p_val[r1$es_grid>0,]>.05)) >
+                  length(which(r1$p_val[r1$es_grid<0,]>.05))){
+          es_cov[i] = abs(diff_means/denom_ATT)
+        } else{
+          es_cov[i] = -1*abs(diff_means/denom_ATT)
+        }
+        es_cov_actual[i] = (diff_means/denom_ATT)
+      }
+    } else{
+      diff_means = diff(mean_sd_bygroup$fn1)
+      denom_ATT = mean_sd_bygroup$fn2[mean_sd_bygroup$treat==1]
       if(raw_pval >= .05){
         es_cov[i] = (diff_means/denom_ATT)
       } else if(raw_pval < .05 & length(which(r1$p_val[r1$es_grid>0,]>.05)) >
