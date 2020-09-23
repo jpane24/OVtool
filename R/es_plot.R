@@ -41,7 +41,7 @@ es_plot = function(prep, col="bw"){
                      legend.key = ggplot2::element_blank(),
                      legend.text = ggplot2::element_text(size = 10),
                      legend.key.size =  grid::unit(0.5, "in"),
-                     plot.margin = ggplot2::unit(c(1,3,1,1), "cm")) +
+                     plot.margin = grid::unit(c(1,3,1,1), "cm")) +
       ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
                                                        vjust = 3,
                                                        gp = grid::gpar(cex = .75)),
