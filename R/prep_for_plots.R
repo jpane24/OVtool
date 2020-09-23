@@ -29,15 +29,15 @@ prep_for_plots <- function(r1, p_contours){
   #                          max_pval < .05 & max_pval >= .01 ~ c(.01, .001, NA),
   #                          max_pval < .01 ~ c(.001, NA, NA)); pvals = pvals[stats::complete.cases(pvals)]
   pvals = sort(p_contours)
-  pval_lines = rep(NA, length(p_contours))
-  if(any(p_contours == .01)){
-    pval_lines[which(p_contours == .01)] = "dotdash"
+  pval_lines = rep(NA, length(pvals))
+  if(any(pvals == .01)){
+    pval_lines[which(pvals == .01)] = "dotdash"
   }
-  if(any(p_contours == .05)){
-    pval_lines[which(p_contours == .05)] = "dotted"
+  if(any(pvals == .05)){
+    pval_lines[which(pvals == .05)] = "dotted"
   }
-  if(any(p_contours == .1)){
-    pval_lines[which(p_contours == .1)] = "solid"
+  if(any(pvals == .1)){
+    pval_lines[which(pvals == .1)] = "solid"
   }
   pval_lines[which(is.na(pval_lines))] = "twodash"
 
@@ -57,7 +57,7 @@ prep_for_plots <- function(r1, p_contours){
   raw_pval = r1$p_val[which(r1$es_grid<.00001 & r1$es_grid>-.00001),
                       which(r1$rho_grid==0)];
   raw_pval_txt = sprintf("%.3f", round(raw_pval,3))
-  raw = paste0("Raw Effect: ", raw_treat_txt, "\n(p-val: ", raw_pval_txt, ")")
+  raw = paste0("Raw Effect: ", raw_treat_txt, "(p-val: ", raw_pval_txt, ")")
 
   #### setup correlations ####
   # how many factors -- model matrix
@@ -207,7 +207,7 @@ prep_for_plots <- function(r1, p_contours){
     dplyr::mutate(ES = dplyr::case_when(abs(ES) > max(r1$es_grid, na.rm=T) ~ max(r1$es_grid, na.rm=T)*(ES/abs(ES)), TRUE ~ ES))
 
   return(list(r1=r1, r1_df=r1_df, obs_cors=obs_cors, text_high=text_high,
-              text_high_es=text_high_es, pvals=p_contours, pval_lines=pval_lines, raw = raw))
+              text_high_es=text_high_es, pvals=pvals, pval_lines=pval_lines, raw = raw))
 
 }
 

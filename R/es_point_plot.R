@@ -39,11 +39,11 @@ es_point_plot = function(prep, col = "color"){
     ggplot2::theme_linedraw() +
     ggplot2::geom_hline(yintercept=max(r1_df$rho_grid)) +
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association with Treatment Indicator\n(effect size scale)") +
-    ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
+    ggplot2::ylab("Absolute Correlation with Outcome (rho)") +
+    ggplot2::ggtitle(paste0("ES contours -- ", raw)) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
           legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
-          legend.key.size =  grid::unit(0.5, "in"),
-          plot.margin = grid::unit(c(1,1.05,1,1), "cm"))
+          legend.key.size =  grid::unit(0.5, "in"))
   for(i in 1:length(pvals)){
     v3 = v3 +
       ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
@@ -61,13 +61,13 @@ es_point_plot = function(prep, col = "color"){
                         ggplot2::aes(x = .data$ES,
                                      y = .data$Cor_Outcome_Actual,
                                      z = NULL)) +
-    ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
-                                                     vjust = 3,
-                                                     gp = grid::gpar(cex = .75)),
-                      ymin = .1,
-                      ymax = .1,
-                      xmax = max(r1_df$es_grid)+.1,
-                      xmin=max(r1_df$es_grid)+.05)  +
+    # ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
+    #                                                  vjust = 3,
+    #                                                  gp = grid::gpar(cex = .75)),
+    #                   ymin = .1,
+    #                   ymax = .1,
+    #                   xmax = max(r1_df$es_grid)+.1,
+    #                   xmin=max(r1_df$es_grid)+.05)  +
     ggrepel::geom_text_repel(data = obs_cors,
                              ggplot2::aes(x = .data$ES,
                                           y = .data$Cor_Outcome_Actual,

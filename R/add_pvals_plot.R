@@ -39,11 +39,11 @@ add_pvals_plot = function(prep, col = "color"){
     ggplot2::theme_linedraw() +
     ggplot2::geom_hline(yintercept=max(r1_df$rho_grid)) +
     ggplot2::geom_contour(col='black') + ggplot2::xlab("Association with Treatment Indicator\n(effect size scale)") +
-    ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
+    ggplot2::ylab("Absolute Correlation with Outcome (rho)") +
+    ggplot2::ggtitle(paste0("ES contours -- ", raw)) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                    legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
-                   legend.key.size =  grid::unit(0.5, "in"),
-                   plot.margin = grid::unit(c(1,1.05,1,1), "cm"))
+                   legend.key.size =  grid::unit(0.5, "in"))
   for(i in 1:length(pvals)){
     v3 = v3 + ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
                                                      y = .data$rho_grid,
@@ -55,13 +55,13 @@ add_pvals_plot = function(prep, col = "color"){
   v3 = v3 +
     ggplot2::scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
                                    labels = p_labels) +
-    ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
-                                                     vjust = 3,
-                                                     gp = grid::gpar(cex = .75)),
-                               ymin = .1,
-                               ymax = .1,
-                               xmax = max(r1_df$es_grid)+.1,
-                               xmin=max(r1_df$es_grid)+.02)  +
+    # ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
+    #                                                  vjust = 3,
+    #                                                  gp = grid::gpar(cex = .75)),
+    #                            ymin = .1,
+    #                            ymax = .1,
+    #                            xmax = max(r1_df$es_grid)+.1,
+    #                            xmin=max(r1_df$es_grid)+.02)  +
     metR::geom_text_contour(ggplot2::aes(z=.data$trt_effect),
                             stroke=.2,
                             check_overlap = T)
@@ -70,8 +70,7 @@ add_pvals_plot = function(prep, col = "color"){
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      legend.key = ggplot2::element_blank(),
                      legend.text = ggplot2::element_text(size = 10),
-                     legend.key.size =  grid::unit(0.5, "in"),
-                     plot.margin = unit(c(1,3,1,1), "lines"))
+                     legend.key.size =  grid::unit(0.5, "in"))
   }
   return(v3)
 }
