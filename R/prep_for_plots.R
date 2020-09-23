@@ -1,5 +1,5 @@
 #### prep_for_plots ####
-prep_for_plots <- function(r1){
+prep_for_plots <- function(r1, p_contours){
   #### setup for plotting ####
   r1_df = data.frame(matrix(nrow=length(r1$rho_grid)*length(r1$es_grid), ncol=4))
   colnames(r1_df) = c("es_grid", "rho_grid", "trt_effect", "p_val")
@@ -20,17 +20,31 @@ prep_for_plots <- function(r1){
 
   # max p-val -- get pvalues for plots:
   max_pval = max(r1_df$p_val, na.rm=T)
+  if(max_pval < max(p_contours)){
+    stop(paste0("The maximum p_contour you specified (", max(round(p_contours, 3)),") is greater than the maximum p-value produced by the grid (", round(max_pval, 3),"). Please re-select your p-values."))
+  }
 
-  pvals = dplyr::case_when(max_pval >= .10 ~ c(.05, .01, .1),
-                           max_pval < .1 & max_pval >= .05 ~ c(.05, .01, NA),
-                           max_pval < .05 & max_pval >= .01 ~ c(.01, .001, NA),
-                           max_pval < .01 ~ c(.001, NA, NA)); pvals = pvals[stats::complete.cases(pvals)]
-  pvals = sort(pvals)
+  # pvals = dplyr::case_when(max_pval >= .10 ~ c(.05, .01, .1),
+  #                          max_pval < .1 & max_pval >= .05 ~ c(.05, .01, NA),
+  #                          max_pval < .05 & max_pval >= .01 ~ c(.01, .001, NA),
+  #                          max_pval < .01 ~ c(.001, NA, NA)); pvals = pvals[stats::complete.cases(pvals)]
+  pvals = sort(p_contours)
+  pval_lines = rep(NA, length(p_contours))
+  if(any(p_contours == .01)){
+    pval_lines[which(p_contours == .01)] = "dotdash"
+  }
+  if(any(p_contours == .05)){
+    pval_lines[which(p_contours == .05)] = "dotted"
+  }
+  if(any(p_contours == .1)){
+    pval_lines[which(p_contours == .1)] = "solid"
+  }
+  pval_lines[which(is.na(pval_lines))] = "twodash"
 
-  pval_lines = dplyr::case_when(max_pval >= .10 ~ c("dotdash", "dotted", "solid"),
-                                max_pval < .1 & max_pval >= .05 ~ c('dotdash', 'dotted', NA),
-                                max_pval < .05 & max_pval >= .01 ~ c('dotdash', 'dotted', NA),
-                                max_pval < .01 ~ c('dotdash', NA, NA));
+  # pval_lines = dplyr::case_when(max_pval >= .10 ~ c("dotdash", "dotted", "solid"),
+  #                               max_pval < .1 & max_pval >= .05 ~ c('dotdash', 'dotted', NA),
+  #                               max_pval < .05 & max_pval >= .01 ~ c('dotdash', 'dotted', NA),
+  #                               max_pval < .01 ~ c('dotdash', NA, NA));
 
   #### make variable names shorter ####
   RHS_short = dplyr::case_when(nchar(r1$cov) > 10 ~ substr(r1$cov, start = 1, stop = 10),
@@ -193,7 +207,7 @@ prep_for_plots <- function(r1){
     dplyr::mutate(ES = dplyr::case_when(abs(ES) > max(r1$es_grid, na.rm=T) ~ max(r1$es_grid, na.rm=T)*(ES/abs(ES)), TRUE ~ ES))
 
   return(list(r1=r1, r1_df=r1_df, obs_cors=obs_cors, text_high=text_high,
-              text_high_es=text_high_es, pvals=pvals, pval_lines=pval_lines, raw = raw))
+              text_high_es=text_high_es, pvals=p_contours, pval_lines=pval_lines, raw = raw))
 
 }
 

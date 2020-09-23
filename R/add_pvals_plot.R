@@ -5,6 +5,10 @@ add_pvals_plot = function(prep, col = "color"){
   pval_lines = prep$pval_lines
   text_high = prep$text_high
   obs_cors = prep$obs_cors
+  p_labels = pvals
+  if(length(which(pval_lines=="twodash")) > 1){
+    p_labels[which(pval_lines=="twodash")] = "Others"
+  }
 
   # Black and white or color
   color=rep(NA,2)
@@ -38,24 +42,19 @@ add_pvals_plot = function(prep, col = "color"){
     ggplot2::ylab("Absolute Correlation with Outcome (rho)") + ggplot2::ggtitle("ES contours") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                    legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
-                   legend.key.size =  grid::unit(0.5, "in")) +
-    ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
+                   legend.key.size =  grid::unit(0.5, "in"),
+                   plot.margin = grid::unit(c(1,1.05,1,1), "cm"))
+  for(i in 1:length(pvals)){
+    v3 = v3 + ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
                                                      y = .data$rho_grid,
                                                      z = .data$p_val,
-                                                     linetype=pval_lines[1]),
-                          color = color[[1]][1], breaks=pvals[1], size=1.25) +
-    ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
-                                                     y = .data$rho_grid,
-                                                     z = .data$p_val,
-                                                     linetype=pval_lines[2]),
-                          color = color[[1]][1], breaks=pvals[2], size=1.25) +
-    ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
-                                                     y = .data$rho_grid,
-                                                     z = .data$p_val,
-                                                     linetype=pval_lines[3]),
-                          color = color[[1]][1], breaks=pvals[3], size=1.25) +
+                                                     linetype=!!pval_lines[i]),
+                          color = color[[1]][1], breaks=pvals[i], size=1.25)
+
+  }
+  v3 = v3 +
     ggplot2::scale_linetype_manual(name = 'P-value Threshold', values = pval_lines,
-                                   labels = pvals) +
+                                   labels = p_labels) +
     ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
                                                      vjust = 3,
                                                      gp = grid::gpar(cex = .75)),
@@ -66,13 +65,13 @@ add_pvals_plot = function(prep, col = "color"){
     metR::geom_text_contour(ggplot2::aes(z=.data$trt_effect),
                             stroke=.2,
                             check_overlap = T)
-
   if(col == "bw"){
     v3 = v3 + ggplot2::theme_bw() +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      legend.key = ggplot2::element_blank(),
                      legend.text = ggplot2::element_text(size = 10),
-                     legend.key.size =  grid::unit(0.5, "in"))
+                     legend.key.size =  grid::unit(0.5, "in"),
+                     plot.margin = unit(c(1,3,1,1), "lines"))
   }
   return(v3)
 }
