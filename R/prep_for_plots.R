@@ -57,7 +57,7 @@ prep_for_plots <- function(r1, p_contours){
   raw_pval = r1$p_val[which(r1$es_grid<.00001 & r1$es_grid>-.00001),
                       which(r1$rho_grid==0)];
   raw_pval_txt = sprintf("%.3f", round(raw_pval,3))
-  raw = paste0("Raw Effect: ", raw_treat_txt, "(p-val: ", raw_pval_txt, ")")
+  raw = paste0("Raw Effect: ", raw_treat_txt, " (p-val: ", raw_pval_txt, ")")
 
   #### setup correlations ####
   # how many factors -- model matrix

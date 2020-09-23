@@ -37,11 +37,12 @@ es_plot = function(prep, col="bw"){
     v = v + ggplot2::geom_contour(col="black") +
       ggplot2::xlab("Association with Treatment Indicator\n (effect size scale)") +
       ggplot2::ylab("Absolute Correlation with Outcome (rho)") +
-      ggplot2::ggtitle(paste0("ES contours -- ", raw)) +
+      ggplot2::ggtitle(paste0("ES contours\n", raw)) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      legend.key = ggplot2::element_blank(),
                      legend.text = ggplot2::element_text(size = 10),
-                     legend.key.size =  grid::unit(0.5, "in")) +
+                     legend.key.size =  grid::unit(0.5, "in"),
+                     .margin) +
       # ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
       #                                                  vjust = 3,
       #                                                  gp = grid::gpar(cex = .75)),
