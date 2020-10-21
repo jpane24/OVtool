@@ -37,7 +37,7 @@ time = Sys.time()
 
 # Introduction
 
-*Note: This is a work in progress.. This document was lasted upated `r time`*
+*Note: This is a work in progress.. This document was lasted updated `r time`*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`) package was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This package includes graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (in preparation) describe the methodology behind the primary function in this package, `ov_sim()`. This document presents syntax for the implementation of the `ov_sim()` function and provides an example of how to interpret the packages' graphical output.
 
@@ -45,7 +45,7 @@ This package is useful in a wide range of applications where researchers want to
 
 # Example: Synthetic Data 
 
-This package is demonstrated using a synthetic data set that was derived from a large scale observational study on youth in substance use treatment. More specifically, it contains a subset of measures from the Global Appraisal of Individual Needs biopsychosocial assessment instrument (GAIN) (Dennis, Titus et al. 2003) from sites that adminstered two different types of substance use disorder treatments (treatment "A" and treatment "B"). The Center for Substance Abuse Treatment (CSAT) funded the sites that administered these two SUD treatments. This dataset consists of 4,000 adolescents. The main goal of this analysis is to understand the effect Treatment A and Treatment B, indicated by `treat`, have on mental health outcomes and to assess the potential for an omitted variable to bias the findings. To create our synthetic data set, we used an R package called "[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf ) : Bespoke Creation of Synthetic Data in R". 
+This package is demonstrated using a synthetic data set that was derived from a large scale observational study on youth in substance use treatment. More specifically, it contains a subset of measures from the Global Appraisal of Individual Needs biopsychosocial assessment instrument (GAIN) (Dennis, Titus et al. 2003) from sites that administered two different types of substance use disorder treatments (treatment "A" and treatment "B"). The Center for Substance Abuse Treatment (CSAT) funded the sites that administered these two SUD treatments. This dataset consists of 4,000 adolescents. The main goal of this analysis is to understand the effect Treatment A and Treatment B, indicated by `treat`, have on mental health outcomes and to assess the potential for an omitted variable to bias the findings. To create our synthetic data set, we used an R package called "[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf ) : Bespoke Creation of Synthetic Data in R". 
 
 In our synthetic dataset, there are 2,000 adolescents in each treatment group. Within this dataset there are variables on substance use disorder and mental health outcomes. For this tutorial we are particularly interested in the mental health outcome, `eps7p_3`, emotional problem scale (eps) recorded at three months. Higher values of eps indicate more emotional problems. Substance use researchers are particularly interested in whether or not treatment A reduces emotional problems more than treatment B. `eps7p_3` ranges from zero to one, where higher values of EPS indicate more emotional problems. See (Dennis, 2003) for more details on this scale. 
 
@@ -180,7 +180,7 @@ First, when generating the omitted variable (U), the empirical cumulative distri
 
 Another key assumption this method draws upon is that the omitted variable is independent from all observed covariates included in the propensity score model.
 
-To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter `col` as `"color"`, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the p-value contours with the column names submitted to `weight_covariates` plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlayed and covariate labels. The `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce a black and white and colored contour graphic, respectively.
+To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter `col` as `"color"`, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the p-value contours with the column names submitted to `weight_covariates` plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlaid and covariate labels. The `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce a black and white and colored contour graphic, respectively.
 
 ```{r, fig1, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -192,7 +192,7 @@ The y-axis in Figure 1 represents the unobserved confounder's absolute correlati
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 ```
 
-Figure 2 is a different variation of Figure 1, but now adds p-value contours. This graphic will allow the user to see what treatment effect on the effect size scale will switch the significance level at critical p-values (i.e. 0.05). This graphic will now give the user an idea of how sensitive the effect is. \newline
+Figure 2 is a different variation of Figure 1, but now adds p-value contours. This graphic will allow the user to see what treatment effect on the effect size scale will switch the significance level at critical p-values (i.e. 0.05). This graphic will now give the user an idea of how sensitive the effect is. The analyst can specify what  red p-value thresholds they want plotted. \newline
 
 ```{r, fig3, fig.width=10, fig.height=7, fig.align='center', linewidth=100}
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
@@ -217,7 +217,7 @@ These results were produced with 50 simulations (`n_reps`) of the unobserved con
 Finally, we can interpret this graphic by running the summary command on the ov object:
 
 ```{r, summary`, linewidth=100}
-summary.ov(object = ovtool_results_twang, model_results = results)
+summary.ov(object = ovtool_results_twang, model_results = results, p_vals=)
 ```
 
 The `OVtool` gives a recommendation on how to report findings regarding the direction of the treatment effect and statistical significance. An analyst could take the results produced by `summary.ov()` and plug them into a manuscript. The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by 83 percent. However, statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.004 to 0.628. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the
@@ -308,7 +308,7 @@ There is continuously a call for work on assessing the sensitivity of research f
 
 # Acknowledgements
 
-The devlopment of this tutorial was supported by funding from grant R01DA045049 (PIs: Griffin/McCaffrey) from the National Institute on Drug Abuse. It was also supported by the Center for Substance Abuse Treatment (CSAT), Substance Abuse and Mental Health Services Administration (SAMHA). The authors thank these agencies, grantees, and their participants for agreeing to share their data to support creation of the synthetic dataset used in this analysis. This tutorial uses a synthetic dataset of youth receiving two unidentified treatments from the GAIN; running on the true dataset will produce different results. 
+The development of this tutorial was supported by funding from grant R01DA045049 (PIs: Griffin/McCaffrey) from the National Institute on Drug Abuse. It was also supported by the Center for Substance Abuse Treatment (CSAT), Substance Abuse and Mental Health Services Administration (SAMHA). The authors thank these agencies, grantees, and their participants for agreeing to share their data to support creation of the synthetic dataset used in this analysis. This tutorial uses a synthetic dataset of youth receiving two unidentified treatments from the GAIN; running on the true dataset will produce different results. 
 
 # References
 

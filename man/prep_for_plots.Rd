@@ -8,13 +8,17 @@
 Data preparation for producing the graphics and summary results.
 }
 \usage{
-prep_for_plots(r1)
+prep_for_plots(r1, p_contours)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{r1}{
 %%     ~~Describe \code{x} here~~
 An object returned from sim_grid
+}
+  \item{p_contours}{
+%%     ~~Describe \code{x} here~~
+P-value countours to plot. The default plots: 0.01, 0.05, and 0.1. We only recommend changing this if the raw effect p-value is very close to one of these values. Do not specify more than four p-value contours.
 }
 }
 \value{
