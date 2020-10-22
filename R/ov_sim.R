@@ -30,7 +30,7 @@ ov_sim <- function(model_results, weight_covariates,
     }
     if(!is.null(es_grid)){
       if(any(abs(es_grid) > 1)){
-        stop("This tool only considers small to moderate correlations. An effect size of 1 corresponds to a correlation of 0.44. Please reduce the size of your grid. For example: rho_grid = seq(-.4, .4, by = 0.05)")
+        stop("This tool only considers small to moderate correlations. An effect size of 1 corresponds to a correlation of 0.44. Please reduce the size of your grid. For example: es_grid = seq(-.4, .4, by = 0.05)")
       }
     }
 
