@@ -28,11 +28,11 @@ ov_sim <- function(model_results, weight_covariates,
         stop("Please specify a rho grid between 0 and 1. For example: rho_grid = seq(0, .45, by = 0.05)")
       }
     }
-    if(!is.null(es_grid)){
-      if(any(abs(es_grid) > 1)){
-        stop("This tool only considers small to moderate correlations. An effect size of 1 corresponds to a correlation of 0.44. Please reduce the size of your grid. For example: es_grid = seq(-.4, .4, by = 0.05)")
-      }
-    }
+    # if(!is.null(es_grid)){
+    #   if(any(abs(es_grid) > 1)){
+    #     stop("This tool only considers small to moderate correlations. An effect size of 1 corresponds to a correlation of 0.44. Please reduce the size of your grid. For example: es_grid = seq(-.4, .4, by = 0.05)")
+    #   }
+    # }
 
     if(!all(dta[,tx] %in% c(0,1))) stop("Treatment variable `tx` must be only 0/1 values.")
 
