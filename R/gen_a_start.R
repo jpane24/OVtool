@@ -74,7 +74,7 @@ gen_a_start <- function(y, tx, es, rho, my_estimand){
     ve0 <- 1 - b0^2 * stats::var(ystar0)
     my_time_2 = proc.time()
     if(as.vector((my_time_2 - my_time) >120)[3]){
-      stop("Could not find bounded parameter for your specification. Please consider checking raw effect size and correlations of your weight_covariates and try only selecting those with small and moderate correlation and effect sizes.")
+      stop("Could not find bounded parameter for your specification. Please consider checking raw effect size and correlations of your plot_covariates and try only selecting those with small and moderate correlation and effect sizes.")
     }
   }
   if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
