@@ -160,7 +160,7 @@ prep_for_plots <- function(r1, p_contours){
       }
     } else{
       diff_means = diff(mean_sd_bygroup$fn1)
-      denom_ATT = mean_sd_bygroup$fn2[mean_sd_bygroup$treat==1]
+      denom_ATT = mean_sd_bygroup$fn2[mean_sd_bygroup[,r1$tx]==1]
       if(raw_pval >= .05){
         es_cov[i] = (diff_means/denom_ATT)
       } else if(raw_pval < .05 & length(which(r1$p_val[r1$es_grid>0,]>.05)) >
