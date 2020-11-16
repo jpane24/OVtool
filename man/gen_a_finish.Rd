@@ -22,4 +22,8 @@ A list of values returned by gen_a_start
 }
 \value{
 \item{a}{used to control the strength of the relationship between the omitted variable and the treatment}
+\item{corUY}{correlation between U and Y}
+\item{corUR}{correlation between U and the residuals}
+\item{corURstar}{correlation between U and Rstar}
 }
+

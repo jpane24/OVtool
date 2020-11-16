@@ -75,23 +75,33 @@ ov_sim <- function(model_results, plot_covariates,
     trt_effect_nodr <- matrix(0,length(es_grid), length(rho_grid))
     p_val_nodr <- matrix(0,length(es_grid), length(rho_grid))
     std_error_nodr <- matrix(0, length(es_grid), length(rho_grid))
-    pValHd <- esHd <- StdError <- rep(NA, n_reps)
+    pValHd <- esHd <- StdError <- corUY <- corUR <- corURstar <- rep(NA, n_reps)
     # save results:
     temp_store = expand.grid(es=es_grid, rho=rho_grid); store_results = data.frame()
     for(i in 1:n_reps){
       store_results = dplyr::bind_rows(store_results, temp_store)
     }
     store_results$esHd = NA; store_results$StdError = NA
+    store_results$corUY = NA; store_results$corUR = NA; store_results$corURstar = NA
     # create w_new and set it to the original weights for now
     dta$w_new = dta$w_orig
+    # residuals:
+    my_res = as.vector(lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
-                                es = es_grid[i], rho = rho_grid[j],
+          a_prep <- gen_a_start(y=dta[,y],
+                                tx = dta[,tx],
+                                residuals = my_res,
+                                es = es_grid[i],
+                                rho = rho_grid[j],
                                 my_estimand = estimand)
-          a <- gen_a_finish(a_res=a_prep, my_estimand=estimand)
+          a_results <- gen_a_finish(a_res=a_prep, my_estimand=estimand)
+          corUY[k] <- a_results$corUY
+          corUR[k] <- a_results$corUR
+          corURstar[k] <- a_results$corURstar
+          a <- a_results$a
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
@@ -99,7 +109,8 @@ ov_sim <- function(model_results, plot_covariates,
           StdError[k] <- summary(glm0_u_nodr)$coefficients[tx,2]
         }
         store_results[which(store_results$es == es_grid[i] &
-                              store_results$rho == rho_grid[j]),c('esHd','StdError')] = data.frame(esHd, StdError)
+                              store_results$rho == rho_grid[j]),
+                      c('esHd','StdError','corUY','corUR','corURstar')] = data.frame(esHd, StdError, corUY, corUR, corURstar)
         combine = Amelia::mi.meld(q=data.frame(esHd), se=data.frame(StdError))
         melded_summary <- as.data.frame(cbind(t(combine$q.mi),
                                               t(combine$se.mi))) %>%
@@ -132,12 +143,17 @@ ov_sim <- function(model_results, plot_covariates,
     }
     store_results$esHd = NA; store_results$StdError = NA
     dta$w_new = dta$w_orig
+    # residuals:
+    my_res = as.vector(lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
-                                es = es_grid[i], rho = rho_grid[j],
+          a_prep <- gen_a_start(y=dta[,y],
+                                tx = dta[,tx],
+                                residuals = my_res,
+                                es = es_grid[i],
+                                rho = rho_grid[j],
                                 my_estimand = estimand)
           a <- gen_a_finish(a_res=a_prep, my_estimand = estimand)
           dta$w_new <- dta$w_orig * a
