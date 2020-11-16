@@ -50,7 +50,7 @@ find_esgrid = function(my_data, my_cov, treatment, outcome, my_estimand){
       }
     } else{
       diff_means = diff(mean_sd_bygroup$fn1)
-      denom_ATT = mean_sd_bygroup$fn2[mean_sd_bygroup$treat==1]
+      denom_ATT = mean_sd_bygroup$fn2[mean_sd_bygroup[,treatment]==1]
       es_cov[i] = abs(diff_means/denom_ATT)
     }
   }
