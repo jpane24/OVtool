@@ -47,7 +47,7 @@ outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights=NULL,
     design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
   }
   # create formula
-  formula = formula(paste0("scale(", y, ") ~ ", tx, " + ", glue::glue_collapse(cov, sep=" + ")))
+  formula = formula(paste0(y, " ~ ", tx, " + ", glue::glue_collapse(cov, sep=" + ")))
   # run outcomes model:
   if(length(unique(data[, y ])) <=1){
     stop("No variation in outcome.")
