@@ -3,7 +3,7 @@ gen_a_finish <- function(a_res, my_estimand){
 
   U1 <- stats::rnorm(a_res$n1)*sqrt(a_res$ve1) + a_res$b1*a_res$Rstar_1 +
     a_res$es*(1-a_res$pi)
-  U0 <- stats::rnorm(a_res$n0)*sqrt(a_res$ve0) + a_res$b0*a_res$Rstar0 -
+  U0 <- stats::rnorm(a_res$n0)*sqrt(a_res$ve0) + a_res$b0*a_res$Rstar_0 -
     a_res$es*a_res$pi
 
   U <- rep(NA, a_res$n)
