@@ -1,5 +1,5 @@
 #### ov_sim fn ####
-ov_sim <- function(model_results, weight_covariates,
+ov_sim <- function(model_results, plot_covariates,
                    es_grid = seq(-.4, .4, by = 0.05),
                    rho_grid = seq(0, .4, by = 0.05), n_reps = 50,
                    progress = TRUE,
@@ -11,10 +11,10 @@ ov_sim <- function(model_results, weight_covariates,
   estimand = model_results$estimand
 
   # covariates
-  if(typeof(weight_covariates) == "language"){
-    cov = all.vars(weight_covariates)
+  if(typeof(plot_covariates) == "language"){
+    cov = all.vars(plot_covariates)
   } else{
-    cov = weight_covariates
+    cov = plot_covariates
   }
 
   # create formula
@@ -47,7 +47,7 @@ ov_sim <- function(model_results, weight_covariates,
       if(!is.null(es_grid)){
         es_drop = jdp_test[which(jdp_test$ES > max(abs(es_grid))),'cov']
         if(max(abs(es_grid)) < max(abs(jdp_test$ES))){
-          warning(paste0("You specified an effect size grid whose maximum in absolute value is less than the maximum absolute association at least one observed covariate has with the treatment indicator. The effect size grid was automatically expanded to include all weight_covariates specified in the relevant graphics. If you want the effect size grid range to remain from ", min(es_grid), " to ", max(es_grid), " then you must exclude the following variables from the weight_covariates argument: ", paste(es_drop, collapse=", "), "."))
+          warning(paste0("You specified an effect size grid whose maximum in absolute value is less than the maximum absolute association at least one observed covariate has with the treatment indicator. The effect size grid was automatically expanded to include all plot_covariates specified in the relevant graphics. If you want the effect size grid range to remain from ", min(es_grid), " to ", max(es_grid), " then you must exclude the following variables from the plot_covariates argument: ", paste(es_drop, collapse=", "), "."))
           es_upper = .05 * ceiling(max(jdp_test$ES)/.05)
           es_lower = -es_upper
           es_grid = seq(es_lower, es_upper, by=0.05)
@@ -61,7 +61,7 @@ ov_sim <- function(model_results, weight_covariates,
       if(!is.null(rho_grid)){
         rho_drop = jdp_test[which(jdp_test$Cor_Outcome > max(abs(rho_grid))),'cov']
         if(max(rho_grid) < max(jdp_test$Cor_Outcome)){
-          warning(paste0("You specified a rho grid whose maximum value is less than the maximum absolute correlation at least one observed covariate has with the outcome. The rho grid was automatically expanded to include all weight_covariates specified in the relevant graphics. If you want the rho grid range to remain from ", min(rho_grid), " to ", max(rho_grid), " then you must exclude the following variables from the weight_covariates argument: ", paste(rho_drop, collapse=", "), "."))
+          warning(paste0("You specified a rho grid whose maximum value is less than the maximum absolute correlation at least one observed covariate has with the outcome. The rho grid was automatically expanded to include all plot_covariates specified in the relevant graphics. If you want the rho grid range to remain from ", min(rho_grid), " to ", max(rho_grid), " then you must exclude the following variables from the plot_covariates argument: ", paste(rho_drop, collapse=", "), "."))
           rho_upper = .05 * ceiling(max(jdp_test$Cor_Outcome)/.05)
           rho_grid = seq(0, rho_upper, by=0.05)
         }
@@ -84,12 +84,17 @@ ov_sim <- function(model_results, weight_covariates,
     store_results$esHd = NA; store_results$StdError = NA
     # create w_new and set it to the original weights for now
     dta$w_new = dta$w_orig
+    # residuals
+    my_res = as.vector(lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
-                                es = es_grid[i], rho = rho_grid[j],
+          a_prep <- gen_a_start(y=dta[,y],
+                                tx = dta[,tx],
+                                residuals = my_res,
+                                es = es_grid[i],
+                                rho = rho_grid[j],
                                 my_estimand = estimand)
           a <- gen_a_finish(a_res=a_prep, my_estimand=estimand)
           dta$w_new <- dta$w_orig * a
@@ -132,12 +137,17 @@ ov_sim <- function(model_results, weight_covariates,
     }
     store_results$esHd = NA; store_results$StdError = NA
     dta$w_new = dta$w_orig
+    # residuals:
+    my_res = as.vector(lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
-          a_prep <- gen_a_start(y=dta[,y], tx = dta[,tx],
-                                es = es_grid[i], rho = rho_grid[j],
+          a_prep <- gen_a_start(y=dta[,y],
+                                tx = dta[,tx],
+                                residuals = my_res,
+                                es = es_grid[i],
+                                rho = rho_grid[j],
                                 my_estimand = estimand)
           a <- gen_a_finish(a_res=a_prep, my_estimand = estimand)
           dta$w_new <- dta$w_orig * a

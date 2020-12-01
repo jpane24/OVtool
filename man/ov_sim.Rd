@@ -11,7 +11,7 @@ effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
 }
 \usage{
-ov_sim(model_results, weight_covariates, es_grid = seq(-.4, .4, by = 0.05),
+ov_sim(model_results, plot_covariates, es_grid = seq(-.4, .4, by = 0.05),
 rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE, add = FALSE,
 sim_archive = NULL)
 }
@@ -20,8 +20,8 @@ sim_archive = NULL)
   \item{model_results}{
   object returned from outcome_model
 }
-  \item{weight_covariates}{
-  vector of column names representing the covariates you used to create your propensity score weights
+  \item{plot_covariates}{
+  vector of column names representing the covariates that will be plotted on the graphic as observed covariates. Most users will include the variables on the right-hand side of the propensity score model
 }
   \item{es_grid}{
   Not required. A grid of effect sizes to simulate over

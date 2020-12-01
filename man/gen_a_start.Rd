@@ -20,6 +20,9 @@ A vector that represents the outcome.
   \item{tx}{
 A vector for the treatment indicator (must be 0s and 1s).
 }
+  \item{residuals}{
+A vector of residuals from regressing Y on X and controlling for treatment.
+}
   \item{es}{
 An effect size value to simulate over.
 }
@@ -37,14 +40,14 @@ gen_a_start returns a list containing the following components:
 \item{n1}{scalar representing sample size of treatment group (treat == 1)}
 \item{ve1}{1 - b1^2 multiplied by the variance of Ystar1}
 \item{b1}{bounded parameter for treatment group (treat == 1) that it with b0 are selected to set the correlation of the omitted variable and the outcome equal to rho}
-\item{ystar1}{inverse of the standard normal distribution cumulative distribution function of the outcome for the treatment group sample (treat == 1)}
 \item{es}{}
 \item{pi}{proportion of population that is in the treatment group (treat == 1)}
 \item{n0}{scalar represnting sample size of control group (treat == 0)}
 \item{ve0}{1 - b0^2 multiplied by the variance of Ystar0}
 \item{b0}{bounded parameter for control group (treat == 0) that it with b1 are selected to set the correlation of the omitted variable and the outcome equal to rho}
-\item{ystar0}{inverse of the standard normal distribution cumulative distribution function of the outcome for the control group sample (treat == 0)}
 \item{n}{scalar representing the total sample size}
 \item{ind}{vector of positions in data that represent treatment group (treat == 1)}
+\item{Rstar_1}{Residuals in treatment group}
+\item{Rstar_0}{Residuals in control group}
 }
 

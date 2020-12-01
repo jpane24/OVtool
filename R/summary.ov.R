@@ -12,7 +12,7 @@ summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, .
   options(warn=-1)
   for(i in 1:nrow(temp$obs_cors)){
     calculate_exact = ov_sim(model_results = model_results,
-                                     weight_covariates = object$cov,
+                                     plot_covariates = object$cov,
                                      rho_grid = temp$obs_cors$Cor_Outcome[i],
                                      es_grid=temp$obs_cors$ES[i],
                                      n_reps = object$n_reps)

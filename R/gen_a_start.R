@@ -1,24 +1,17 @@
 #### gen_a_start fn ####
-gen_a_start <- function(y, tx, es, rho, my_estimand){
+gen_a_start <- function(y, tx, residuals, es, rho, my_estimand){
   ind <- which(tx == 1)
-  if(length(unique(y[ind])) == 2){
-    y[ind][which(y[ind]==1)] = stats::runif(length(which(y[ind]==1)), min=1, max=2)
-    y[ind][which(y[ind]==0)] = stats::runif(length(which(y[ind]==0)), min=-1, max=0)
 
-    y[-ind][which(y[-ind]==1)] = stats::runif(length(which(y[-ind]==1)), min=1, max=2)
-    y[-ind][which(y[-ind]==0)] = stats::runif(length(which(y[-ind]==0)), min=-1, max=0)
-  }
-
-  cdf1 = EnvStats::ecdfPlot(y[ind], discrete = F, plot.it = F)
-  cdf0 = EnvStats::ecdfPlot(y[-ind], discrete = F, plot.it = F)
-  ystar1 = stats::qnorm(cdf1$Cumulative.Probabilities[rank(y[ind], ties.method = 'random')])
-  ystar0 = stats::qnorm(cdf0$Cumulative.Probabilities[rank(y[-ind], ties.method = 'random')])
+  cdf1 = EnvStats::ecdfPlot(residuals[ind], discrete = F, plot.it = F)
+  cdf0 = EnvStats::ecdfPlot(residuals[-ind], discrete = F, plot.it = F)
+  Rstar1 = stats::qnorm(cdf1$Cumulative.Probabilities[rank(residuals[ind], ties.method = 'random')])
+  Rstar0 = stats::qnorm(cdf0$Cumulative.Probabilities[rank(residuals[-ind], ties.method = 'random')])
 
   n1 <- sum(tx)
   n0 <- sum(1-tx)
   n <- n1 + n0
-  c1 <- stats::cov(ystar1,y[ind])
-  c0 <- stats::cov(ystar0,y[-ind])
+  c1 <- stats::cov(Rstar1,y[ind])
+  c0 <- stats::cov(Rstar0,y[-ind])
 
   pi <- mean(tx)
 
@@ -55,33 +48,33 @@ gen_a_start <- function(y, tx, es, rho, my_estimand){
   }
   # temporary line 57
   if(my_estimand == "ATT"){
-    b1 = 0
+    b1 = 0.55 # this needs fixed.
   } else{
     b1 = stats::runif(1, b1low, b1high)
   }
 
   # solve for b0.
   b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
-  ve1 <- 1 - b1^2 * stats::var(ystar1)
-  ve0 <- 1 - b0^2 * stats::var(ystar0)
+  ve1 <- 1 - b1^2 * stats::var(Rstar1)
+  ve0 <- 1 - b0^2 * stats::var(Rstar0)
 
   # redraw b1 if ve0 < 0 | ve1 < 0
   my_time = proc.time()
   while(ve0 < 0 | ve1 < 0){
     b1 = stats::runif(1, b1low, b1high)
     b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
-    ve1 <- 1 - b1^2 * stats::var(ystar1)
-    ve0 <- 1 - b0^2 * stats::var(ystar0)
+    ve1 <- 1 - b1^2 * stats::var(Rstar1)
+    ve0 <- 1 - b0^2 * stats::var(Rstar0)
     my_time_2 = proc.time()
     if(as.vector((my_time_2 - my_time) >120)[3]){
-      stop("Could not find bounded parameter for your specification. Please consider checking raw effect size and correlations of your weight_covariates and try only selecting those with small and moderate correlation and effect sizes.")
+      stop("Could not find bounded parameter for your specification. Please consider checking raw effect size and correlations of your plot_covariates and try only selecting those with small and moderate correlation and effect sizes.")
     }
   }
   if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
-  return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, ystar1 = ystar1,
-                      es = es, pi = pi, n0 = n0, ve0 = ve0, b0 = b0,
-                      ystar0 = ystar0, n = n, ind = ind, y = y,
-                      rho = rho))
+  return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, es=es, pi = pi,
+                      n0 = n0, ve0 = ve0, b0 = b0, n = n, ind = ind,
+                      y = y, rho = rho, Rstar_1 = Rstar1, Rstar_0 = Rstar0,
+                      residuals = residuals))
 }
 

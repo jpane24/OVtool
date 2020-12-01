@@ -146,7 +146,7 @@ The outcome model results show an adjusted treatment effect estimate that accoun
 
 At this stage, researchers should begin to ask themselves if this effect is real and how sensitive it is. Our tool is used to help answer these sort of logical next step questions. The next snippet of code presents the main function in `OVtool`: `ov_sim()`. This function requires results from `outcome_model()` plus additional parameters including:
 
-* `weight_covariates`: a vector of column names representing the covariates used to produce the analysts propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)
+* `plot_covariates`: a vector of column names potentially representing the covariates used to produce the analysts' propensity score weights (these may or may not be the same as the list of covariates used for the outcome model)
 
 * `es_grid`: a vector on an effect size scale representing the association between the unobserved confounders (omitted variables) and the treatment indicator. 
 
@@ -159,10 +159,10 @@ The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size
 ```{r, ov_sim}
 # Run OVtool (with weights (not a ps object))
 ovtool_results_twang = ov_sim(model_results=results, 
-                              weight_covariates=c("eps7p_0", "sfs8p_0",
-                                                  "sati_0", "ada_0",
-                                                  "recov_0", "tss_0", 
-                                                  "mhtrt_0", "dss9_0"),
+                              plot_covariates=c("eps7p_0", "sfs8p_0",
+                                                "sati_0", "ada_0",
+                                                "recov_0", "tss_0", 
+                                                "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
                               n_reps = 50,
@@ -170,7 +170,7 @@ ovtool_results_twang = ov_sim(model_results=results,
 
 ```
 
-In our example, `ov_sim` produced a warning saying "You specified a rho grid whose maximum value is less than the maximum absolute correlation at least one observed covariate has with the outcome. The rho grid was automatically expanded to include all weight_covariates specified in the relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then you must exclude the following variables from the weight_covariates argument: eps7p_0, tss_0, dss9_0." The grid was expanded to ensure all `weight_covariates` could be seen on the contour plot. If the user does not want the grid expanded, they can leave out the observed covariates used in the propensity score model that have an absolute correlation with the outcome that is greater than the maximum rho value the user specifies (`eps_7p_0`, `dss9_0`, and `tss_0`). 
+In our example, `ov_sim` produced a warning saying "You specified a rho grid whose maximum value is less than the maximum absolute correlation at least one observed covariate has with the outcome. The rho grid was automatically expanded to include all plot_covariates specified in the relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then you must exclude the following variables from the plot_covariates argument: eps7p_0, tss_0, dss9_0." The grid was expanded to ensure all `plot_covariates` could be seen on the contour plot. If the user does not want the grid expanded, they can leave out the observed covariates used in the propensity score model that have an absolute correlation with the outcome that is greater than the maximum rho value the user specifies (`eps_7p_0`, `dss9_0`, and `tss_0`). 
 
 The grid values are not required; if es_grid and/or rho_grid are set to `NULL`, the tool will calculate reasonable values to simulate over. For this tutorial we set `es_grid` to NULL. The tool then iterated over all observed covariate associations with the treatment indicator on an effect size scale to derive a reasonable range. 
 
@@ -180,7 +180,7 @@ First, when generating the omitted variable (U), the empirical cumulative distri
 
 Another key assumption this method draws upon is that the omitted variable is independent from all observed covariates included in the propensity score model.
 
-To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter `col` as `"color"`, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the p-value contours with the column names submitted to `weight_covariates` plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlaid and covariate labels. The `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce a black and white and colored contour graphic, respectively.
+To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter `col` as `"color"`, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the p-value contours with the column names submitted to `plot_covariates` plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlaid and covariate labels. The `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce a black and white and colored contour graphic, respectively.
 
 ```{r, fig1, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -259,10 +259,10 @@ Again, the only difference in the call to the outcome_model function is specifyi
 
 ```{r, ovsim_att}
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
-                                  weight_covariates=c("eps7p_0", "sfs8p_0",
-                                                      "sati_0", "ada_0",
-                                                      "recov_0", "tss_0", 
-                                                      "mhtrt_0", "dss9_0"),
+                                  plot_covariates=c("eps7p_0", "sfs8p_0",
+                                                    "sati_0", "ada_0",
+                                                    "recov_0", "tss_0", 
+                                                    "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
                                   n_reps = 50,
