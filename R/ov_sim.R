@@ -75,7 +75,8 @@ ov_sim <- function(model_results, plot_covariates,
     trt_effect_nodr <- matrix(0,length(es_grid), length(rho_grid))
     p_val_nodr <- matrix(0,length(es_grid), length(rho_grid))
     std_error_nodr <- matrix(0, length(es_grid), length(rho_grid))
-    pValHd <- esHd <- StdError <- corUY <- corUR <- corURstar <- rep(NA, n_reps)
+    pValHd <- esHd <- StdError <- corUY <- corUR <- corURstar <-  rep(NA, n_reps)
+    b1 <- b0 <- ve1 <- ve0 <- pi <- n1 <- n0 <- rep(NA, n_reps)
     # save results:
     temp_store = expand.grid(es=es_grid, rho=rho_grid); store_results = data.frame()
     for(i in 1:n_reps){
@@ -83,6 +84,9 @@ ov_sim <- function(model_results, plot_covariates,
     }
     store_results$esHd = NA; store_results$StdError = NA
     store_results$corUY = NA; store_results$corUR = NA; store_results$corURstar = NA
+    store_results$b1 = NA; store_results$ve1 = NA; store_results$ve0 = NA
+    store_results$b0 = NA; store_results$pi = NA; store_results$n1 = NA;
+    store_results$n0 = NA; store_ai = matrix(NA, nrow=nrow(dta), ncol=12)
     # create w_new and set it to the original weights for now
     dta$w_new = dta$w_orig
     # residuals:
@@ -101,16 +105,27 @@ ov_sim <- function(model_results, plot_covariates,
           corUY[k] <- a_results$corUY
           corUR[k] <- a_results$corUR
           corURstar[k] <- a_results$corURstar
+          b1[k] <- a_prep$b1
+          b0[k] <- a_prep$b0
+          ve1[k] <- a_prep$ve1
+          ve0[k] <- a_prep$ve0
+          pi[k] <- a_prep$pi
+          n1[k] <- a_prep$n1
+          n0[k] <- a_prep$n0
           a <- a_results$a
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
           esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
           StdError[k] <- summary(glm0_u_nodr)$coefficients[tx,2]
+          # store a_i's
+          # store_ai[,index] = a
         }
         store_results[which(store_results$es == es_grid[i] &
                               store_results$rho == rho_grid[j]),
-                      c('esHd','StdError','corUY','corUR','corURstar')] = data.frame(esHd, StdError, corUY, corUR, corURstar)
+                      c('esHd','StdError','corUY','corUR','corURstar',
+                        'b1','b0','ve1','ve0','pi','n1','n0')] = data.frame(esHd, StdError, corUY, corUR, corURstar,
+                                                                            b1, b0, ve1, ve0, pi, n1, n0)
         combine = Amelia::mi.meld(q=data.frame(esHd), se=data.frame(StdError))
         melded_summary <- as.data.frame(cbind(t(combine$q.mi),
                                               t(combine$se.mi))) %>%

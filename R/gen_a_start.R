@@ -48,7 +48,7 @@ gen_a_start <- function(y, tx, residuals, es, rho, my_estimand){
   }
   # temporary line 57
   if(my_estimand == "ATT"){
-    b1 = 0
+    b1 = 0.55
   } else{
     b1 = stats::runif(1, b1low, b1high)
   }
@@ -60,7 +60,7 @@ gen_a_start <- function(y, tx, residuals, es, rho, my_estimand){
 
   # redraw b1 if ve0 < 0 | ve1 < 0
   my_time = proc.time()
-  while(ve0 < 0 | ve1 < 0){
+  while(ve0 < 0 | ve1 < 0){ #
     b1 = stats::runif(1, b1low, b1high)
     b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
     ve1 <- 1 - b1^2 * stats::var(Rstar1)
