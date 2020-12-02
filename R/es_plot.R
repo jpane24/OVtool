@@ -29,7 +29,8 @@ es_plot = function(prep, col="bw"){
                        alpha = 0.01) +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(limits = c(0,max(r1_df$rho_grid)), expand = c(0, 0)) +
-    ggplot2::theme_linedraw()
+    ggplot2::theme_linedraw() +
+    ggplot2::geom_vline(xintercept = 0, color = 'darkgrey')
     if(col == "color"){
       v = v + ggplot2::geom_tile() +
         ggplot2::scale_fill_gradient(low="blue", high="orange")

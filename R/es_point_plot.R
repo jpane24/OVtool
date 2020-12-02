@@ -44,7 +44,7 @@ es_point_plot = function(prep, col = "color"){
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
           legend.key = ggplot2::element_blank(), legend.text = ggplot2::element_text(size = 10),
           legend.key.size =  grid::unit(0.5, "in")) +
-    ggplot2::geom_vline(xintercept = 0, color = 'black')
+    ggplot2::geom_vline(xintercept = 0, color = 'darkgrey')
   for(i in 1:length(pvals)){
     v3 = v3 +
       ggplot2::geom_contour(data = r1_df, ggplot2::aes(x = .data$es_grid,
