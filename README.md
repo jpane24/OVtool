@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2020-09-21 13:06:08*
+2020-12-01 22:44:08*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -32,7 +32,7 @@ from a large scale observational study on youth in substance use
 treatment. More specifically, it contains a subset of measures from the
 Global Appraisal of Individual Needs biopsychosocial assessment
 instrument (GAIN) (Dennis, Titus et al. 2003) from sites that
-adminstered two different types of substance use disorder treatments
+administered two different types of substance use disorder treatments
 (treatment “A” and treatment “B”). The Center for Substance Abuse
 Treatment (CSAT) funded the sites that administered these two SUD
 treatments. This dataset consists of 4,000 adolescents. The main goal of
@@ -74,7 +74,7 @@ you restart your R session after running:*
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jpane24/OVtool") 
+devtools::install_github("jpane24/OVtool", ref='master') 
 # we recommend restarting your R session after running the previous line of code
 # for the first time on your machine.
 library(OVtool)
@@ -138,6 +138,24 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
 ## Get weights
 sud = data.frame(sud)
 library(twang)
+```
+
+    #> Loading required package: survey
+
+    #> Loading required package: grid
+
+    #> Loading required package: Matrix
+
+    #> Loading required package: survival
+
+    #> 
+    #> Attaching package: 'survey'
+
+    #> The following object is masked from 'package:graphics':
+    #> 
+    #>     dotchart
+
+``` r
 ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
 
@@ -223,7 +241,7 @@ summary(results$mod_results)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
-    #> (Intercept) -0.7079871  0.0649876 -10.894  < 2e-16 ***
+    #> (Intercept)  0.3562719  0.0649876   5.482 4.46e-08 ***
     #> treat        0.0785796  0.0275254   2.855  0.00433 ** 
     #> eps7p_0      1.6332282  0.1180704  13.833  < 2e-16 ***
     #> sfs8p_0      0.0023047  0.0020310   1.135  0.25654    
@@ -253,10 +271,10 @@ sort of logical next step questions. The next snippet of code presents
 the main function in `OVtool`: `ov_sim()`. This function requires
 results from `outcome_model()` plus additional parameters including:
 
-  - `weight_covariates`: a vector of column names representing the
-    covariates used to produce the analysts propensity score weights
-    (these may or may not be the same as the list of covariates used for
-    the outcome model)
+  - `plot_covariates`: a vector of column names potentially representing
+    the covariates used to produce the analysts’ propensity score
+    weights (these may or may not be the same as the list of covariates
+    used for the outcome model)
 
   - `es_grid`: a vector on an effect size scale representing the
     association between the unobserved confounders (omitted variables)
@@ -289,22 +307,22 @@ used by `OVtool`.
 ``` r
 # Run OVtool (with weights (not a ps object))
 ovtool_results_twang = ov_sim(model_results=results, 
-                              weight_covariates=c("eps7p_0", "sfs8p_0",
-                                                  "sati_0", "ada_0",
-                                                  "recov_0", "tss_0", 
-                                                  "mhtrt_0", "dss9_0"),
+                              plot_covariates=c("eps7p_0", "sfs8p_0",
+                                                "sati_0", "ada_0",
+                                                "recov_0", "tss_0", 
+                                                "mhtrt_0", "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
                               n_reps = 50,
                               progress = TRUE)
 ```
 
-    #> Warning in ov_sim(model_results = results, weight_covariates = c("eps7p_0", :
+    #> Warning in ov_sim(model_results = results, plot_covariates = c("eps7p_0", :
     #> You specified a rho grid whose maximum value is less than the maximum absolute
     #> correlation at least one observed covariate has with the outcome. The rho grid
-    #> was automatically expanded to include all weight_covariates specified in the
+    #> was automatically expanded to include all plot_covariates specified in the
     #> relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
-    #> you must exclude the following variables from the weight_covariates argument:
+    #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
     #> [1] "6% Done!"
@@ -328,11 +346,11 @@ ovtool_results_twang = ov_sim(model_results=results,
 In our example, `ov_sim` produced a warning saying “You specified a rho
 grid whose maximum value is less than the maximum absolute correlation
 at least one observed covariate has with the outcome. The rho grid was
-automatically expanded to include all weight\_covariates specified in
-the relevant graphics. If you want the rho grid range to remain from 0
-to 0.4 then you must exclude the following variables from the
-weight\_covariates argument: eps7p\_0, tss\_0, dss9\_0.” The grid was
-expanded to ensure all `weight_covariates` could be seen on the contour
+automatically expanded to include all plot\_covariates specified in the
+relevant graphics. If you want the rho grid range to remain from 0 to
+0.4 then you must exclude the following variables from the
+plot\_covariates argument: eps7p\_0, tss\_0, dss9\_0.” The grid was
+expanded to ensure all `plot_covariates` could be seen on the contour
 plot. If the user does not want the grid expanded, they can leave out
 the observed covariates used in the propensity score model that have an
 absolute correlation with the outcome that is greater than the maximum
@@ -367,11 +385,11 @@ graphics. The first graphic (Figure 1) plots the treatment effect
 contours without covariate labels. If the user specifies the parameter
 `col` as `"color"`, the contours will overlay a colored heat map. The
 second graphic (Figure 2) plots the p-value contours with the column
-names submitted to `weight_covariates` plotted by their raw rho and
-effect size. The third graphic (Figure 3) plots the treatment effect
-contours with the p-value contour overlayed and covariate labels. The
-`col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce
-a black and white and colored contour graphic, respectively.
+names submitted to `plot_covariates` plotted by their raw rho and effect
+size. The third graphic (Figure 3) plots the treatment effect contours
+with the p-value contour overlaid and covariate labels. The `col`
+options for Figures 2 and 3 are `"bw"` and `"color"` which produce a
+black and white and colored contour graphic, respectively.
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -401,7 +419,8 @@ Figure 2 is a different variation of Figure 1, but now adds p-value
 contours. This graphic will allow the user to see what treatment effect
 on the effect size scale will switch the significance level at critical
 p-values (i.e. 0.05). This graphic will now give the user an idea of how
-sensitive the effect is. 
+sensitive the effect is. The analyst can specify what red p-value
+thresholds they want plotted. 
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
@@ -475,15 +494,17 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
-    confounders have the same strength of association with the treatment indicator and outcome that are
-    seen in the observed confounders. In the most extreme observed case, the estimated effect size is
-    reduced by 82 percent."
+    confounders have the same strength of associations with the treatment indicator and outcome that
+    are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the
+    estimated effect size is 126 percent of the original, but in the opposite direction. The sign of
+    the estimate would not be expected to be preserved for unobserved confounders that have the same
+    strength of association with the treatment indicator and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
-    in 5 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.619. Significance at the 0.05 level would not be expected to
+    in 4 of the 8 observed confounders. In the most extreme observed case, the p-value would be
+    expected to increase from 0.004 to 0.473. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
-    treatment indicator and outcome as eps7p_0, sati_0, tss_0."
+    treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0."
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
@@ -574,7 +595,7 @@ summary(results_att$mod_results)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
-    #> (Intercept) -0.7196504  0.0666856 -10.792  < 2e-16 ***
+    #> (Intercept)  0.3446086  0.0666856   5.168 2.49e-07 ***
     #> treat        0.0669815  0.0298823   2.242   0.0250 *  
     #> eps7p_0      1.6224090  0.1216548  13.336  < 2e-16 ***
     #> sfs8p_0      0.0028975  0.0021227   1.365   0.1723    
@@ -603,23 +624,23 @@ the analysis.
 
 ``` r
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
-                                  weight_covariates=c("eps7p_0", "sfs8p_0",
-                                                      "sati_0", "ada_0",
-                                                      "recov_0", "tss_0", 
-                                                      "mhtrt_0", "dss9_0"),
+                                  plot_covariates=c("eps7p_0", "sfs8p_0",
+                                                    "sati_0", "ada_0",
+                                                    "recov_0", "tss_0", 
+                                                    "mhtrt_0", "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
                                   n_reps = 50,
                                   progress = TRUE)
 ```
 
-    #> Warning in ov_sim(model_results = results_att, weight_covariates =
-    #> c("eps7p_0", : You specified a rho grid whose maximum value is less than
-    #> the maximum absolute correlation at least one observed covariate has
-    #> with the outcome. The rho grid was automatically expanded to include all
-    #> weight_covariates specified in the relevant graphics. If you want the rho grid
-    #> range to remain from 0 to 0.4 then you must exclude the following variables from
-    #> the weight_covariates argument: eps7p_0, tss_0, dss9_0.
+    #> Warning in ov_sim(model_results = results_att, plot_covariates = c("eps7p_0", :
+    #> You specified a rho grid whose maximum value is less than the maximum absolute
+    #> correlation at least one observed covariate has with the outcome. The rho grid
+    #> was automatically expanded to include all plot_covariates specified in the
+    #> relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
+    #> you must exclude the following variables from the plot_covariates argument:
+    #> eps7p_0, tss_0, dss9_0.
 
     #> [1] "8% Done!"
     #> [1] "15% Done!"
@@ -711,8 +732,8 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of association with the treatment indicator and outcome that are seen in the observed confounders. In the most extreme observed case, the estimated effect size is reduced by 96 percent."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.953. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is 184 percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 4 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.495. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
 
@@ -727,7 +748,7 @@ effects using ps methods.
 
 # Acknowledgements
 
-The devlopment of this tutorial was supported by funding from grant
+The development of this tutorial was supported by funding from grant
 R01DA045049 (PIs: Griffin/McCaffrey) from the National Institute on Drug
 Abuse. It was also supported by the Center for Substance Abuse Treatment
 (CSAT), Substance Abuse and Mental Health Services Administration
