@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2020-12-02 12:34:13*
+2020-12-02 17:16:16*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -84,6 +84,7 @@ We can load the synthetic dataset and make our treatment variable a
 binary indicator of 0’s and 1’s:
 
 ``` r
+set.seed(24)
 data(sud) 
 sud$treat = ifelse(sud$treat == "A", 1, 0)
 ```
@@ -138,24 +139,6 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
 ## Get weights
 sud = data.frame(sud)
 library(twang)
-```
-
-    #> Loading required package: survey
-
-    #> Loading required package: grid
-
-    #> Loading required package: Matrix
-
-    #> Loading required package: survival
-
-    #> 
-    #> Attaching package: 'survey'
-
-    #> The following object is masked from 'package:graphics':
-    #> 
-    #>     dotchart
-
-``` r
 ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
 
@@ -349,7 +332,7 @@ at least one observed covariate has with the outcome. The rho grid was
 automatically expanded to include all plot\_covariates specified in the
 relevant graphics. If you want the rho grid range to remain from 0 to
 0.4 then you must exclude the following variables from the
-plot\_covariates argument: eps7p\_0, tss\_0, dss9\_0.” The grid was
+`plot_covariates` argument: `eps7p_0`, `tss_0`, `dss9_0`.” The grid was
 expanded to ensure all `plot_covariates` could be seen on the contour
 plot. If the user does not want the grid expanded, they can leave out
 the observed covariates used in the propensity score model that have an
@@ -496,7 +479,7 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of associations with the treatment indicator and outcome that
     are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the
-    estimated effect size is 126 percent of the original, but in the opposite direction. The sign of
+    estimated effect size is reduced by 126 percent of the observed raw effect size, 0.079. The sign of
     the estimate would not be expected to be preserved for unobserved confounders that have the same
     strength of association with the treatment indicator and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
@@ -513,15 +496,18 @@ into a manuscript. The sign of the estimated effect is expected to
 remain consistent when simulated unobserved confounders have the same
 strength of association with the treatment indicator and outcome that
 are seen in the observed confounders. In the most extreme observed case,
-the estimated effect size is reduced by 83 percent. However, statistical
-significance at the 0.05 level is expected to be robust to unobserved
-confounders with strengths of associations with the treatment indicator
-and outcome that are seen in 5 of the 8 observed confounders. In the
-most extreme observed case, the p-value would be expected to increase
-from 0.004 to 0.628. Significance at the 0.05 level would not be
-expected to be preserved for unobserved confounders that have the same
-strength of association with the treatment indicator and outcome as
-`eps7p_0`, `sati_0`, `tss_0`.
+the estimated effect size is reduced by 125 percent of the observed raw
+effect size, 0.079. The sign of the estimate would not be expected to be
+preserved for unobserved confounders that have the same strength of
+association with the treatment indicator and outcome as `eps7p_0`.
+However, statistical significance at the 0.05 level is expected to be
+robust to unobserved confounders with strengths of associations with the
+treatment indicator and outcome that are seen in 4 of the 8 observed
+confounders. In the most extreme observed case, the p-value would be
+expected to increase from 0.004 to 0.486. Significance at the 0.05 level
+would not be expected to be preserved for unobserved confounders that
+have the same strength of association with the treatment indicator and
+outcome as `eps7p_0`, `sati_0`, `ada_0`, and `tss_0`.
 
 In the next section, we will show how our method works with the average
 treatment effect on the treated (ATT) using a continuous outcome. **As
@@ -732,7 +718,7 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 6 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is 156 percent of the original, but in the opposite direction. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 6 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is reduced by 156 percent of the observed raw effect size, 0.067. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.998. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion

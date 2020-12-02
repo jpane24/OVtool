@@ -97,7 +97,7 @@ In the next section, we will show how our method works with the average treatmen
 
 The `OVtool` can either take a vector of weights estimated using any method or a ps object produced by `TWANG` (Ridgeway et al., 2020). We begin walking through the OVtool by estimating weights using `ps()` from the `TWANG` package prior to running the outcome model using `outcome_model()` from the `OVtool` package. The `outcome_model` function calls `svyglm` from the `survey` package in R ([survey](http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf)) to produce outcome model results. The chunk of code below demonstrates how to specify your propensity score model and generate your propensity score weights using the `TWANG` package.
 
-```{r, estTWANG}
+```{r, estTWANG, message=F}
 ## Create Formula
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
                           tss_0 + mhtrt_0 + dss9_0)
