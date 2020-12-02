@@ -57,7 +57,7 @@ We begin by loading the development version of the package from [GitHub](https:/
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
 # we recommend restarting your R session after running the previous line of code
-# for the first time on your machine.
+# for the first time on your machine
 library(OVtool)
 ```
 
