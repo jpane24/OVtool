@@ -48,7 +48,7 @@ gen_a_start <- function(y, tx, residuals, es, rho, my_estimand){
   }
   # temporary line 57
   if(my_estimand == "ATT"){
-    b1 = 0.55 # this needs fixed.
+    b1 = 0 # this needs fixed.
   } else{
     b1 = stats::runif(1, b1low, b1high)
   }
