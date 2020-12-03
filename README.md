@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2020-12-02 17:16:16*
+2020-12-02 18:47:14*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,6 +75,21 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
+```
+
+    #> 
+    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpENrAyO/remotes59a2715d52b8/jpane24-OVtool-2fbfe58/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpENrAyO/remotes59a2715d52b8/jpane24-OVtool-2fbfe58/DESCRIPTION’
+    #>   ─  preparing ‘OVtool’:
+    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    #>   ─  checking for LF line-endings in source and make files and shell scripts
+    #>   ─  checking for empty or unneeded directories
+    #>   ─  building ‘OVtool_1.0.0.tar.gz’
+    #>      Warning: invalid uid value replaced by that for user 'nobody'
+    #>    Warning: invalid gid value replaced by that for user 'nobody'
+    #>      
+    #> 
+
+``` r
 # we recommend restarting your R session after running the previous line of code
 # for the first time on your machine
 library(OVtool)
@@ -504,7 +519,7 @@ However, statistical significance at the 0.05 level is expected to be
 robust to unobserved confounders with strengths of associations with the
 treatment indicator and outcome that are seen in 4 of the 8 observed
 confounders. In the most extreme observed case, the p-value would be
-expected to increase from 0.004 to 0.486. Significance at the 0.05 level
+expected to increase from 0.004 to 0.473. Significance at the 0.05 level
 would not be expected to be preserved for unobserved confounders that
 have the same strength of association with the treatment indicator and
 outcome as `eps7p_0`, `sati_0`, `ada_0`, and `tss_0`.
