@@ -275,13 +275,13 @@ We have found that the number of repetitions needed in the ATT setting is greate
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 ```
 
-The contours shown in Figure 4 are relatively smooth but we would like to smooth them out if possible by simulating our unobserved confounder an additional 200 times. The user can do this by running the following lines of code.
+The contours shown in Figure 4 are relatively smooth but we would like to smooth them out if possible by simulating our unobserved confounder an additional 50 times. The user can do this by running the following lines of code.
 
 ```{r, addreps_att}
 # If you want to add repetitions, run the following line. You may change more_reps
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
-                                    more_reps = 200)
+                                    more_reps = 50)
 ```
 
 ```{r, fig2_att_new, fig.width=10, fig.height=7, fig.align='center', warning=F}
