@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2020-12-02 18:47:14*
+2020-12-15 17:07:58*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,21 +75,6 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
-```
-
-    #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpENrAyO/remotes59a2715d52b8/jpane24-OVtool-2fbfe58/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpENrAyO/remotes59a2715d52b8/jpane24-OVtool-2fbfe58/DESCRIPTION’
-    #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    #>   ─  checking for LF line-endings in source and make files and shell scripts
-    #>   ─  checking for empty or unneeded directories
-    #>   ─  building ‘OVtool_1.0.0.tar.gz’
-    #>      Warning: invalid uid value replaced by that for user 'nobody'
-    #>    Warning: invalid gid value replaced by that for user 'nobody'
-    #>      
-    #> 
-
-``` r
 # we recommend restarting your R session after running the previous line of code
 # for the first time on your machine
 library(OVtool)
@@ -671,14 +656,14 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 
 The contours shown in Figure 4 are relatively smooth but we would like
 to smooth them out if possible by simulating our unobserved confounder
-an additional 200 times. The user can do this by running the following
+an additional 50 times. The user can do this by running the following
 lines of code.
 
 ``` r
 # If you want to add repetitions, run the following line. You may change more_reps
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
-                                    more_reps = 200)
+                                    more_reps = 50)
 ```
 
     #> [1] "8% Done!"
@@ -733,8 +718,8 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 6 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is reduced by 156 percent of the observed raw effect size, 0.067. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.998. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is reduced by 240 percent of the observed raw effect size, 0.067. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, tss_0."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.999. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
 
