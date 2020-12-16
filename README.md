@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2020-12-15 17:07:58*
+2020-12-16 02:43:33*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -478,10 +478,10 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of associations with the treatment indicator and outcome that
-    are seen in 7 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the
-    estimated effect size is reduced by 126 percent of the observed raw effect size, 0.079. The sign of
-    the estimate would not be expected to be preserved for unobserved confounders that have the same
-    strength of association with the treatment indicator and outcome as eps7p_0."
+    are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign
+    changes, the estimated effect size shifts from 0.079 to -0.02. The sign of the estimate would not
+    be expected to be preserved for unobserved confounders that have the same strength of association
+    with the treatment indicator and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 4 of the 8 observed confounders. In the most extreme observed case, the p-value would be
@@ -718,7 +718,7 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case, eps7p_0, the estimated effect size is reduced by 240 percent of the observed raw effect size, 0.067. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, tss_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.094. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, tss_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.999. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
