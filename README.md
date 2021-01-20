@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2020-12-16 08:04:46*
+2021-01-19 21:05:29*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,28 +75,6 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
-```
-
-    #> spam     (2.5-1 -> 2.6-0) [CRAN]
-    #> pkgbuild (1.1.0 -> 1.2.0) [CRAN]
-    #> 
-    #>   There are binary versions available but the source versions are later:
-    #>          binary source needs_compilation
-    #> spam      2.5-1  2.6-0              TRUE
-    #> pkgbuild  1.1.0  1.2.0             FALSE
-    #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpTY4D8O/remotes1d9b612e9eac/jpane24-OVtool-17cb648/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpTY4D8O/remotes1d9b612e9eac/jpane24-OVtool-17cb648/DESCRIPTION’
-    #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    #>   ─  checking for LF line-endings in source and make files and shell scripts
-    #>   ─  checking for empty or unneeded directories
-    #>   ─  building ‘OVtool_1.0.0.tar.gz’
-    #>      Warning: invalid uid value replaced by that for user 'nobody'
-    #>    Warning: invalid gid value replaced by that for user 'nobody'
-    #>      
-    #> 
-
-``` r
 # we recommend restarting your R session after running the previous line of code
 # for the first time on your machine
 library(OVtool)
@@ -507,7 +485,7 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
     in 4 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.473. Significance at the 0.05 level would not be expected to
+    expected to increase from 0.004 to 0.478. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
     treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0."
 
@@ -526,7 +504,7 @@ strength of association with the treatment indicator and outcome as
 expected to be robust to unobserved confounders with strengths of
 associations with the treatment indicator and outcome that are seen in 4
 of the 8 observed confounders. In the most extreme observed case, the
-p-value would be expected to increase from 0.004 to 0.473. Significance
+p-value would be expected to increase from 0.004 to 0.49. Significance
 at the 0.05 level would not be expected to be preserved for unobserved
 confounders that have the same strength of association with the
 treatment indicator and outcome as `eps7p_0`, `sati_0`, `ada_0`, and
@@ -679,14 +657,14 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 
 The contours shown in Figure 4 are relatively smooth but we would like
 to smooth them out if possible by simulating our unobserved confounder
-an additional 50 times. The user can do this by running the following
-lines of code.
+an additional 10 times. The user can specify `more_reps` to any number
+they choose in the following function call, `add_reps()`.
 
 ``` r
 # If you want to add repetitions, run the following line. You may change more_reps
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
-                                    more_reps = 50)
+                                    more_reps = 10)
 ```
 
     #> [1] "8% Done!"
@@ -741,8 +719,8 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 5 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.094. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, tss_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.999. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as sfs8p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.038. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.495. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
 
@@ -755,11 +733,38 @@ that users will use our tool when they are trying to analyze how
 sensitive their results are to omitted variables when estimating causal
 effects using ps methods.
 
+# About This Tutorial
+
+This tutorial and the development of the OVtool R package were supported
+by funding from grant 1R01DA034065 from the National Institute on Drug
+Abuse. The overarching goal of the grant is to develop statistical
+methods and tools that will provide addiction health services
+researchers and others with the tools and training they need to study
+the effectiveness of treatments using observational data. The work is an
+extension of the Toolkit for Weighting and Analysis of Nonequivalent
+Groups, or TWANG, which contains a set of functions to support causal
+modeling of observational data through the estimation and evaluation of
+propensity score weights. The TWANG package was first developed in 2004
+by RAND researchers for the R statistical computing language and
+environment and has since been expanded to include tools for SAS, Stata,
+and Shiny. For more information about TWANG and other causal tools being
+developed, see www.rand.org/statistics/twang.
+
+RAND Social and Economic Well-Being is a division of the RAND
+Corporation that seeks to actively improve the health and social and
+economic well-being of populations and communities throughout the world.
+This research was conducted in the Social and Behavioral Policy Program
+within RAND Social and Economic Well-Being. The program focuses on such
+topics as risk factors and prevention programs, social safety net
+programs and other social supports, poverty, aging, disability, child
+and youth health and well-being, and quality of life, as well as other
+policy concerns that are influenced by social and behavioral actions and
+systems that affect well-being. For more information, email
+<sbp@rand.org>.
+
 # Acknowledgements
 
-The development of this tutorial was supported by funding from grant
-R01DA045049 (PIs: Griffin/McCaffrey) from the National Institute on Drug
-Abuse. It was also supported by the Center for Substance Abuse Treatment
+We would like to acknowledge the Center for Substance Abuse Treatment
 (CSAT), Substance Abuse and Mental Health Services Administration
 (SAMHA). The authors thank these agencies, grantees, and their
 participants for agreeing to share their data to support creation of the
@@ -768,8 +773,6 @@ dataset of youth receiving two unidentified treatments from the GAIN;
 running on the true dataset will produce different results.
 
 # References
-
-*Will update to link with text*
 
 Cohen, J. (1995). The earth is round (p \< .05): Rejoinder. American
 Psychologist, 50, 1103.
