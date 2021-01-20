@@ -46,48 +46,13 @@ gen_a_start <- function(y, tx, residuals, es, rho, my_estimand){
     b1low = max(-b1lim, ((b0lim - alpha) / beta))
     b1high = min(b1lim, ((-b0lim - alpha) / beta))
   }
-  # temporary line 57
-  if(my_estimand == "ATT"){
-    b1 = 0
-  } else{
-    b1 = stats::runif(1, b1low, b1high)
-  }
 
-  b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
+  # Set b0 == b1
+  b1 = (A - Q) / ( ((1-pi)*c0) * (1 + ((c1*pi) / ((1-pi)*c0))) )
+  b0 <- (A-b1*c1*pi-Q)/((1-pi)*c0)
   ve1 <- 1 - b1^2 * stats::var(Rstar1)
   ve0 <- 1 - b0^2 * stats::var(Rstar0)
 
-  # redraw b1 if ve0 < 0 | ve1 < 0
-  my_time = proc.time()
-  if(my_estimand == "ATT"){
-    while(ve0 < 0){
-      if(b1low >= 0){
-        b1 = b1 + .01
-      } else if(b1low < 0 & b1high < 0){
-        b1 = b1 - .01
-      } else{
-        b1 = b1 + .01
-      }
-      b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
-      ve1 <- 1 - b1^2 * stats::var(Rstar1)
-      ve0 <- 1 - b0^2 * stats::var(Rstar0)
-      my_time_2 = proc.time()
-      if(as.vector((my_time_2 - my_time) >120)[3]){
-        stop("Could not find bounded parameter for your specification. Please consider checking raw effect size and correlations of your plot_covariates and try only selecting those with small and moderate correlation and effect sizes.")
-      }
-      }
-  } else{
-    while(ve0 < 0 | ve1 < 0){
-    b1 = stats::runif(1, b1low, b1high)
-    b0 <- (A-b1*c1*pi - Q)/((1-pi)*c0)
-    ve1 <- 1 - b1^2 * stats::var(Rstar1)
-    ve0 <- 1 - b0^2 * stats::var(Rstar0)
-    my_time_2 = proc.time()
-    if(as.vector((my_time_2 - my_time) >120)[3]){
-      stop("Could not find bounded parameter for your specification. Please consider checking raw effect size and correlations of your plot_covariates and try only selecting those with small and moderate correlation and effect sizes.")
-    }
-    }
-  }
   if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
   return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, es=es, pi = pi,
