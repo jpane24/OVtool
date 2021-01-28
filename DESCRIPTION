@@ -2,7 +2,7 @@ Package: OVtool
 Type: Package
 Title: Omitted Variable tool
 Version: 1.0.0
-Author: Lane F. Burgette, Beth Ann Griffin, Joseph D. Pane, and Daniel F. McCaffrey
+Author: Joseph D. Pane, Lane F. Burgette, Beth Ann Griffin, and Daniel F. McCaffrey
 Maintainer: Joseph D. Pane <josephp@rand.org>
 Description: This tool was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This tool produces graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (2020) describe the methodology behind the primary function in this package, ov_sim.
     Use four spaces when indenting paragraphs within the Description.
@@ -17,7 +17,6 @@ Imports:
 	ggplot2,
 	ggrepel,
 	glue,
-	knitr,
 	magrittr,
 	metR,
 	purrr,
@@ -28,6 +27,9 @@ Imports:
 	tidyselect,
 	twang, 
 	varhandle
+Suggests:
+  rmarkdown,
+  knitr
 Depends:
   R (>= 2.10),
 VignetteBuilder: 

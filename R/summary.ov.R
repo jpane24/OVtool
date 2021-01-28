@@ -1,6 +1,6 @@
 #### summarize fn ####
 summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, ...){
-  temp = prep_for_plots(object, p_contours = coef(summary(model_results$mod_results))[2,4])
+  temp = prep_for_plots(object, p_contours = stats::coef(summary(model_results$mod_results))[2,4])
   raw_treat = object$trt_effect[which(object$es_grid<.000000001 & object$es_grid>-.000000001),
                             which(object$rho_grid==0)]
   raw_pval = object$p_val[which(object$es_grid<.000000001 & object$es_grid>-.000000001),

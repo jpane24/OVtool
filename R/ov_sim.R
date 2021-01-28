@@ -85,7 +85,7 @@ ov_sim <- function(model_results, plot_covariates,
     # create w_new and set it to the original weights for now
     dta$w_new = dta$w_orig
     # residuals
-    my_res = as.vector(lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
+    my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
@@ -138,7 +138,7 @@ ov_sim <- function(model_results, plot_covariates,
     store_results$esHd = NA; store_results$StdError = NA
     dta$w_new = dta$w_orig
     # residuals:
-    my_res = as.vector(lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
+    my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){

@@ -52,7 +52,6 @@ gen_a_start <- function(y, tx, residuals, es, rho, my_estimand){
   b0 <- (A-b1*c1*pi-Q)/((1-pi)*c0)
   ve1 <- 1 - b1^2 * stats::var(Rstar1)
   ve0 <- 1 - b0^2 * stats::var(Rstar0)
-
   if(!(abs(b0) <= b0lim)) stop("b0 is too large in absolute value. Try reducing the size of the grid.")
 
   return(a_res = list(n1 = n1, ve1 = ve1, b1 = b1, es=es, pi = pi,

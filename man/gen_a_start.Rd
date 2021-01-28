@@ -9,7 +9,7 @@
 This function is a wrapper to ov_simgrid. It generates the a. a is used to control the strength of the relationshp between the unobserved counfounder, U, and the treatment indicator
 }
 \usage{
-gen_a_start(y, tx, es, rho, my_estimand)
+gen_a_start(y, tx, residuals, es, rho, my_estimand)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

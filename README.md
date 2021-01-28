@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2021-01-19 21:05:29*
+2021-01-28 09:44:26*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -75,6 +75,37 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
+```
+
+    #> knitr     (1.30  -> 1.31   ) [CRAN]
+    #> fastmap   (1.0.1 -> 1.1.0  ) [CRAN]
+    #> cachem    (NA    -> 1.0.1  ) [CRAN]
+    #> htmltools (0.5.1 -> 0.5.1.1) [CRAN]
+    #> rappdirs  (0.3.1 -> 0.3.2  ) [CRAN]
+    #> gert      (1.0.2 -> 1.1.0  ) [CRAN]
+    #> memoise   (1.1.0 -> 2.0.0  ) [CRAN]
+    #> ggrepel   (0.9.0 -> 0.9.1  ) [CRAN]
+    #> 
+    #>   There are binary versions available but the source versions are later:
+    #>          binary source needs_compilation
+    #> knitr      1.30   1.31             FALSE
+    #> rappdirs  0.3.1  0.3.2              TRUE
+    #> 
+    #> 
+    #> The downloaded binary packages are in
+    #>  /var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T//RtmpqFppIB/downloaded_packages
+    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpqFppIB/remotes183e71b494ff6/jpane24-OVtool-99ae661/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpqFppIB/remotes183e71b494ff6/jpane24-OVtool-99ae661/DESCRIPTION’
+    #>   ─  preparing ‘OVtool’:
+    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    #>   ─  checking for LF line-endings in source and make files and shell scripts
+    #>   ─  checking for empty or unneeded directories
+    #>   ─  building ‘OVtool_1.0.0.tar.gz’
+    #>      Warning: invalid uid value replaced by that for user 'nobody'
+    #>    Warning: invalid gid value replaced by that for user 'nobody'
+    #>      
+    #> 
+
+``` r
 # we recommend restarting your R session after running the previous line of code
 # for the first time on your machine
 library(OVtool)
@@ -149,10 +180,10 @@ bal.table(ps.twang); # summary(ps.twang)
     #> $unw
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
     #> eps7p_0  0.256  0.196  0.219  0.192      0.187  5.937 0.000 0.103   0.000
-    #> sfs8p_0 11.253 13.134 10.571 12.162      0.054  1.703 0.089 0.045   0.032
+    #> sfs8p_0 11.253 13.134 10.571 12.162      0.054  1.703 0.089 0.046   0.032
     #> sati_0   8.233 22.128  2.145 10.658      0.345 11.088 0.000 0.121   0.000
-    #> ada_0   48.748 33.400 54.236 32.454     -0.166 -5.271 0.000 0.081   0.000
-    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
+    #> ada_0   48.748 33.400 54.236 32.454     -0.166 -5.271 0.000 0.080   0.000
+    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.007   1.000
     #> tss_0    2.277  3.525  1.924  3.115      0.106  3.365 0.001 0.043   0.050
     #> mhtrt_0  0.290  0.513  0.256  0.484      0.069  2.188 0.029 0.028   0.413
     #> dss9_0   2.750  2.604  2.638  2.492      0.044  1.390 0.165 0.023   0.666
@@ -534,24 +565,24 @@ bal.table(ps.twang_att)
     #> $unw
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
     #> eps7p_0  0.256  0.196  0.219  0.192      0.185  5.937 0.000 0.103   0.000
-    #> sfs8p_0 11.253 13.134 10.571 12.162      0.052  1.703 0.089 0.045   0.032
+    #> sfs8p_0 11.253 13.134 10.571 12.162      0.052  1.703 0.089 0.046   0.032
     #> sati_0   8.233 22.128  2.145 10.658      0.275 11.088 0.000 0.121   0.000
-    #> ada_0   48.748 33.400 54.236 32.454     -0.164 -5.271 0.000 0.081   0.000
-    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
+    #> ada_0   48.748 33.400 54.236 32.454     -0.164 -5.271 0.000 0.080   0.000
+    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.007   1.000
     #> tss_0    2.277  3.525  1.924  3.115      0.100  3.365 0.001 0.043   0.050
     #> mhtrt_0  0.290  0.513  0.256  0.484      0.067  2.188 0.029 0.028   0.413
     #> dss9_0   2.750  2.604  2.638  2.492      0.043  1.390 0.165 0.023   0.666
     #> 
     #> $ks.max.ATT
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    #> eps7p_0  0.256  0.196  0.249  0.193      0.034  1.024 0.306 0.026   0.561
-    #> sfs8p_0 11.253 13.134 11.016 12.677      0.018  0.544 0.587 0.020   0.866
-    #> sati_0   8.233 22.128  6.376 19.312      0.084  1.939 0.053 0.035   0.214
-    #> ada_0   48.748 33.400 50.291 33.318     -0.046 -1.349 0.177 0.028   0.478
-    #> recov_0  0.246  0.431  0.229  0.420      0.039  1.207 0.227 0.017   0.953
-    #> tss_0    2.277  3.525  2.263  3.432      0.004  0.114 0.909 0.015   0.980
-    #> mhtrt_0  0.290  0.513  0.307  0.521     -0.032 -0.909 0.363 0.016   0.978
-    #> dss9_0   2.750  2.604  2.832  2.589     -0.031 -0.912 0.362 0.021   0.811
+    #> eps7p_0  0.256  0.196  0.249  0.193      0.035  1.040 0.298 0.027   0.542
+    #> sfs8p_0 11.253 13.134 11.023 12.673      0.017  0.526 0.599 0.020   0.854
+    #> sati_0   8.233 22.128  6.365 19.291      0.084  1.957 0.050 0.035   0.207
+    #> ada_0   48.748 33.400 50.297 33.315     -0.046 -1.356 0.175 0.028   0.480
+    #> recov_0  0.246  0.431  0.229  0.420      0.040  1.234 0.217 0.017   0.944
+    #> tss_0    2.277  3.525  2.265  3.431      0.003  0.095 0.924 0.016   0.970
+    #> mhtrt_0  0.290  0.513  0.306  0.521     -0.032 -0.890 0.373 0.015   0.982
+    #> dss9_0   2.750  2.604  2.834  2.589     -0.032 -0.939 0.348 0.022   0.788
 
 Notice that the only difference here is we use `estimand = ATT` to
 estimate the propensity score weights using TWANG. Again, we have
@@ -582,20 +613,20 @@ summary(results_att$mod_results)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
-    #> (Intercept)  0.3446086  0.0666856   5.168 2.49e-07 ***
-    #> treat        0.0669815  0.0298823   2.242   0.0250 *  
-    #> eps7p_0      1.6224090  0.1216548  13.336  < 2e-16 ***
-    #> sfs8p_0      0.0028975  0.0021227   1.365   0.1723    
-    #> sati_0       0.0020634  0.0012422   1.661   0.0968 .  
-    #> ada_0        0.0002657  0.0007851   0.338   0.7351    
-    #> recov_0     -0.0756167  0.0332064  -2.277   0.0228 *  
-    #> tss_0        0.0338415  0.0072709   4.654 3.36e-06 ***
-    #> mhtrt_0      0.2549506  0.0360198   7.078 1.72e-12 ***
-    #> dss9_0       0.0489526  0.0080671   6.068 1.41e-09 ***
+    #> (Intercept)  0.3444533  0.0666197   5.170 2.45e-07 ***
+    #> treat        0.0671950  0.0298328   2.252   0.0244 *  
+    #> eps7p_0      1.6202474  0.1213787  13.349  < 2e-16 ***
+    #> sfs8p_0      0.0029105  0.0021199   1.373   0.1699    
+    #> sati_0       0.0020605  0.0012391   1.663   0.0964 .  
+    #> ada_0        0.0002663  0.0007846   0.339   0.7343    
+    #> recov_0     -0.0753006  0.0331632  -2.271   0.0232 *  
+    #> tss_0        0.0338560  0.0072532   4.668 3.15e-06 ***
+    #> mhtrt_0      0.2556486  0.0359440   7.112 1.35e-12 ***
+    #> dss9_0       0.0489629  0.0080572   6.077 1.34e-09 ***
     #> ---
     #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     #> 
-    #> (Dispersion parameter for gaussian family taken to be 0.7221675)
+    #> (Dispersion parameter for gaussian family taken to be 0.7218555)
     #> 
     #> Number of Fisher Scoring iterations: 2
 
@@ -719,8 +750,8 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "88% Done!"
     #> [1] "100% Done!"
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.038. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.025 to 0.495. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.037. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.024 to 0.489. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
 
 # Conclusion
 
