@@ -91,7 +91,7 @@ The relevant variables in this analysis are:
 
 * `dss9_0`: depressive symptom scale at baseline
 
-In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. **The OVtool will handle binary outcomes in the near future.**
+In the next section, we will show how our method works with the average treatment effect (ATE) using a continuous outcome. **The OVtool will handle binary outcomes in the near future. We currently implement a temporary solution to handle binary outcomes that utilizes the residuals from the observed (i.e. absent unobserved confounder) linear probability model to generate the empirical CDF.** 
 
 ## Continous Outcome: Average Treatment Effect (ATE)
 
@@ -181,7 +181,7 @@ First, when generating the omitted variable (U), the empirical cumulative distri
 
 Another key assumption this method draws upon is that the omitted variable is independent from all observed covariates included in the propensity score model.
 
-To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter `col` as `"color"`, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the p-value contours with the column names submitted to `plot_covariates` plotted by their raw rho and effect size. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlaid and covariate labels. The `col` options for Figures 2 and 3 are `"bw"` and `"color"` which produce a black and white and colored contour graphic, respectively.
+To visualize our results, the `plot.ov` function will produce three graphics. The first graphic (Figure 1) plots the treatment effect contours without covariate labels. If the user specifies the parameter `col` as `"color"`, the contours will overlay a colored heat map. The second graphic (Figure 2) plots the treatment effect contours in black and the p-value contours in red. The third graphic (Figure 3) plots the treatment effect contours with the p-value contour overlaid and covariate labels (i.e. the column names submitted to `plot_covariates`) plotted by their raw rho and effect size. The `col` options for Figures 2 and 3 are `"bw"` and `"color"`, which produce a black and white and colored contour graphic, respectively.
 
 ```{r, fig1, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -193,13 +193,13 @@ The y-axis in Figure 1 represents the unobserved confounder's absolute correlati
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 ```
 
-Figure 2 is a different variation of Figure 1, but now adds p-value contours. This graphic will allow the user to see what treatment effect on the effect size scale will switch the significance level at critical p-values (i.e. 0.05). This graphic will now give the user an idea of how sensitive the effect is. The analyst can specify what  red p-value thresholds they want plotted. \newline
+Figure 2 is a different variation of Figure 1, but now adds p-value contours. This graphic will allow the user to see what treatment effect on the effect size scale will switch the significance level at critical p-values (i.e. 0.05). This graphic will now give the user an idea of how sensitive the effect is. The analyst can specify what red p-value thresholds they want plotted. \newline
 
 ```{r, fig3, fig.width=10, fig.height=7, fig.align='center', linewidth=100}
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 ```
 
-Figure 3 adds a final dimension (observed covariate labels) to Figure 2. Similar to Figures 1 and 2, plotted at the bottom of the figure margin is the PS weighted treatment effect size  (0.079) and associated p-value of 0.004. The solid black contours represent the effect size (treatment effect) contour lines and the red lines (sometimes dashed) represent the p-value threshold. The key on the right side of the graphic shows where various p-value cutoff lines are, including p = 0.05. The blue points on the plot represent the observed covariate correlations with the outcome (y-axis) and effect size associations with the treatment indicator (x-axis). For instance, `ada_0` and the outcome have approximately a 0.18 absolute correlation with the emotional problem scale at three months and an absolute association of approximately 0.17 effect size difference between the two treatment groups (magnitude of its relationship with the treatment indicator). In this case, not all of the observed covariate relationships with the outcome and the treatment indicator are less than the 0.05 p-value threshold so the analyst potentially has results that are sensitive to an unobserved confounder. If the blue points all existed in contours greater than the 0.05 p-value contour, then unobserved confounders with similar associations would retain the significant effect and allow the user to conclude that the results are reasonably robust. 
+Figure 3 adds a final dimension (observed covariate labels) to Figure 2. Similar to Figures 1 and 2, plotted at the top of the figure margin is the PS weighted treatment effect size  (0.079) and associated p-value of 0.004. The solid black contours represent the effect size (treatment effect) contour lines and the red lines (sometimes dashed) represent the p-value threshold. The key on the right side of the graphic shows where various p-value cutoff lines are, including p = 0.05. The blue points on the plot represent the observed covariate correlations with the outcome (y-axis) and effect size associations with the treatment indicator (x-axis). For instance, `ada_0` and the outcome have approximately a 0.18 absolute correlation with the emotional problem scale at three months and an absolute association of approximately 0.17 effect size difference between the two treatment groups (magnitude of its relationship with the treatment indicator). In this case, not all of the observed covariate relationships with the outcome and the treatment indicator are less than the 0.05 p-value threshold so the analyst potentially has results that are sensitive to an unobserved confounder. If the blue points all existed in contours greater than the 0.05 p-value contour, then unobserved confounders with similar associations would retain the significant effect and allow the user to conclude that the results are reasonably robust. 
 
 *Note: When the outcome model shows a significant effect, for all observed covariates, regardless of the sign of the association effect size difference between the two treatment groups, we force the sign of the magnitude to go with the direction of the significant effect. The blue points are meant to give the analyst an idea (using observed covariates as an indicator) of what would cause a change in the interpretation of their results.*
 
@@ -223,7 +223,7 @@ summary.ov(object = ovtool_results_twang, model_results = results)
 
 The `OVtool` gives a recommendation on how to report findings regarding the direction of the treatment effect and statistical significance. An analyst could take the results produced by `summary.ov()` and plug them into a manuscript. The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.079 to -0.02. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`. However, statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 4 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.004 to 0.49. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as `eps7p_0`, `sati_0`, `ada_0`, and `tss_0`.
 
-In the next section, we will show how our method works with the average treatment effect on the treated (ATT) using a continuous outcome. **As mentioned above, the OVtool will handle binary outcomes in the near future.**
+In the next section, we will show how our method works with the average treatment effect on the treated (ATT) using a continuous outcome. **As mentioned above, the OVtool will handle binary outcomes in the near future. We currently implement a temporary solution to handle binary outcomes that utilizes the residuals from the observed (i.e. absent unobserved confounder) linear probability model to generate the empirical CDF.**
 
 # Continous Outcome: Average Treatment Effect on the Treated (ATT)
 
@@ -255,7 +255,7 @@ summary(results_att$mod_results)
 
 Again, the only difference in the call to the outcome_model function is specifying the correct `estimand`. Under the ATT setting, our effect size is 0.07 with a p-value of 0.025. We now want to understand how sensitive our result is to unobserved confounders. 
 
- Below we will run the `ov_sim` function; we notice that in our call to `ov_sim` the parameters remain the same. The `estimand` parameter is stored in `results_att` and carried forward throughout the remainder of the analysis.
+Below we will run the `ov_sim` function; we notice that in our call to `ov_sim` the parameters remain the same. The `estimand` parameter is stored in `results_att` and carried forward throughout the remainder of the analysis.
 
 ```{r, ovsim_att}
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
@@ -269,13 +269,13 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                   progress = TRUE)
 ```
 
-We have found that the number of repetitions needed in the ATT setting is greater than in the ATE setting. Once we observe our graphical results, if the contours do not look smooth, we recommend calling `OVtool::add_reps` and specifying `more_reps` to the number of additional simulations of the unobserved confounder you desire.
+Occasionally the specified number of repetitions (default is `n_reps = 50`) is not sufficient. Evidence that `n_reps` is not sufficient are contours that don't appear smooth. The number of repetitions needed can vary based off sample size, the distribution of the outcome, and the specified estimand. Once we observe our graphical results, if the contours do not look smooth, we recommend calling `OVtool::add_reps` and specifying `more_reps` to the number of additional simulations of the unobserved confounder you desire.
 
 ```{r, fig1_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 ```
 
-The contours shown in Figure 4 are relatively smooth but we would like to smooth them out if possible by simulating our unobserved confounder an additional 10 times. The user can specify `more_reps` to any number they choose in the following function call, `add_reps()`.
+The contours shown in Figure 4 are relatively smooth but for sake of example we show how a user would specify 10 additional repetitions. The user can specify `more_reps` to any number they choose in the following function call, `add_reps()`.
 
 ```{r, addreps_att}
 # If you want to add repetitions, run the following line. You may change more_reps
@@ -283,6 +283,8 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
                                     more_reps = 10)
 ```
+
+Once the number of repetitions is finalized, the user can visualize the results through the same three function calls as described in the ATE section above. To review, the graphics visualize (1) treatment effect contours, (2) treatment effect contours in black and p-value contours in red, and (3) treatment effect and p-value contours with covariate labels added, respectively.
 
 ```{r, fig2_att_new, fig.width=10, fig.height=7, fig.align='center', warning=F}
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
@@ -302,6 +304,8 @@ Finally, we will run the `summary.ov` function to get the tool's recommendations
 summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
+The text produced states that the sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in seven of the eight observed confounders. On the otherhand, statistical significance at the 0.05 alpha level is robust to unobserved confounders with strengths of associations with treatment indicator and outcome that are seen in only 25% of our observed confounders. 
+
 # Conclusion
 
 There is continuously a call for work on assessing the sensitivity of research findings. To our knowledge, this is a novel approach to assessing the sensitivity of research findings to omitted variables when estimating causal effects using PS weighting. Development of user friendly software tools are critical for advancing research. We hope that users will use our tool when they are trying to analyze how sensitive their results are to omitted variables when estimating causal effects using ps methods.
@@ -315,6 +319,8 @@ RAND Social and Economic Well-Being is a division of the RAND Corporation that s
 # Acknowledgements
 
 We would like to acknowledge the Center for Substance Abuse Treatment (CSAT), Substance Abuse and Mental Health Services Administration (SAMHA). The authors thank these agencies, grantees, and their participants for agreeing to share their data to support creation of the synthetic dataset used in this analysis. This tutorial uses a synthetic dataset of youth receiving two unidentified treatments from the GAIN; running on the true dataset will produce different results. 
+
+We also would like to thank our beta testers: Irineo Cabreros, Marika Booth, Andreas Markoulidakis, Brooke Hunter, and Yajna Chakraborti. Their comments, feedback, and suggestions were invaluable throughout the development of this tool.
 
 # References
 

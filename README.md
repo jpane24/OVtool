@@ -5,7 +5,7 @@
 # Introduction
 
 *Note: This is a work in progress.. This document was lasted updated
-2021-01-28 09:44:26*
+2021-01-28 15:53:37*
 
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
@@ -77,24 +77,8 @@ you restart your R session after running:*
 devtools::install_github("jpane24/OVtool", ref='master') 
 ```
 
-    #> knitr     (1.30  -> 1.31   ) [CRAN]
-    #> fastmap   (1.0.1 -> 1.1.0  ) [CRAN]
-    #> cachem    (NA    -> 1.0.1  ) [CRAN]
-    #> htmltools (0.5.1 -> 0.5.1.1) [CRAN]
-    #> rappdirs  (0.3.1 -> 0.3.2  ) [CRAN]
-    #> gert      (1.0.2 -> 1.1.0  ) [CRAN]
-    #> memoise   (1.1.0 -> 2.0.0  ) [CRAN]
-    #> ggrepel   (0.9.0 -> 0.9.1  ) [CRAN]
     #> 
-    #>   There are binary versions available but the source versions are later:
-    #>          binary source needs_compilation
-    #> knitr      1.30   1.31             FALSE
-    #> rappdirs  0.3.1  0.3.2              TRUE
-    #> 
-    #> 
-    #> The downloaded binary packages are in
-    #>  /var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T//RtmpqFppIB/downloaded_packages
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpqFppIB/remotes183e71b494ff6/jpane24-OVtool-99ae661/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/RtmpqFppIB/remotes183e71b494ff6/jpane24-OVtool-99ae661/DESCRIPTION’
+    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2h4JcQ/remotesf80612bb60a/jpane24-OVtool-d98adb9/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2h4JcQ/remotesf80612bb60a/jpane24-OVtool-d98adb9/DESCRIPTION’ (343ms)
     #>   ─  preparing ‘OVtool’:
     #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
     #>   ─  checking for LF line-endings in source and make files and shell scripts
@@ -147,7 +131,10 @@ The relevant variables in this analysis are:
 
 In the next section, we will show how our method works with the average
 treatment effect (ATE) using a continuous outcome. **The OVtool will
-handle binary outcomes in the near future.**
+handle binary outcomes in the near future. We currently implement a
+temporary solution to handle binary outcomes that utilizes the residuals
+from the observed (i.e. absent unobserved confounder) linear probability
+model to generate the empirical CDF.**
 
 ## Continous Outcome: Average Treatment Effect (ATE)
 
@@ -398,12 +385,13 @@ To visualize our results, the `plot.ov` function will produce three
 graphics. The first graphic (Figure 1) plots the treatment effect
 contours without covariate labels. If the user specifies the parameter
 `col` as `"color"`, the contours will overlay a colored heat map. The
-second graphic (Figure 2) plots the p-value contours with the column
-names submitted to `plot_covariates` plotted by their raw rho and effect
-size. The third graphic (Figure 3) plots the treatment effect contours
-with the p-value contour overlaid and covariate labels. The `col`
-options for Figures 2 and 3 are `"bw"` and `"color"` which produce a
-black and white and colored contour graphic, respectively.
+second graphic (Figure 2) plots the treatment effect contours in black
+and the p-value contours in red. The third graphic (Figure 3) plots the
+treatment effect contours with the p-value contour overlaid and
+covariate labels (i.e. the column names submitted to `plot_covariates`)
+plotted by their raw rho and effect size. The `col` options for Figures
+2 and 3 are `"bw"` and `"color"`, which produce a black and white and
+colored contour graphic, respectively.
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -446,9 +434,9 @@ plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
     0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 Figure 3 adds a final dimension (observed covariate labels) to Figure 2.
-Similar to Figures 1 and 2, plotted at the bottom of the figure margin
-is the PS weighted treatment effect size (0.079) and associated p-value
-of 0.004. The solid black contours represent the effect size (treatment
+Similar to Figures 1 and 2, plotted at the top of the figure margin is
+the PS weighted treatment effect size (0.079) and associated p-value of
+0.004. The solid black contours represent the effect size (treatment
 effect) contour lines and the red lines (sometimes dashed) represent the
 p-value threshold. The key on the right side of the graphic shows where
 various p-value cutoff lines are, including p = 0.05. The blue points on
@@ -544,7 +532,10 @@ treatment indicator and outcome as `eps7p_0`, `sati_0`, `ada_0`, and
 In the next section, we will show how our method works with the average
 treatment effect on the treated (ATT) using a continuous outcome. **As
 mentioned above, the OVtool will handle binary outcomes in the near
-future.**
+future. We currently implement a temporary solution to handle binary
+outcomes that utilizes the residuals from the observed (i.e. absent
+unobserved confounder) linear probability model to generate the
+empirical CDF.**
 
 # Continous Outcome: Average Treatment Effect on the Treated (ATT)
 
@@ -674,11 +665,14 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> [1] "92% Done!"
     #> [1] "100% Done!"
 
-We have found that the number of repetitions needed in the ATT setting
-is greater than in the ATE setting. Once we observe our graphical
-results, if the contours do not look smooth, we recommend calling
-`OVtool::add_reps` and specifying `more_reps` to the number of
-additional simulations of the unobserved confounder you desire.
+Occasionally the specified number of repetitions (default is `n_reps
+= 50`) is not sufficient. Evidence that `n_reps` is not sufficient are
+contours that don’t appear smooth. The number of repetitions needed can
+vary based off sample size, the distribution of the outcome, and the
+specified estimand. Once we observe our graphical results, if the
+contours do not look smooth, we recommend calling `OVtool::add_reps` and
+specifying `more_reps` to the number of additional simulations of the
+unobserved confounder you desire.
 
 ``` r
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
@@ -686,10 +680,10 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 
 <img src="inst/fig1_att-1.png" style="display: block; margin: auto;" />
 
-The contours shown in Figure 4 are relatively smooth but we would like
-to smooth them out if possible by simulating our unobserved confounder
-an additional 10 times. The user can specify `more_reps` to any number
-they choose in the following function call, `add_reps()`.
+The contours shown in Figure 4 are relatively smooth but for sake of
+example we show how a user would specify 10 additional repetitions. The
+user can specify `more_reps` to any number they choose in the following
+function call, `add_reps()`.
 
 ``` r
 # If you want to add repetitions, run the following line. You may change more_reps
@@ -711,6 +705,13 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
     #> [1] "85% Done!"
     #> [1] "92% Done!"
     #> [1] "100% Done!"
+
+Once the number of repetitions is finalized, the user can visualize the
+results through the same three function calls as described in the ATE
+section above. To review, the graphics visualize (1) treatment effect
+contours, (2) treatment effect contours in black and p-value contours in
+red, and (3) treatment effect and p-value contours with covariate labels
+added, respectively.
 
 ``` r
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
@@ -752,6 +753,15 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.037. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.024 to 0.489. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+
+The text produced states that the sign of the estimated effect is
+expected to remain consistent when simulated unobserved confounders have
+the same strength of associations with the treatment indicator and
+outcome that are seen in seven of the eight observed confounders. On the
+otherhand, statistical significance at the 0.05 alpha level is robust to
+unobserved confounders with strengths of associations with treatment
+indicator and outcome that are seen in only 25% of our observed
+confounders.
 
 # Conclusion
 
@@ -802,6 +812,11 @@ participants for agreeing to share their data to support creation of the
 synthetic dataset used in this analysis. This tutorial uses a synthetic
 dataset of youth receiving two unidentified treatments from the GAIN;
 running on the true dataset will produce different results.
+
+We also would like to thank our beta testers: Irineo Cabreros, Marika
+Booth, Andreas Markoulidakis, Brooke Hunter, and Yajna Chakraborti.
+Their comments, feedback, and suggestions were invaluable throughout the
+development of this tool.
 
 # References
 
