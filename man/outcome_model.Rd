@@ -29,7 +29,7 @@ outcome, model_covariates, estimand = "ATE")
   A data frame containing the data
 }
   \item{weights}{
-  A vector of propensity score weights
+  A column name in data that represents the relevant weights
 }
   \item{treatment}{
   A column name in data for the treatment indicator
@@ -56,7 +56,7 @@ outcome_model returns a list containing the following components:
 \item{ps_object}{The ps_object from TWANG specified in the function call. If ignored, this component will be NULL}
 \item{stop.method}{The stop method, if applicable, specified in the function call}
 \item{data}{the updated data frame}
-\item{weights}{a vector of weights}
+\item{weights}{the original vector of weights}
 \item{tx}{a character name in data indicating the treatment indicator}
 \item{y}{a character name in data indicating the outcome}
 \item{outcome_mod_fmla}{the final outcome model formula}

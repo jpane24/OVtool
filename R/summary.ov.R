@@ -10,6 +10,10 @@ summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, .
   pvals = rep(NA, nrow(temp$obs_cors))
   trt_effect = rep(NA, nrow(temp$obs_cors))
   options(warn=-1)
+  # set status bar
+  pb <- progress::progress_bar$new(
+    format = "  running simulation [:bar] :percent completed in :elapsed",
+    total = nrow(temp$obs_cors), clear = FALSE, width= 60)
   for(i in 1:nrow(temp$obs_cors)){
     calculate_exact = ov_sim(model_results = model_results,
                                      plot_covariates = object$cov,
@@ -19,7 +23,8 @@ summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, .
     trt_effect[i] = calculate_exact$trt_effect[[1]]
     pvals[i] = calculate_exact$p_val[[1]]
     if(progress == TRUE){
-      print(paste0(round(i/nrow(temp$obs_cors)*100,0), "% Done!"))
+      pb$tick()
+      Sys.sleep(1 / nrow(temp$obs_cors))
     }
   }
   options(warn=1)

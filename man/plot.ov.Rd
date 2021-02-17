@@ -12,8 +12,8 @@ Plots the user specified graphic(s)
 }
 
 \arguments{
-  \item{x}{
-Object returned from sim_grid
+  \item{ov_sims}{
+Object returned from the call to ov_sim
 }
   \item{col}{
 If user wants color or black and white. Specify color with "color" or black and white "bw"

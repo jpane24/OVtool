@@ -87,6 +87,10 @@ ov_sim <- function(model_results, plot_covariates,
     # residuals
     my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
+    # set status bar:
+    pb <- progress::progress_bar$new(
+      format = "  running [:bar] :percent completed in :elapsed",
+      total = length(es_grid), clear = FALSE, width= 60)
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
@@ -120,7 +124,9 @@ ov_sim <- function(model_results, plot_covariates,
         std_error_nodr[i,j] <- melded_summary$std.error
       }
       if((length(es_grid) >1) & progress == TRUE){
-        print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
+        # print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
+          pb$tick()
+          Sys.sleep(1 / length(es_grid))
       }
     }
   } else{
@@ -140,6 +146,10 @@ ov_sim <- function(model_results, plot_covariates,
     # residuals:
     my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
 
+    # set status bar
+    pb <- progress::progress_bar$new(
+      format = "  running simulation [:bar] :percent completed in :elapsed",
+      total = length(es_grid), clear = FALSE, width= 60)
     for(i in 1:length(es_grid)){
       for(j in 1:length(rho_grid)){
         for(k in 1:n_reps){
@@ -176,7 +186,9 @@ ov_sim <- function(model_results, plot_covariates,
         std_error_nodr[i,j] <- melded_summary$std.error
       }
       if((length(es_grid) >1) & progress == TRUE){
-        print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
+        # print(paste0(round(i/length(es_grid)*100,0), "% Done!"))
+        pb$tick()
+        Sys.sleep(1 / length(es_grid))
       }
     }
     store_results = dplyr::bind_rows(sim_archive, store_results)

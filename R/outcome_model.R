@@ -11,7 +11,7 @@ outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights=NULL,
       outcome, and covariates OR the data and relevant column names for: weights, treatment, outcome, & covariates")
     } else{
       # weights
-      data$w_orig = weights
+      data$w_orig = data[,weights]
       # outcome
       y = outcome
       # treamtment
@@ -57,7 +57,7 @@ outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights=NULL,
   # print(summary(model_results))
 
   return(list(ps_object = ps_object, stop.method = stop.method, data = data,
-              weights = weights, tx = tx, y = y, outcome_mod_fmla = formula,
+              weights = data$w_orig, tx = tx, y = y, outcome_mod_fmla = formula,
               estimand = estimand, mod_results = outcome_mod_results))
 }
 

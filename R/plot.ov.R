@@ -1,6 +1,6 @@
 #### Plotting Package for OV ####
-plot.ov <- function(x, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1), ...) {
-  prep_plots = prep_for_plots(x, p_contours)
+plot.ov <- function(ov_sims, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1), ...) {
+  prep_plots = prep_for_plots(ov_sims, p_contours)
 
   #### some defaults ####
   plot_1 = es_plot(prep=prep_plots, col=col)

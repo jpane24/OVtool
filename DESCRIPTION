@@ -20,6 +20,7 @@ Imports:
 	magrittr,
 	metR,
 	purrr,
+	progress,
 	rlang,
 	survey,
 	stats,
