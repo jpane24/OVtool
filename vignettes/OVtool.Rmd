@@ -97,7 +97,7 @@ For additional details on these variables, please refer to Dennis et al. (2003).
 
 In the next two sections we showcase how our method works with a continuous outcome and binary treatment indicator. The first analysis subsection utilizes the average treatment effect (ATE) estimand and the second subsection operates under the average treatment effect on the treated (ATT) estimand. **Note: Under a binary outcome, the OVtool utilizes residuals from the observed (i.e. absent unobserved confounder) linear probability model to generate the empirical CDF.** 
 
-### Continous Outcome: Average Treatment Effect (ATE)
+### Continuous Outcome: Average Treatment Effect (ATE)
 
 #### 1. Computing Weights under ATE
 
