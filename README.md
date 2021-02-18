@@ -4,9 +4,6 @@
 
 # Introduction
 
-*Note: This is a work in progress.. This document was lasted updated
-2021-01-28 15:53:37*
-
 The <ins>O</ins>mitted <ins>V</ins>ariable <ins>T</ins>ool (`OVtool`)
 package was designed to assess the sensitivity of research findings to
 omitted variables when estimating causal effects using propensity score
@@ -25,7 +22,7 @@ models. It will estimate the potential impact of the unobserved
 counfounders on both the estimated treatment or exposure effects as well
 as on the statistical significance of an analysis.
 
-# Example: Synthetic Data
+# Examples: Synthetic Substance Use Data
 
 This package is demonstrated using a synthetic data set that was derived
 from a large scale observational study on youth in substance use
@@ -44,24 +41,22 @@ synthetic data set, we used an R package called
 : Bespoke Creation of Synthetic Data in R”.
 
 In our synthetic dataset, there are 2,000 adolescents in each treatment
-group. Within this dataset there are variables on substance use disorder
-and mental health outcomes. For this tutorial we are particularly
-interested in the mental health outcome, `eps7p_3`, emotional problem
-scale (eps) recorded at three months. Higher values of eps indicate more
-emotional problems. Substance use researchers are particularly
-interested in whether or not treatment A reduces emotional problems more
-than treatment B. `eps7p_3` ranges from zero to one, where higher values
-of EPS indicate more emotional problems. See (Dennis, 2003) for more
-details on this scale.
+group. Within this dataset there is a treatment indicator and 28
+variables on substance use disorder and mental health outcomes.
+Variables that end in `_0`, `_3`, and `_6` were collected from
+interviews at baseline, 3-, and 6-months post-baseline, respectively.
 
-Past research has indicated there are many influential confounders when
-analyzing adolescents’ emotional problems, some included in this
-synthetic dataset (Diamond et al.). These variables were measured at
-baseline: emotional problem scale (`eps7p_0`), adjusted days abstinent
-(any in past 90) (`ada_0`), substance frequency scale (`sfs8p_0`),
-substance abuse treatment index (`sati_0`), in recovery (`recov_0`),
-traumatic stress scale (`tss_0`), mental health treatment in the past 90
-days (`mhtrt_0`), and the depressive symptom scale (`dss9_0`). 
+For this tutorial we are interested in the mental health outcome,
+`eps7p_3`, emotional problem scale (eps) recorded at three months. In
+particular, whether or not treatment A reduces emotional problems more
+than treatment B. `eps7p_3` ranges from zero to one, where higher values
+of EPS indicate more emotional problems. Past research has concluded
+there are many variables that may influence treatment assignment and an
+adolescents’ emotional problems (Griffin et al., 2020). We utilize a
+selection of these variables in our propensity score and outcome models
+and provide their definitions below. 
+
+## Installation
 
 We begin by loading the development version of the package from
 [GitHub](https://github.com/). If you haven’t installed the devtools
@@ -75,145 +70,166 @@ you restart your R session after running:*
 ``` r
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
-```
-
-    #> 
-    #>      checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2h4JcQ/remotesf80612bb60a/jpane24-OVtool-d98adb9/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/ks/ll8v5y8x6rz_cgvtgk6zln90b6fd3c/T/Rtmp2h4JcQ/remotesf80612bb60a/jpane24-OVtool-d98adb9/DESCRIPTION’ (343ms)
-    #>   ─  preparing ‘OVtool’:
-    #>      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    #>   ─  checking for LF line-endings in source and make files and shell scripts
-    #>   ─  checking for empty or unneeded directories
-    #>   ─  building ‘OVtool_1.0.0.tar.gz’
-    #>      Warning: invalid uid value replaced by that for user 'nobody'
-    #>    Warning: invalid gid value replaced by that for user 'nobody'
-    #>      
-    #> 
-
-``` r
 # we recommend restarting your R session after running the previous line of code
 # for the first time on your machine
 library(OVtool)
 ```
 
+## Data Structure/Preparation
+
 We can load the synthetic dataset and make our treatment variable a
-binary indicator of 0’s and 1’s:
+binary indicator of 0’s and 1’s. The OVtool requires the user to specify
+the treatment indicator as a numeric vector of 1’s and 0’s, where 1
+indicates the target treatment group.
 
 ``` r
 set.seed(24)
-data(sud) 
+data(sud); sud = data.frame(sud)
 sud$treat = ifelse(sud$treat == "A", 1, 0)
 ```
 
 The relevant variables in this analysis are:
 
-  - **Treatment indicator** `treat`: indicates treatment type where 1 is
-    Treatment “A” and 0 is Treatment “B”
+  - **Treatment indicator** `treat`: treatment program, a binary
+    indicator where 1 and 0 represent Treatment “A” and Treatment “B”,
+    respectively.
 
   - **Outcome of interest** `eps7p_3`: emotional problem scale at
-    3-months
+    3-months, a continuous variable ranging from 0 to 1. Higher values
+    represent more emotional problems.
 
-  - `eps7p_0`: emotional problem scale at baseline
+  - `eps7p_0`: emotional problem scale at baseline, a continuous
+    variable ranging from 0 to 1. Like the outcome, higher values
+    represent more emotional problems.
 
-  - `sfs8p_0`: substance frequency scale 8-item version at baseline
+  - `sfs8p_0`: substance frequency scale 8-item version at baseline, a
+    continuous variable ranging from 0 to 77.5. Higher values represent
+    more frequencies of substance use, staying high most of the day, and
+    causing problems.
 
-  - `sati_0`: substance abuse treatment index at baseline
+  - `sati_0`: substance abuse treatment index at baseline, a continuous
+    variable ranging from 0 to 110. Higher values indicate more
+    involvement in substance abuse treatment.
 
-  - `ada_0`: adjusted days abstinent at baseline
+  - `ada_0`: adjusted days abstinent at baseline, a continuous variable
+    ranging from 0 to 90 days.
 
   - `recov_0`: indicates whether the adolescent was in recovery at
-    baseline, where 1 is in recovery and 0 is not in recovery
+    baseline, where 1 is in recovery and 0 is not in recovery.
 
-  - `tss_0`: traumatic stress scale at baseline
+  - `tss_0`: traumatic stress scale at baseline, a continuous variable
+    ranging from 0 to 13. Higher values indicate more problems related
+    to memories of traumatic events.
 
-  - `mhtrt_0`: mental health treatment in the past 90 days at baseline
+  - `dss9_0`: depressive symptom scale at baseline, a continuous
+    variable ranging from 0 to 9. Higher values indicate higher levels
+    of depressive symptoms.
 
-  - `dss9_0`: depressive symptom scale at baseline
+For additional details on these variables, please refer to Dennis et
+al. (2003).
 
-In the next section, we will show how our method works with the average
-treatment effect (ATE) using a continuous outcome. **The OVtool will
-handle binary outcomes in the near future. We currently implement a
-temporary solution to handle binary outcomes that utilizes the residuals
-from the observed (i.e. absent unobserved confounder) linear probability
-model to generate the empirical CDF.**
+## Analysis
 
-## Continous Outcome: Average Treatment Effect (ATE)
+In the next two sections we showcase how our method works with a
+continuous outcome and binary treatment indicator. The first analysis
+subsection utilizes the average treatment effect (ATE) estimand and the
+second subsection operates under the average treatment effect on the
+treated (ATT) estimand. **Note: Under a binary outcome, the OVtool
+utilizes residuals from the observed (i.e. absent unobserved confounder)
+linear probability model to generate the empirical CDF.**
+
+### Continous Outcome: Average Treatment Effect (ATE)
+
+#### 1\. Computing Weights under ATE
 
 The `OVtool` can either take a vector of weights estimated using any
-method or a ps object produced by `TWANG` (Ridgeway et al., 2020). We
-begin walking through the OVtool by estimating weights using `ps()` from
-the `TWANG` package prior to running the outcome model using
-`outcome_model()` from the `OVtool` package. The `outcome_model`
-function calls `svyglm` from the `survey` package in R
-([survey](http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf))
-to produce outcome model results. The chunk of code below demonstrates
-how to specify your propensity score model and generate your propensity
-score weights using the `TWANG` package.
+method or a ps object produced by `TWANG` (Ridgeway et al., 2020). The
+chunk of code below demonstrates how to specify your propensity score
+model and generate propensity score weights using the `ps` function from
+`TWANG`. If you already have a column of weights in your dataset, you
+can skip to step 2.
 
 ``` r
 ## Create Formula
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
-                          tss_0 + mhtrt_0 + dss9_0)
+                          tss_0 + dss9_0)
 
 ## Get weights
-sud = data.frame(sud)
 library(twang)
 ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
+```
 
+The following line of code produces a balance table that demonstrates
+`TWANG` does a reasonable job of balancing. There are additional
+diagnostics we could check to ensure we have sufficient balance, but we
+move on without diving in further because the purpose of this tutorial
+is to showcase `OVtool`. See [Ridgeway et
+al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf)
+for further information on balance diagnostics.
+
+``` r
 # Check Balance
-bal.table(ps.twang); # summary(ps.twang)
+bal.table(ps.twang)
 ```
 
     #> $unw
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
     #> eps7p_0  0.256  0.196  0.219  0.192      0.187  5.937 0.000 0.103   0.000
-    #> sfs8p_0 11.253 13.134 10.571 12.162      0.054  1.703 0.089 0.046   0.032
+    #> sfs8p_0 11.253 13.134 10.571 12.162      0.054  1.703 0.089 0.045   0.032
     #> sati_0   8.233 22.128  2.145 10.658      0.345 11.088 0.000 0.121   0.000
-    #> ada_0   48.748 33.400 54.236 32.454     -0.166 -5.271 0.000 0.080   0.000
-    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.007   1.000
+    #> ada_0   48.748 33.400 54.236 32.454     -0.166 -5.271 0.000 0.081   0.000
+    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
     #> tss_0    2.277  3.525  1.924  3.115      0.106  3.365 0.001 0.043   0.050
-    #> mhtrt_0  0.290  0.513  0.256  0.484      0.069  2.188 0.029 0.028   0.413
     #> dss9_0   2.750  2.604  2.638  2.492      0.044  1.390 0.165 0.023   0.666
     #> 
     #> $ks.max.ATE
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    #> eps7p_0  0.238  0.193  0.232  0.192      0.033  1.015 0.310 0.023   0.697
-    #> sfs8p_0 10.830 12.609 10.675 12.324      0.012  0.385 0.700 0.012   0.999
-    #> sati_0   5.302 17.852  4.087 15.449      0.069  1.955 0.051 0.024   0.641
-    #> ada_0   51.585 32.900 52.540 32.849     -0.029 -0.886 0.376 0.020   0.849
-    #> recov_0  0.247  0.431  0.240  0.427      0.017  0.506 0.613 0.007   1.000
-    #> tss_0    2.094  3.345  2.024  3.244      0.021  0.656 0.512 0.014   0.990
-    #> mhtrt_0  0.271  0.502  0.274  0.500     -0.006 -0.171 0.865 0.004   1.000
-    #> dss9_0   2.678  2.551  2.684  2.528     -0.002 -0.075 0.941 0.008   1.000
+    #> eps7p_0  0.239  0.194  0.233  0.192      0.028  0.880 0.379 0.021   0.765
+    #> sfs8p_0 10.885 12.655 10.727 12.372      0.012  0.392 0.695 0.012   0.998
+    #> sati_0   5.345 17.937  4.198 15.691      0.065  1.797 0.072 0.023   0.662
+    #> ada_0   51.455 32.894 52.377 32.898     -0.028 -0.858 0.391 0.020   0.823
+    #> recov_0  0.248  0.432  0.238  0.426      0.023  0.716 0.474 0.010   1.000
+    #> tss_0    2.099  3.358  2.065  3.279      0.010  0.313 0.754 0.012   0.999
+    #> dss9_0   2.675  2.556  2.706  2.535     -0.012 -0.381 0.703 0.012   0.999
 
-The output produced by the code snippet above demonstrates that `TWANG`
-does a reasonable job of balancing. There are additional diagnostics we
-could check to ensure we have good balance but we move on without diving
-in further because the purpose of this tutorial is to showcase `OVtool`.
-See [Ridgeway et
-al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf)
-for further information on balance diagnostics. The next step is to
-estimate the treatment effect and analyze the sensitivity of those
-results using `OVtool`. We first present how a researcher would produce
-results for their outcome model. There are two options the researcher
-can take to input the relevant information to get their outcome results
-using `outcome_model()`.
+The last step needed prior to moving onto the specification of your
+outcome model is to attach the weights as a column in your dataset. We
+extract the weights produced from `ps` in the line below.
+
+``` r
+# Get weights (not needed if user inserts a ps object in OVtool::outcome_model)
+sud$w_twang = ps.twang$w$ks.max.ATE
+```
+
+#### 2\. Running Outcome Model under ATE
+
+The next step is to estimate the observed treatment effect. The
+`outcome_model` function in `OVtool` automatically utilizes the
+`svydesign` and `svyglm` functions from the `survey` package in R
+([survey](http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf))
+and formats and returns a list of components that are needed throughout
+step 3.
+
+There are two options the researcher can take to input the relevant
+information to get their outcome results using `outcome_model()`.
 
   - Input a `ps.object` from `TWANG` and a `stop.method`
     (e.g. `"ks.max"`) or
-  - Input a vector of `weights`, a data frame containing the `data`
-    used, and the column name representing the treatment indicator,
-    `treatment`.
+  - Input a data frame containing the `data` used, the column name
+    representing the weights, `weights`, and the column name
+    representing the treatment indicator, `treatment`.
 
-The analyst must also provide a column name representing the outcome and
-a vector of covariates to be included in the final outcome model.
-Recall: `outcome_model()` calls `svyglm()` from the survey package to
-run the outcome model.
+The analyst must also provide:
+
+  - a column name representing the outcome, `outcome`
+  - a vector of covariates to be included in the final outcome model,
+    `model_covariates`
+  - the estimand of interest, `estimand`
+
+<!-- end list -->
 
 ``` r
-# Get weights (not needed if user inserts a ps object in OVTool)
-sud$w_twang = ps.twang$w$ks.max.ATE
-
 # Run Models -- first standardize outcome
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
@@ -221,13 +237,13 @@ sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3)
 results = outcome_model(ps_object = NULL,
                         stop.method = NULL, 
                         data = sud,
-                        weights = sud$w_twang, 
+                        weights = "w_twang", 
                         treatment = "treat",
                         outcome = "eps7p_3_std", 
                         model_covariates = c("eps7p_0", "sfs8p_0",
                                              "sati_0", "ada_0",
                                              "recov_0", "tss_0",
-                                             "mhtrt_0", "dss9_0"),
+                                             "dss9_0"),
                         estimand = "ATE")
 
 summary(results$mod_results)
@@ -242,35 +258,37 @@ summary(results$mod_results)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
-    #> (Intercept)  0.3562719  0.0649876   5.482 4.46e-08 ***
-    #> treat        0.0785796  0.0275254   2.855  0.00433 ** 
-    #> eps7p_0      1.6332282  0.1180704  13.833  < 2e-16 ***
-    #> sfs8p_0      0.0023047  0.0020310   1.135  0.25654    
-    #> sati_0       0.0017325  0.0012363   1.401  0.16119    
-    #> ada_0       -0.0000504  0.0007587  -0.066  0.94704    
-    #> recov_0     -0.0693833  0.0314387  -2.207  0.02737 *  
-    #> tss_0        0.0312059  0.0068902   4.529 6.10e-06 ***
-    #> mhtrt_0      0.2694083  0.0355520   7.578 4.34e-14 ***
-    #> dss9_0       0.0489996  0.0078452   6.246 4.66e-10 ***
+    #> (Intercept)  0.4235011  0.0657531   6.441 1.33e-10 ***
+    #> treat        0.0712001  0.0278454   2.557   0.0106 *  
+    #> eps7p_0      1.7397954  0.1166266  14.918  < 2e-16 ***
+    #> sfs8p_0      0.0015028  0.0020843   0.721   0.4709    
+    #> sati_0       0.0028393  0.0012348   2.299   0.0215 *  
+    #> ada_0       -0.0005808  0.0007725  -0.752   0.4522    
+    #> recov_0     -0.0704673  0.0317912  -2.217   0.0267 *  
+    #> tss_0        0.0329637  0.0069454   4.746 2.15e-06 ***
+    #> dss9_0       0.0540816  0.0080153   6.747 1.72e-11 ***
     #> ---
     #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     #> 
-    #> (Dispersion parameter for gaussian family taken to be 0.6890915)
+    #> (Dispersion parameter for gaussian family taken to be 0.7074412)
     #> 
     #> Number of Fisher Scoring iterations: 2
 
 The outcome model results show an adjusted treatment effect estimate
 that accounts for confounding from observed covariates between youth in
-the two treatment programs (A = 1 and B = 0). From the results, we can
-see that the effect size is 0.079 (p = 0.004), whereby youth receiving
-treatment A have slightly higher emotional problems at the 3-month
-follow-up than youth in treatment program B.
+the two treatment programs (A = 1 and B = 0). From the results, we
+observe that the effect size is 0.07 (p = 0.011), whereby youth
+receiving treatment A have slightly higher emotional problems at the
+3-month follow-up than youth in treatment program B.
 
-At this stage, researchers should begin to ask themselves if this effect
-is real and how sensitive it is. Our tool is used to help answer these
-sort of logical next step questions. The next snippet of code presents
-the main function in `OVtool`: `ov_sim()`. This function requires
-results from `outcome_model()` plus additional parameters including:
+#### 3\. Sensitivity Analysis under ATE
+
+At this stage, researchers should begin to ask themselves if the
+observed effect in Step 2 is real and how sensitive it is. Our tool is
+used to help answer these sort of logical next step questions. The next
+snippet of code presents the main function in `OVtool`: `ov_sim()`. This
+function requires results from `outcome_model()` plus additional
+parameters including:
 
   - `plot_covariates`: a vector of column names potentially representing
     the covariates used to produce the analysts’ propensity score
@@ -291,19 +309,35 @@ results from `outcome_model()` plus additional parameters including:
     sufficient but the analyst may need to reduce or increase the number
     of repetitions.
 
-The grid, as shown by the x-axis and y-axis in Figure 1 presents the
-effect size and rho, respectively. We define the effect size on the
-x-axis to show the strength of the relationship between the simulated
-unobserved covariate (U) and the treatment group indicator; it is
-defined as the standardized mean difference in U for the treatment A and
-treatment B groups. Typical rules of thumb for effect sizes (Cohen’s D)
-follow such that effect sizes greater than 0.2 would be considered
-small, 0.4 would be moderate and 0.6 would be large (Cohen, J., 1995).
-We define rho in this setting as the absolute correlation the unobserved
-covariate (U) has with the outcome of interest, with larger values
-indicating stronger relationships between U and the outcome. Please see
-Burgette et al. (in progress) for additional details on the methodology
-used by `OVtool`.
+Optional argument include:
+
+  - `progress`: whether or not the function progress should print to
+    screen. The default value is TRUE. If the user doe not want the
+    output to print to screen, they should set this parameter to FALSE.
+
+  - `add`: The default value is FALSE. This is only set to TRUE if the
+    user is running additional repetitions after the first call to
+    `ov_sim`.
+
+  - `sim_archive`: The default value is NULL and is only used if
+    `add_reps` is called.
+
+The `ov_sim` function does not require the user to specify vectors for
+`es_grid` and `rho_grid`. If the user specifies `NULL` for both, the
+tool will automatically derive appropriate values. We define an effect
+size value in `es_grid` to show the strength of the relationship between
+the simulated unobserved covariate (U) and the treatment group
+indicator; it is defined as the standardized mean difference in U for
+the treatment A and treatment B groups. Typical rules of thumb for
+effect sizes (Cohen’s D) follow such that effect sizes greater than 0.2
+would be considered small, 0.4 would be moderate and 0.6 would be large
+(Cohen, J., 1995). We define a particular value of rho specified in
+`rho_grid` as the absolute correlation the unobserved covariate (U) has
+with the outcome of interest, with larger values indicating stronger
+relationships between U and the outcome.
+
+Please see Burgette et al. (in progress) for additional details on the
+theory behind `OVtool`.
 
 ``` r
 # Run OVtool (with weights (not a ps object))
@@ -311,11 +345,13 @@ ovtool_results_twang = ov_sim(model_results=results,
                               plot_covariates=c("eps7p_0", "sfs8p_0",
                                                 "sati_0", "ada_0",
                                                 "recov_0", "tss_0", 
-                                                "mhtrt_0", "dss9_0"),
+                                                "dss9_0"),
                               es_grid = NULL,
                               rho_grid = seq(0, 0.40, by = 0.05), 
                               n_reps = 50,
-                              progress = TRUE)
+                              progress = TRUE,
+                              add = FALSE,
+                              sim_archive = NULL)
 ```
 
     #> Warning in ov_sim(model_results = results, plot_covariates = c("eps7p_0", :
@@ -326,25 +362,15 @@ ovtool_results_twang = ov_sim(model_results=results,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #> [1] "6% Done!"
-    #> [1] "12% Done!"
-    #> [1] "18% Done!"
-    #> [1] "24% Done!"
-    #> [1] "29% Done!"
-    #> [1] "35% Done!"
-    #> [1] "41% Done!"
-    #> [1] "47% Done!"
-    #> [1] "53% Done!"
-    #> [1] "59% Done!"
-    #> [1] "65% Done!"
-    #> [1] "71% Done!"
-    #> [1] "76% Done!"
-    #> [1] "82% Done!"
-    #> [1] "88% Done!"
-    #> [1] "94% Done!"
-    #> [1] "100% Done!"
+    #>   running [==>-----------------------]  12% completed in 30s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  2m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  4m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  5m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  6m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  7m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  8m  running [==========================] 100% completed in  8m
 
-In our example, `ov_sim` produced a warning saying “You specified a rho
+The grid values are not required; if `es_grid` and/or `rho_grid` are set
+to `NULL`, the tool will calculate reasonable values to simulate over.
+For this tutorial we set `es_grid` to `NULL`. The tool then iterated
+over all observed covariate associations with the treatment indicator on
+an effect size scale to derive a reasonable range.
+
+The function, `ov_sim`, produced a warning saying “You specified a rho
 grid whose maximum value is less than the maximum absolute correlation
 at least one observed covariate has with the outcome. The rho grid was
 automatically expanded to include all plot\_covariates specified in the
@@ -355,43 +381,62 @@ expanded to ensure all `plot_covariates` could be seen on the contour
 plot. If the user does not want the grid expanded, they can leave out
 the observed covariates used in the propensity score model that have an
 absolute correlation with the outcome that is greater than the maximum
-rho value the user specifies (`eps_7p_0`, `dss9_0`, and `tss_0`).
-
-The grid values are not required; if es\_grid and/or rho\_grid are set
-to `NULL`, the tool will calculate reasonable values to simulate over.
-For this tutorial we set `es_grid` to NULL. The tool then iterated over
-all observed covariate associations with the treatment indicator on an
-effect size scale to derive a reasonable range.
+rho value the user specifies (in this example: `eps_7p_0`, `dss9_0`, and
+`tss_0`).
 
 There are a few methodological assumptions that are important for an
 analyst to understand.
 
 First, when generating the omitted variable (U), the empirical
-cumulative distribution function (CDF) for the outcome within each
-treatment is used. When multiple ties are present, the tool handles this
-by randomly ranking multiple ties. For example, imagine a scenario where
-you have ten observations (shown in rank order) and the first two
-observations are 0s. The tool will randomly assign the rank of the two
-zeroes and assign the first observation with 0.1 and the second
-observation with 0.2 as opposed to assigning the two zeroes a value of
-0.2. This process is repeated for each effect size and rho combination
-`n_reps` times.
+cumulative distribution function (CDF) for the residuals within each
+treatment is used. The residuals are generated from the observed outcome
+model. When multiple ties are present, the tool handles this by randomly
+ranking multiple ties. For example, imagine a scenario where you have
+ten observations (shown in rank order) and the first two observations
+are 0s. The tool will randomly assign the rank of the two zeroes and
+assign the first observation with 0.1 and the second observation with
+0.2 as opposed to assigning the two zeroes a value of 0.2. This process
+is repeated for each effect size and rho combination `n_reps` times.
 
 Another key assumption this method draws upon is that the omitted
 variable is independent from all observed covariates included in the
 propensity score model.
 
-To visualize our results, the `plot.ov` function will produce three
-graphics. The first graphic (Figure 1) plots the treatment effect
-contours without covariate labels. If the user specifies the parameter
-`col` as `"color"`, the contours will overlay a colored heat map. The
-second graphic (Figure 2) plots the treatment effect contours in black
-and the p-value contours in red. The third graphic (Figure 3) plots the
-treatment effect contours with the p-value contour overlaid and
-covariate labels (i.e. the column names submitted to `plot_covariates`)
-plotted by their raw rho and effect size. The `col` options for Figures
-2 and 3 are `"bw"` and `"color"`, which produce a black and white and
-colored contour graphic, respectively.
+To visualize our results, the `plot.ov` function can be called to
+produce three graphics. The main arguments to `plot.ov` are as follows:
+
+  - `ov_sims`: the object returned from the call to `ov_sim`
+
+  - `col`: if specified as “color” a color graphic will be produced and
+    if specified as “bw” a black and white graphic will be produced. If
+    and only if `print_graphic` is set to “1”, the “col” option will
+    produce a heat map
+
+  - `p_contours`: a vector of p-value contours plotted. The default is
+    0.01, 0.05, and 0.1. We only recommend changing from teh default if
+    the p-value for the raw effect is close to one of these values. This
+    parameter is only used when `print_graphic` equals “2” or “3”.
+
+  - `print_graphic`: takes values “1”, “2”, or “3”, representing Figures
+    1, 2, and 3 described below.
+    
+      - The first graphic (Figure 1) plots the treatment effect contours
+        without covariate labels. This graphic can be produced by
+        specifying `print_graphic` to “1”. If the user specifies the
+        parameter `col` as `"color"`, the contours will overlay a
+        colored heat map.
+    
+      - The second graphic (Figure 2) plots the treatment effect
+        contours in black and the p-value contours in red. The p-value
+        contours can be specified with `p_contours`. The default values
+        are 0.01, 0.05, and 0.1.
+    
+      - The third graphic (Figure 3) plots the treatment effect contours
+        with the p-value contour overlaid and covariate labels (i.e. the
+        column names submitted to `plot_covariates`) plotted by their
+        raw rho and effect size.
+
+The following code snippet will produce Figure 1.
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -399,12 +444,15 @@ plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
 
 <img src="inst/fig1-1.png" style="display: block; margin: auto;" />
 
+The grid, as shown by the x-axis and y-axis in Figure 1 presents the
+effect size and rho, respectively.
+
 The y-axis in Figure 1 represents the unobserved confounder’s absolute
 correlation with the outcome and the x-axis is the association between
 the unobserved confounder and the treatment indicator on an effect size
 scale. The black lines represent effect size contours that run along the
 grid. The PS weighted treatment effect of Treatment A versus Treatment B
-equals 0.079 and is significant with a p-value equal to 0.004. However,
+equals 0.071 and is significant with a p-value equal to 0.011. However,
 looking at this graphic alone will not give us an idea of how sensitive
 the effect is. 
 
@@ -422,7 +470,7 @@ contours. This graphic will allow the user to see what treatment effect
 on the effect size scale will switch the significance level at critical
 p-values (i.e. 0.05). This graphic will now give the user an idea of how
 sensitive the effect is. The analyst can specify what red p-value
-thresholds they want plotted. 
+thresholds they want plotted with the `p_contours` argument. 
 
 ``` r
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
@@ -435,8 +483,8 @@ plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 
 Figure 3 adds a final dimension (observed covariate labels) to Figure 2.
 Similar to Figures 1 and 2, plotted at the top of the figure margin is
-the PS weighted treatment effect size (0.079) and associated p-value of
-0.004. The solid black contours represent the effect size (treatment
+the PS weighted treatment effect size (0.071) and associated p-value of
+0.011. The solid black contours represent the effect size (treatment
 effect) contour lines and the red lines (sometimes dashed) represent the
 p-value threshold. The key on the right side of the graphic shows where
 various p-value cutoff lines are, including p = 0.05. The blue points on
@@ -446,14 +494,17 @@ the plot represent the observed covariate correlations with the outcome
 0.18 absolute correlation with the emotional problem scale at three
 months and an absolute association of approximately 0.17 effect size
 difference between the two treatment groups (magnitude of its
-relationship with the treatment indicator). In this case, not all of the
-observed covariate relationships with the outcome and the treatment
-indicator are less than the 0.05 p-value threshold so the analyst
-potentially has results that are sensitive to an unobserved confounder.
-If the blue points all existed in contours greater than the 0.05 p-value
-contour, then unobserved confounders with similar associations would
-retain the significant effect and allow the user to conclude that the
-results are reasonably robust.
+relationship with the treatment indicator). In this case, if an
+unobserved confounder had a relationship with the outcome (`eps7p_3`)
+and the treatment indicator (`treat`) that was equivalent to `ada_0`,
+`tss_0`, `eps7p_0`, `sati_0`, or `dss9_0`, then the researcher would
+conclude that their results would likely be sensitive to an unobserved
+confounder at a p-value threshold of 0.05. All of these observed
+relationships are senstiive at the 0.10 p-value threshold other than
+`dss9_0`. If the blue points all existed in contours greater than the
+0.05 p-value contour, then unobserved confounders with similar
+associations would retain the significant effect and allow the user to
+conclude that the results are reasonably robust.
 
 *Note: When the outcome model shows a significant effect, for all
 observed covariates, regardless of the sign of the association effect
@@ -486,58 +537,40 @@ the ov object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #> [1] "12% Done!"
-    #> [1] "25% Done!"
-    #> [1] "38% Done!"
-    #> [1] "50% Done!"
-    #> [1] "62% Done!"
-    #> [1] "75% Done!"
-    #> [1] "88% Done!"
-    #> [1] "100% Done!"
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
+
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
     confounders have the same strength of associations with the treatment indicator and outcome that
-    are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign
-    changes, the estimated effect size shifts from 0.079 to -0.02. The sign of the estimate would not
+    are seen in 6 of the 7 observed confounders. In the most extreme observed case in which the sign
+    changes, the estimated effect size shifts from 0.071 to -0.027. The sign of the estimate would not
     be expected to be preserved for unobserved confounders that have the same strength of association
     with the treatment indicator and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
     confounders with strengths of associations with the treatment indicator and outcome that are seen
-    in 4 of the 8 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.004 to 0.478. Significance at the 0.05 level would not be expected to
+    in 2 of the 7 observed confounders. In the most extreme observed case, the p-value would be
+    expected to increase from 0.011 to 0.383. Significance at the 0.05 level would not be expected to
     be preserved for unobserved confounders that have the same strength of association with the
-    treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0."
+    treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, dss9_0."
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
 analyst could take the results produced by `summary.ov()` and plug them
-into a manuscript. The sign of the estimated effect is expected to
-remain consistent when simulated unobserved confounders have the same
-strength of associations with the treatment indicator and outcome that
-are seen in 7 of the 8 observed confounders. In the most extreme
-observed case in which the sign changes, the estimated effect size
-shifts from 0.079 to -0.02. The sign of the estimate would not be
-expected to be preserved for unobserved confounders that have the same
-strength of association with the treatment indicator and outcome as
-`eps7p_0`. However, statistical significance at the 0.05 level is
-expected to be robust to unobserved confounders with strengths of
-associations with the treatment indicator and outcome that are seen in 4
-of the 8 observed confounders. In the most extreme observed case, the
-p-value would be expected to increase from 0.004 to 0.49. Significance
-at the 0.05 level would not be expected to be preserved for unobserved
-confounders that have the same strength of association with the
-treatment indicator and outcome as `eps7p_0`, `sati_0`, `ada_0`, and
-`tss_0`.
+directly into a manuscript. The tool produces these results by iterating
+through each observed confounder the user specified in the
+`plot_covariates` argument to `ov_sim` and runs the simulation for those
+exact effect size and rho combinations to produce the treatment effect
+and p-value. It then determines which observed relationships would
+produce a treatment effect that changes direction and p-value that
+crosses over the 0.05 threshold when a significant raw effect is
+observed.
 
 In the next section, we will show how our method works with the average
-treatment effect on the treated (ATT) using a continuous outcome. **As
-mentioned above, the OVtool will handle binary outcomes in the near
-future. We currently implement a temporary solution to handle binary
-outcomes that utilizes the residuals from the observed (i.e. absent
-unobserved confounder) linear probability model to generate the
-empirical CDF.**
+treatment effect on the treated (ATT) using a continuous outcome.
 
-# Continous Outcome: Average Treatment Effect on the Treated (ATT)
+### Continous Outcome: Average Treatment Effect on the Treated (ATT)
+
+#### Computing Weights under ATT
 
 Perhaps the user is interested in the average treatment effect on the
 treated. The tool operates very similarly in the ATT setting. We will
@@ -547,6 +580,10 @@ ATT is the user must specify the correct estimand when (1) generating
 their weights and (2) running their outcome model.
 
 ``` r
+## Create formula - here we use same formula as in the ATE case.
+my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
+                          tss_0 + dss9_0)
+
 # Propensity score weights:
 ps.twang_att <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
@@ -556,35 +593,44 @@ bal.table(ps.twang_att)
     #> $unw
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
     #> eps7p_0  0.256  0.196  0.219  0.192      0.185  5.937 0.000 0.103   0.000
-    #> sfs8p_0 11.253 13.134 10.571 12.162      0.052  1.703 0.089 0.046   0.032
+    #> sfs8p_0 11.253 13.134 10.571 12.162      0.052  1.703 0.089 0.045   0.032
     #> sati_0   8.233 22.128  2.145 10.658      0.275 11.088 0.000 0.121   0.000
-    #> ada_0   48.748 33.400 54.236 32.454     -0.164 -5.271 0.000 0.080   0.000
-    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.007   1.000
+    #> ada_0   48.748 33.400 54.236 32.454     -0.164 -5.271 0.000 0.081   0.000
+    #> recov_0  0.246  0.431  0.240  0.427      0.015  0.479 0.632 0.006   1.000
     #> tss_0    2.277  3.525  1.924  3.115      0.100  3.365 0.001 0.043   0.050
-    #> mhtrt_0  0.290  0.513  0.256  0.484      0.067  2.188 0.029 0.028   0.413
     #> dss9_0   2.750  2.604  2.638  2.492      0.043  1.390 0.165 0.023   0.666
     #> 
     #> $ks.max.ATT
     #>          tx.mn  tx.sd  ct.mn  ct.sd std.eff.sz   stat     p    ks ks.pval
-    #> eps7p_0  0.256  0.196  0.249  0.193      0.035  1.040 0.298 0.027   0.542
-    #> sfs8p_0 11.253 13.134 11.023 12.673      0.017  0.526 0.599 0.020   0.854
-    #> sati_0   8.233 22.128  6.365 19.291      0.084  1.957 0.050 0.035   0.207
-    #> ada_0   48.748 33.400 50.297 33.315     -0.046 -1.356 0.175 0.028   0.480
-    #> recov_0  0.246  0.431  0.229  0.420      0.040  1.234 0.217 0.017   0.944
-    #> tss_0    2.277  3.525  2.265  3.431      0.003  0.095 0.924 0.016   0.970
-    #> mhtrt_0  0.290  0.513  0.306  0.521     -0.032 -0.890 0.373 0.015   0.982
-    #> dss9_0   2.750  2.604  2.834  2.589     -0.032 -0.939 0.348 0.022   0.788
+    #> eps7p_0  0.256  0.196  0.249  0.193      0.034  1.023 0.306 0.025   0.643
+    #> sfs8p_0 11.253 13.134 10.935 12.623      0.024  0.725 0.469 0.020   0.881
+    #> sati_0   8.233 22.128  6.399 19.437      0.083  1.840 0.066 0.036   0.207
+    #> ada_0   48.748 33.400 50.324 33.268     -0.047 -1.365 0.172 0.028   0.489
+    #> recov_0  0.246  0.431  0.234  0.424      0.027  0.810 0.418 0.012   1.000
+    #> tss_0    2.277  3.525  2.226  3.440      0.015  0.399 0.690 0.016   0.976
+    #> dss9_0   2.750  2.604  2.790  2.582     -0.016 -0.446 0.655 0.014   0.992
 
 Notice that the only difference here is we use `estimand = ATT` to
-estimate the propensity score weights using TWANG. Again, we have
-reasonable balance. In fact, all of our standardized effect size
-differences are less than 0.1.
+estimate the propensity score weights using TWANG. We observe reasonable
+balance; all of our standardized effect size differences are less than
+0.1. As mentioned in the ATE example, refer to [Ridgeway et
+al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf)
+for further information on balance diagnostics.
+
+#### Running Outcome Model under ATT
+
+The following code snippet displays how a user would insert a ps object
+produced by `twang` into `outcome_model` and specify the appropriate
+stopping method to extract the propensity score weights as opposed to
+utilizing the `weights` argument. Other than this, the only difference
+in the call to `outcome_model` from the ATE example is specifying the
+correct `estimand`.
 
 ``` r
 results_att = outcome_model(ps_object = ps.twang_att,
                             stop.method = "ks.max",
                             data = sud,
-                            weights = NULL, # weights to NULL
+                            weights = NULL, 
                             treatment = "treat",
                             outcome = "eps7p_3_std",
                             model_covariates = c("eps7p_0", "sfs8p_0",
@@ -604,39 +650,39 @@ summary(results_att$mod_results)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
-    #> (Intercept)  0.3444533  0.0666197   5.170 2.45e-07 ***
-    #> treat        0.0671950  0.0298328   2.252   0.0244 *  
-    #> eps7p_0      1.6202474  0.1213787  13.349  < 2e-16 ***
-    #> sfs8p_0      0.0029105  0.0021199   1.373   0.1699    
-    #> sati_0       0.0020605  0.0012391   1.663   0.0964 .  
-    #> ada_0        0.0002663  0.0007846   0.339   0.7343    
-    #> recov_0     -0.0753006  0.0331632  -2.271   0.0232 *  
-    #> tss_0        0.0338560  0.0072532   4.668 3.15e-06 ***
-    #> mhtrt_0      0.2556486  0.0359440   7.112 1.35e-12 ***
-    #> dss9_0       0.0489629  0.0080572   6.077 1.34e-09 ***
+    #> (Intercept)  0.3492268  0.0669257   5.218 1.90e-07 ***
+    #> treat        0.0641723  0.0304310   2.109   0.0350 *  
+    #> eps7p_0      1.6430733  0.1242182  13.227  < 2e-16 ***
+    #> sfs8p_0      0.0026741  0.0021297   1.256   0.2093    
+    #> sati_0       0.0020878  0.0012827   1.628   0.1037    
+    #> ada_0        0.0002505  0.0007861   0.319   0.7500    
+    #> recov_0     -0.0788224  0.0336288  -2.344   0.0191 *  
+    #> tss_0        0.0344397  0.0074878   4.599 4.37e-06 ***
+    #> mhtrt_0      0.2468881  0.0370127   6.670 2.90e-11 ***
+    #> dss9_0       0.0481264  0.0081534   5.903 3.88e-09 ***
     #> ---
     #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     #> 
-    #> (Dispersion parameter for gaussian family taken to be 0.7218555)
+    #> (Dispersion parameter for gaussian family taken to be 0.7229591)
     #> 
     #> Number of Fisher Scoring iterations: 2
 
-Again, the only difference in the call to the outcome\_model function is
-specifying the correct `estimand`. Under the ATT setting, our effect
-size is 0.07 with a p-value of 0.025. We now want to understand how
-sensitive our result is to unobserved confounders.
+Under the ATT setting, our effect size is 0.064 with a p-value of 0.035.
 
-Below we will run the `ov_sim` function; we notice that in our call to
-`ov_sim` the parameters remain the same. The `estimand` parameter is
-stored in `results_att` and carried forward throughout the remainder of
-the analysis.
+#### Sensitivity Analysis under ATT
+
+We now want to understand how sensitive our result is to unobserved
+confounders. Below we will run the `ov_sim` function; we notice that in
+our call to `ov_sim` the parameters remain the same as in our ATE
+example. The `estimand` parameter is stored in `results_att` and carried
+forward throughout the remainder of the analysis.
 
 ``` r
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
                                   plot_covariates=c("eps7p_0", "sfs8p_0",
                                                     "sati_0", "ada_0",
                                                     "recov_0", "tss_0", 
-                                                    "mhtrt_0", "dss9_0"),
+                                                    "dss9_0"),
                                   es_grid = NULL,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
                                   n_reps = 50,
@@ -651,19 +697,7 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #> [1] "8% Done!"
-    #> [1] "15% Done!"
-    #> [1] "23% Done!"
-    #> [1] "31% Done!"
-    #> [1] "38% Done!"
-    #> [1] "46% Done!"
-    #> [1] "54% Done!"
-    #> [1] "62% Done!"
-    #> [1] "69% Done!"
-    #> [1] "77% Done!"
-    #> [1] "85% Done!"
-    #> [1] "92% Done!"
-    #> [1] "100% Done!"
+    #>   running [===>----------------------]  15% completed in 30s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  2m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  3m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  4m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  5m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  6m  running [==========================] 100% completed in  6m
 
 Occasionally the specified number of repetitions (default is `n_reps
 = 50`) is not sufficient. Evidence that `n_reps` is not sufficient are
@@ -692,19 +726,7 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     more_reps = 10)
 ```
 
-    #> [1] "8% Done!"
-    #> [1] "15% Done!"
-    #> [1] "23% Done!"
-    #> [1] "31% Done!"
-    #> [1] "38% Done!"
-    #> [1] "46% Done!"
-    #> [1] "54% Done!"
-    #> [1] "62% Done!"
-    #> [1] "69% Done!"
-    #> [1] "77% Done!"
-    #> [1] "85% Done!"
-    #> [1] "92% Done!"
-    #> [1] "100% Done!"
+    #>   running simulation [=>-------------]  15% completed in  6s  running simulation [==>------------]  23% completed in 13s  running simulation [====>----------]  31% completed in 19s  running simulation [=====>---------]  38% completed in 26s  running simulation [======>--------]  46% completed in 33s  running simulation [=======>-------]  54% completed in 39s  running simulation [========>------]  62% completed in 46s  running simulation [=========>-----]  69% completed in  1m  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
 
 Once the number of repetitions is finalized, the user can visualize the
 results through the same three function calls as described in the ATE
@@ -735,33 +757,27 @@ plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
 
     #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
-Finally, we will run the `summary.ov` function to get the tool’s
+Finally, we will run the `summary.ov` function to receive the tool’s
 recommendations.
 
 ``` r
 summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
-    #> [1] "12% Done!"
-    #> [1] "25% Done!"
-    #> [1] "38% Done!"
-    #> [1] "50% Done!"
-    #> [1] "62% Done!"
-    #> [1] "75% Done!"
-    #> [1] "88% Done!"
-    #> [1] "100% Done!"
+    #>   running simulation [===>-----------]  29% completed in  1s  running simulation [=====>---------]  43% completed in  1s  running simulation [========>------]  57% completed in  2s  running simulation [==========>----]  71% completed in  3s  running simulation [============>--]  86% completed in  4s  running simulation [===============] 100% completed in  4s
+
     #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 7 of the 8 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.067 to -0.037. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 2 of the 8 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.024 to 0.489. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, mhtrt_0, dss9_0."
+    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 6 of the 7 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.064 to -0.04. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 7 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.035 to 0.555. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, dss9_0."
 
 The text produced states that the sign of the estimated effect is
 expected to remain consistent when simulated unobserved confounders have
 the same strength of associations with the treatment indicator and
-outcome that are seen in seven of the eight observed confounders. On the
+outcome that are seen in six of the seven observed confounders. On the
 otherhand, statistical significance at the 0.05 alpha level is robust to
 unobserved confounders with strengths of associations with treatment
-indicator and outcome that are seen in only 25% of our observed
-confounders.
+indicator and outcome that are seen in only one of our observed
+covariates.
 
 # Conclusion
 
@@ -823,10 +839,16 @@ development of this tool.
 Cohen, J. (1995). The earth is round (p \< .05): Rejoinder. American
 Psychologist, 50, 1103.
 
-Diamond, G., Godley, S. H., Liddle, H. A., Sampl, S., Webb, C., Tims, F.
-M., & Meyers, R. (2002). Five outpatient treatment models for adolescent
-marijuana use: a description of the Cannabis Youth Treatment
-Interventions. Addiction, 97, 70-83.
+Dennis, M. L., Titus, J. C., White, M. K., Unsicker, J. I., & Hodgkins,
+D. (2003). Global appraisal of individual needs: Administration guide
+for the GAIN and related measures. Bloomington, IL: Chestnut Health
+Systems.
+
+Griffin, B.A., Ayer, L., Pane, J., Vegetabile, B.G., Burgette, L.F.,
+McCaffrey, D.M., Coffman, D.L., Cefalu, M., Funk, R., Godley, M.
+Expanding outcomes when considering the relative effectiveness of two
+evidence-based outpatient treatment programs for adolescents. 2020.
+Journal of Substance Abuse Treatment, 118, 108075. PMCID: PMC519172
 
 Lumley, T (2020). “survey: analysis of complex survey samples.” R
 package version 4.0.
