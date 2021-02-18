@@ -8,11 +8,11 @@
 Plots the user specified graphic(s)
 }
 \usage{
-\method{plot}{ov}(ov_sims, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1), \dots)
+\method{plot}{ov}(x, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1), \dots)
 }
 
 \arguments{
-  \item{ov_sims}{
+  \item{x}{
 Object returned from the call to ov_sim
 }
   \item{col}{

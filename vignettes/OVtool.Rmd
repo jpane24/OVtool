@@ -218,7 +218,7 @@ Another key assumption this method draws upon is that the omitted variable is in
 
 To visualize our results, the `plot.ov` function can be called to produce three graphics. The main arguments to `plot.ov` are as follows:
 
-* `ov_sims`: the object returned from the call to `ov_sim`
+* `x`: the object returned from the call to `ov_sim`
 
 * `col`: if specified as "color" a color graphic will be produced and if specified as "bw" a black and white graphic will be produced. If and only if `print_graphic` is set to "1", the "col" option will produce a heat map
 
