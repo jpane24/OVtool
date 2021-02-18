@@ -19,13 +19,13 @@ This package is useful in a wide range of applications where researchers
 want to analyze how sensitive their research findings are to unobserved
 confounders that were not included in their propensity score and outcome
 models. It will estimate the potential impact of the unobserved
-counfounders on both the estimated treatment or exposure effects as well
+confounders on both the estimated treatment or exposure effects as well
 as on the statistical significance of an analysis.
 
 # Examples: Synthetic Substance Use Data
 
 This package is demonstrated using a synthetic data set that was derived
-from a large scale observational study on youth in substance use
+from a large-scale observational study on youth in substance use
 treatment. More specifically, it contains a subset of measures from the
 Global Appraisal of Individual Needs biopsychosocial assessment
 instrument (GAIN) (Dennis, Titus et al. 2003) from sites that
@@ -138,12 +138,12 @@ treated (ATT) estimand. **Note: Under a binary outcome, the OVtool
 utilizes residuals from the observed (i.e. absent unobserved confounder)
 linear probability model to generate the empirical CDF.**
 
-### Continous Outcome: Average Treatment Effect (ATE)
+### Continuous Outcome: Average Treatment Effect (ATE)
 
 #### 1\. Computing Weights under ATE
 
 The `OVtool` can either take a vector of weights estimated using any
-method or a ps object produced by `TWANG` (Ridgeway et al., 2020). The
+method or a `ps` object produced by `TWANG` (Ridgeway et al., 2020). The
 chunk of code below demonstrates how to specify your propensity score
 model and generate propensity score weights using the `ps` function from
 `TWANG`. If you already have a column of weights in your dataset, you
@@ -306,14 +306,15 @@ parameters including:
   - `n_reps`: the number of repetitions represents the number of times
     an unobserved confounder is simulated at each effect size and rho
     combination. The package defaults to 50. Fifty repetitions should be
-    sufficient but the analyst may need to reduce or increase the number
-    of repetitions.
+    sufficient, but the analyst may need to reduce or increase the
+    number of repetitions.
 
 Optional argument include:
 
   - `progress`: whether or not the function progress should print to
-    screen. The default value is TRUE. If the user doe not want the
-    output to print to screen, they should set this parameter to FALSE.
+    screen. The default value is TRUE. If the user does not want the
+    output to print to the console, they should set this parameter to
+    FALSE.
 
   - `add`: The default value is FALSE. This is only set to TRUE if the
     user is running additional repetitions after the first call to
@@ -362,7 +363,7 @@ ovtool_results_twang = ov_sim(model_results=results,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [==>-----------------------]  12% completed in 30s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  2m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  4m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  5m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  6m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  7m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  8m  running [==========================] 100% completed in  8m
+    #>   running [==>-----------------------]  12% completed in 43s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  2m  running [=======>------------------]  29% completed in  3m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  4m  running [===========>--------------]  47% completed in  4m  running [=============>------------]  53% completed in  5m  running [==============>-----------]  59% completed in  5m  running [================>---------]  65% completed in  6m  running [=================>--------]  71% completed in  6m  running [===================>------]  76% completed in  7m  running [====================>-----]  82% completed in  8m  running [======================>---]  88% completed in  8m  running [=======================>--]  94% completed in  9m  running [==========================] 100% completed in  9m
 
 The grid values are not required; if `es_grid` and/or `rho_grid` are set
 to `NULL`, the tool will calculate reasonable values to simulate over.
@@ -373,7 +374,7 @@ an effect size scale to derive a reasonable range.
 The function, `ov_sim`, produced a warning saying “You specified a rho
 grid whose maximum value is less than the maximum absolute correlation
 at least one observed covariate has with the outcome. The rho grid was
-automatically expanded to include all plot\_covariates specified in the
+automatically expanded to include all `plot_covariates` specified in the
 relevant graphics. If you want the rho grid range to remain from 0 to
 0.4 then you must exclude the following variables from the
 `plot_covariates` argument: `eps7p_0`, `tss_0`, `dss9_0`.” The grid was
@@ -405,7 +406,7 @@ propensity score model.
 To visualize our results, the `plot.ov` function can be called to
 produce three graphics. The main arguments to `plot.ov` are as follows:
 
-  - `ov_sims`: the object returned from the call to `ov_sim`
+  - `x`: the object returned from the call to `ov_sim`
 
   - `col`: if specified as “color” a color graphic will be produced and
     if specified as “bw” a black and white graphic will be produced. If
@@ -413,7 +414,7 @@ produce three graphics. The main arguments to `plot.ov` are as follows:
     produce a heat map
 
   - `p_contours`: a vector of p-value contours plotted. The default is
-    0.01, 0.05, and 0.1. We only recommend changing from teh default if
+    0.01, 0.05, and 0.1. We only recommend changing from the default if
     the p-value for the raw effect is close to one of these values. This
     parameter is only used when `print_graphic` equals “2” or “3”.
 
@@ -500,7 +501,7 @@ and the treatment indicator (`treat`) that was equivalent to `ada_0`,
 `tss_0`, `eps7p_0`, `sati_0`, or `dss9_0`, then the researcher would
 conclude that their results would likely be sensitive to an unobserved
 confounder at a p-value threshold of 0.05. All of these observed
-relationships are senstiive at the 0.10 p-value threshold other than
+relationships are sensitive at the 0.10 p-value threshold other than
 `dss9_0`. If the blue points all existed in contours greater than the
 0.05 p-value contour, then unobserved confounders with similar
 associations would retain the significant effect and allow the user to
@@ -531,13 +532,13 @@ can recreate the plots. Example code to add repetitions:
 ```
 
 Finally, we can interpret this graphic by running the summary command on
-the ov object:
+the `ov` object:
 
 ``` r
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  6s  running simulation [========>------]  57% completed in  9s  running simulation [==========>----]  71% completed in 12s  running simulation [============>--]  86% completed in 15s  running simulation [===============] 100% completed in 18s
 
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
@@ -568,7 +569,7 @@ observed.
 In the next section, we will show how our method works with the average
 treatment effect on the treated (ATT) using a continuous outcome.
 
-### Continous Outcome: Average Treatment Effect on the Treated (ATT)
+### Continuous Outcome: Average Treatment Effect on the Treated (ATT)
 
 #### Computing Weights under ATT
 
@@ -619,12 +620,12 @@ for further information on balance diagnostics.
 
 #### Running Outcome Model under ATT
 
-The following code snippet displays how a user would insert a ps object
-produced by `twang` into `outcome_model` and specify the appropriate
-stopping method to extract the propensity score weights as opposed to
-utilizing the `weights` argument. Other than this, the only difference
-in the call to `outcome_model` from the ATE example is specifying the
-correct `estimand`.
+The following code snippet displays how a user would insert a `ps`
+object produced by `twang` into `outcome_model` and specify the
+appropriate stopping method to extract the propensity score weights as
+opposed to utilizing the `weights` argument. Other than this, the only
+difference in the call to `outcome_model` from the ATE example is
+specifying the correct `estimand`.
 
 ``` r
 results_att = outcome_model(ps_object = ps.twang_att,
@@ -697,16 +698,16 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [===>----------------------]  15% completed in 30s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  2m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  3m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  4m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  5m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  6m  running [==========================] 100% completed in  6m
+    #>   running [===>----------------------]  15% completed in 34s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  2m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  3m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  4m  running [=================>--------]  69% completed in  5m  running [===================>------]  77% completed in  5m  running [=====================>----]  85% completed in  6m  running [=======================>--]  92% completed in  6m  running [==========================] 100% completed in  7m
 
 Occasionally the specified number of repetitions (default is `n_reps
 = 50`) is not sufficient. Evidence that `n_reps` is not sufficient are
 contours that don’t appear smooth. The number of repetitions needed can
 vary based off sample size, the distribution of the outcome, and the
 specified estimand. Once we observe our graphical results, if the
-contours do not look smooth, we recommend calling `OVtool::add_reps` and
-specifying `more_reps` to the number of additional simulations of the
-unobserved confounder you desire.
+contours do not look smooth, we recommend calling the `add_reps`
+function and specifying `more_reps` to the number of additional
+simulations of the unobserved confounder you desire.
 
 ``` r
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
@@ -726,7 +727,7 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     more_reps = 10)
 ```
 
-    #>   running simulation [=>-------------]  15% completed in  6s  running simulation [==>------------]  23% completed in 13s  running simulation [====>----------]  31% completed in 19s  running simulation [=====>---------]  38% completed in 26s  running simulation [======>--------]  46% completed in 33s  running simulation [=======>-------]  54% completed in 39s  running simulation [========>------]  62% completed in 46s  running simulation [=========>-----]  69% completed in  1m  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
+    #>   running simulation [=>-------------]  15% completed in  7s  running simulation [==>------------]  23% completed in 14s  running simulation [====>----------]  31% completed in 21s  running simulation [=====>---------]  38% completed in 28s  running simulation [======>--------]  46% completed in 36s  running simulation [=======>-------]  54% completed in 42s  running simulation [========>------]  62% completed in  1m  running simulation [=========>-----]  69% completed in  1m  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
 
 Once the number of repetitions is finalized, the user can visualize the
 results through the same three function calls as described in the ATE
@@ -764,7 +765,7 @@ recommendations.
 summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  1s  running simulation [=====>---------]  43% completed in  1s  running simulation [========>------]  57% completed in  2s  running simulation [==========>----]  71% completed in  3s  running simulation [============>--]  86% completed in  4s  running simulation [===============] 100% completed in  4s
+    #>   running simulation [===>-----------]  29% completed in  1s  running simulation [=====>---------]  43% completed in  1s  running simulation [========>------]  57% completed in  2s  running simulation [==========>----]  71% completed in  3s  running simulation [============>--]  86% completed in  3s  running simulation [===============] 100% completed in  4s
 
     #> [1] "Recommendation for reporting the sensitivity analyses"
     #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 6 of the 7 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.064 to -0.04. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
@@ -774,8 +775,8 @@ The text produced states that the sign of the estimated effect is
 expected to remain consistent when simulated unobserved confounders have
 the same strength of associations with the treatment indicator and
 outcome that are seen in six of the seven observed confounders. On the
-otherhand, statistical significance at the 0.05 alpha level is robust to
-unobserved confounders with strengths of associations with treatment
+other hand, statistical significance at the 0.05 alpha level is robust
+to unobserved confounders with strengths of associations with treatment
 indicator and outcome that are seen in only one of our observed
 covariates.
 
@@ -788,24 +789,24 @@ estimating causal effects using PS weighting. Development of user
 friendly software tools are critical for advancing research. We hope
 that users will use our tool when they are trying to analyze how
 sensitive their results are to omitted variables when estimating causal
-effects using ps methods.
+effects.
 
 # About This Tutorial
 
-This tutorial and the development of the OVtool R package were supported
-by funding from grant 1R01DA034065 from the National Institute on Drug
-Abuse. The overarching goal of the grant is to develop statistical
-methods and tools that will provide addiction health services
-researchers and others with the tools and training they need to study
-the effectiveness of treatments using observational data. The work is an
-extension of the Toolkit for Weighting and Analysis of Nonequivalent
-Groups, or TWANG, which contains a set of functions to support causal
-modeling of observational data through the estimation and evaluation of
-propensity score weights. The TWANG package was first developed in 2004
-by RAND researchers for the R statistical computing language and
-environment and has since been expanded to include tools for SAS, Stata,
-and Shiny. For more information about TWANG and other causal tools being
-developed, see www.rand.org/statistics/twang.
+This tutorial and the development of the `OVtool` R package were
+supported by funding from grant 1R01DA034065 from the National Institute
+on Drug Abuse. The overarching goal of the grant is to develop
+statistical methods and tools that will provide addiction health
+services researchers and others with the tools and training they need to
+study the effectiveness of treatments using observational data. The work
+is an extension of the Toolkit for Weighting and Analysis of
+Nonequivalent Groups, or TWANG, which contains a set of functions to
+support causal modeling of observational data through the estimation and
+evaluation of propensity score weights. The TWANG package was first
+developed in 2004 by RAND researchers for the R statistical computing
+language and environment and has since been expanded to include tools
+for SAS, Stata, and Shiny. For more information about TWANG and other
+causal tools being developed, see www.rand.org/statistics/twang.
 
 RAND Social and Economic Well-Being is a division of the RAND
 Corporation that seeks to actively improve the health and social and
