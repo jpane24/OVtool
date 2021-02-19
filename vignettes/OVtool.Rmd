@@ -2,7 +2,7 @@
 title: "OVtool - Omitted Variable tool"
 author: "Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Omitted Variable tool: OVtool}
   %\VignetteEngine{knitr::rmarkdown}
@@ -53,7 +53,7 @@ For this tutorial we are interested in the mental health outcome, `eps7p_3`, emo
 
 We begin by loading the development version of the package from [GitHub](https://github.com/). If you haven't installed the devtools package, make sure you uncomment and run the first line of the following code snippet prior to running the second line. *Note: installing OVtool may require a large number of other package installations if they are not already installed on your machine. To avoid conflicts, we recommend you restart your R session after running:* `devtools::install_github("jpane24/OVtool")`
 
-```{r, begin, message=F}
+```{r, begin, message=F, linewidth=60}
 # install.packages("devtools")
 devtools::install_github("jpane24/OVtool", ref='master') 
 # we recommend restarting your R session after running the previous line of code
@@ -103,7 +103,7 @@ In the next two sections we showcase how our method works with a continuous outc
 
 The `OVtool` can either take a vector of weights estimated using any method or a `ps` object produced by `TWANG` (Ridgeway et al., 2020). The chunk of code below demonstrates how to specify your propensity score model and generate propensity score weights using the `ps` function from `TWANG`. If you already have a column of weights in your dataset, you can skip to step 2.
 
-```{r, estTWANG, message=F}
+```{r, estTWANG, message=F, linewidth=60}
 ## Create Formula
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
                           tss_0 + dss9_0)
@@ -116,14 +116,14 @@ ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
 
 The following line of code produces a balance table that demonstrates `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have sufficient balance, but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [Ridgeway et al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf) for further information on balance diagnostics.
 
-```{r, balance, message=F}
+```{r, balance, message=F, linewidth=60}
 # Check Balance
 bal.table(ps.twang)
 ```
 
 The last step needed prior to moving onto the specification of your outcome model is to attach the weights as a column in your dataset. We extract the weights produced from `ps` in the line below. 
 
-```{r, getweights, message=F}
+```{r, getweights, message=F, linewidth=60}
 # Get weights (not needed if user inserts a ps object in OVtool::outcome_model)
 sud$w_twang = ps.twang$w$ks.max.ATE
 ```
@@ -145,7 +145,7 @@ The analyst must also provide:
 * a vector of covariates to be included in the final outcome model, `model_covariates`
 * the estimand of interest, `estimand`
 
-```{r, outcomemodel}
+```{r, outcomemodel, linewidth=60}
 # Run Models -- first standardize outcome
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
@@ -189,9 +189,9 @@ Optional argument include:
 
 The `ov_sim` function does not require the user to specify vectors for `es_grid` and `rho_grid`. If the user specifies `NULL` for both, the tool will automatically derive appropriate values. We define an effect size value in `es_grid` to show the strength of the relationship between the simulated unobserved covariate (U) and the treatment group indicator; it is defined as the standardized mean difference in U for the treatment A and treatment B groups. Typical rules of thumb for effect sizes (Cohen's D) follow such that effect sizes greater than 0.2 would be considered small, 0.4 would be moderate and 0.6 would be large (Cohen, J., 1995). We define a particular value of rho specified in `rho_grid` as the absolute correlation the unobserved covariate (U) has with the outcome of interest, with larger values indicating stronger relationships between U and the outcome. 
 
-Please see Burgette et al. (in progress) for additional details on the theory behind `OVtool`.
+Please see Burgette et al. (in preparation) for additional details on the theory behind `OVtool`.
 
-```{r, ov_sim}
+```{r, ov_sim, linewidth=60}
 # Run OVtool (with weights (not a ps object))
 ovtool_results_twang = ov_sim(model_results=results, 
                               plot_covariates=c("eps7p_0", "sfs8p_0",
@@ -234,7 +234,7 @@ To visualize our results, the `plot.ov` function can be called to produce three 
 
 The following code snippet will produce Figure 1.
 
-```{r, fig1, fig.width=10, fig.height=7, fig.align='center', warning=F}
+```{r, fig1, fig.width=10, fig.height=7, fig.align='center', warning=F, linewidth=60}
 plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
 ```
 
@@ -242,13 +242,13 @@ The grid, as shown by the x-axis and y-axis in Figure 1 presents the effect size
 
 The y-axis in Figure 1 represents the unobserved confounder's absolute correlation with the outcome and the x-axis is the association between the unobserved confounder and the treatment indicator on an effect size scale. The black lines represent effect size contours that run along the grid. The PS weighted treatment effect of Treatment A versus Treatment B equals 0.071 and is significant with a p-value equal to 0.011. However, looking at this graphic alone will not give us an idea of how sensitive the effect is. \newline
 
-```{r, fig2, fig.width=10, fig.height=7, fig.align='center', linewidth=100}
+```{r, fig2, fig.width=10, fig.height=7, fig.align='center', linewidth=60}
 plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 ```
 
 Figure 2 is a different variation of Figure 1, but now adds p-value contours. This graphic will allow the user to see what treatment effect on the effect size scale will switch the significance level at critical p-values (i.e. 0.05). This graphic will now give the user an idea of how sensitive the effect is. The analyst can specify what red p-value thresholds they want plotted with the `p_contours` argument. \newline
 
-```{r, fig3, fig.width=10, fig.height=7, fig.align='center', linewidth=100}
+```{r, fig3, fig.width=10, fig.height=7, fig.align='center', linewidth=60}
 plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 ```
 
@@ -258,11 +258,11 @@ Figure 3 adds a final dimension (observed covariate labels) to Figure 2. Similar
 
 These results were produced with 50 simulations (`n_reps`) of the unobserved confounder. If the contours are rigid or the user wants to add simulations, they can call `add_reps` and specify the number (`more_reps`) of additional simulations. Once this is completed, a user can recreate the plots. Example code to add repetitions:
 
-```{r, addreps}
-# If you want to add repetitions, run the following line. You may change more_reps
+```{r, addreps, linewidth=60}
+# If you want to add repetitions, run the following line.
 # ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
 #                                 model_results = results,
-#                                 more_reps = 3)
+#                                 more_reps = 30)
 #
 # Recreate Graphic
 # plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -270,7 +270,7 @@ These results were produced with 50 simulations (`n_reps`) of the unobserved con
 
 Finally, we can interpret this graphic by running the summary command on the `ov` object:
 
-```{r, summary`, linewidth=100}
+```{r, summary`, linewidth=60}
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
@@ -284,7 +284,7 @@ In the next section, we will show how our method works with the average treatmen
 
 Perhaps the user is interested in the average treatment effect on the treated. The tool operates very similarly in the ATT setting. We will briefly show the steps needed to run the ATT version of the tool for continuous treatments below. Largely the only difference between ATE and ATT is the user must specify the correct estimand when (1) generating their weights and (2) running their outcome model. 
 
-```{r, ATT}
+```{r, ATT, linewidth=60}
 ## Create formula - here we use same formula as in the ATE case.
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
                           tss_0 + dss9_0)
@@ -301,7 +301,7 @@ Notice that the only difference here is we use `estimand = ATT` to estimate the 
 
 The following code snippet displays how a user would insert a `ps` object produced by `twang` into `outcome_model` and specify the appropriate stopping method to extract the propensity score weights as opposed to utilizing the `weights` argument. Other than this, the only difference in the call to `outcome_model` from the ATE example is specifying the correct `estimand`.
 
-```{r, outcome_att}
+```{r, outcome_att, linewidth=60}
 results_att = outcome_model(ps_object = ps.twang_att,
                             stop.method = "ks.max",
                             data = sud,
@@ -322,7 +322,7 @@ Under the ATT setting, our effect size is 0.064 with a p-value of 0.035.
 
 We now want to understand how sensitive our result is to unobserved confounders. Below we will run the `ov_sim` function; we notice that in our call to `ov_sim` the parameters remain the same as in our ATE example. The `estimand` parameter is stored in `results_att` and carried forward throughout the remainder of the analysis.
 
-```{r, ovsim_att}
+```{r, ovsim_att, linewidth=60}
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
                                   plot_covariates=c("eps7p_0", "sfs8p_0",
                                                     "sati_0", "ada_0",
@@ -336,13 +336,13 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
 
 Occasionally the specified number of repetitions (default is `n_reps = 50`) is not sufficient. Evidence that `n_reps` is not sufficient are contours that don't appear smooth. The number of repetitions needed can vary based off sample size, the distribution of the outcome, and the specified estimand. Once we observe our graphical results, if the contours do not look smooth, we recommend calling the `add_reps` function and specifying `more_reps` to the number of additional simulations of the unobserved confounder you desire.
 
-```{r, fig1_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
+```{r, fig1_att, fig.width=10, fig.height=7, fig.align='center', warning=F, linewidth=60}
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 ```
 
 The contours shown in Figure 4 are relatively smooth but for sake of example we show how a user would specify 10 additional repetitions. The user can specify `more_reps` to any number they choose in the following function call, `add_reps()`.
 
-```{r, addreps_att}
+```{r, addreps_att, linewidth=60}
 # If you want to add repetitions, run the following line. You may change more_reps
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
@@ -351,21 +351,21 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
 
 Once the number of repetitions is finalized, the user can visualize the results through the same three function calls as described in the ATE section above. To review, the graphics visualize (1) treatment effect contours, (2) treatment effect contours in black and p-value contours in red, and (3) treatment effect and p-value contours with covariate labels added, respectively.
 
-```{r, fig2_att_new, fig.width=10, fig.height=7, fig.align='center', warning=F}
+```{r, fig2_att_new, fig.width=10, fig.height=7, fig.align='center', warning=F, linewidth=60}
 plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 ```
 
-```{r, fig2_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
+```{r, fig2_att, fig.width=10, fig.height=7, fig.align='center', warning=F, linewidth=60}
 plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
 ```
 
-```{r, fig3_att, fig.width=10, fig.height=7, fig.align='center', warning=F}
+```{r, fig3_att, fig.width=10, fig.height=7, fig.align='center', warning=F, linewidth=60}
 plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
 ```
 
 Finally, we will run the `summary.ov` function to receive the tool's recommendations.  
 
-```{r, summary_att}
+```{r, summary_att, linewidth=60}
 summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
