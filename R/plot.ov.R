@@ -1,5 +1,5 @@
 #### Plotting Package for OV ####
-plot.ov <- function(x, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1)) {
+plot.ov <- function(x, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1), ...) {
   prep_plots = prep_for_plots(x, p_contours)
 
   #### some defaults ####

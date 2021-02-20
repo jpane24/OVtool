@@ -58,20 +58,20 @@ and provide their definitions below.
 
 ## Installation
 
-We begin by loading the development version of the package from
-[GitHub](https://github.com/). If you haven’t installed the devtools
-package, make sure you uncomment and run the first line of the following
-code snippet prior to running the second line. *Note: installing OVtool
-may require a large number of other package installations if they are
-not already installed on your machine. To avoid conflicts, we recommend
-you restart your R session after running:*
-`devtools::install_github("jpane24/OVtool")`
+We begin by loading package. For the most up-to-date version of the
+package, you can load the development version from
+[GitHub](https://github.com/) using the following command:
+`devtools::install_github("jpane24/OVtool")`. If you haven’t installed
+the devtools package, make sure you also run the first line of code in
+the snippet below prior to running the second line. *Note: installing
+OVtool may require a large number of other package installations if they
+are not already installed on your machine. We recommend using a fresh R
+session prior to installation. To avoid conflicts, we recommend you
+restart your R session after running:*
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jpane24/OVtool", ref='master') 
-# we recommend restarting your R session after running the previous line of code
-# for the first time on your machine
+# devtools::install_github("jpane24/OVtool", ref='master') 
 library(OVtool)
 ```
 
@@ -337,8 +337,8 @@ would be considered small, 0.4 would be moderate and 0.6 would be large
 with the outcome of interest, with larger values indicating stronger
 relationships between U and the outcome.
 
-Please see Burgette et al. (in progress) for additional details on the
-theory behind `OVtool`.
+Please see Burgette et al. (in preparation) for additional details on
+the theory behind `OVtool`.
 
 ``` r
 # Run OVtool (with weights (not a ps object))
@@ -363,7 +363,7 @@ ovtool_results_twang = ov_sim(model_results=results,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [==>-----------------------]  12% completed in 43s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  2m  running [=======>------------------]  29% completed in  3m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  4m  running [===========>--------------]  47% completed in  4m  running [=============>------------]  53% completed in  5m  running [==============>-----------]  59% completed in  5m  running [================>---------]  65% completed in  6m  running [=================>--------]  71% completed in  6m  running [===================>------]  76% completed in  7m  running [====================>-----]  82% completed in  8m  running [======================>---]  88% completed in  8m  running [=======================>--]  94% completed in  9m  running [==========================] 100% completed in  9m
+    #>   running [==>-----------------------]  12% completed in 29s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  1m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  2m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  3m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  4m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  5m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  6m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  7m  running [==========================] 100% completed in  8m
 
 The grid values are not required; if `es_grid` and/or `rho_grid` are set
 to `NULL`, the tool will calculate reasonable values to simulate over.
@@ -463,8 +463,9 @@ plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 
 <img src="inst/fig2-1.png" style="display: block; margin: auto;" />
 
-    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
-    0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
+    #> [1] "NOTE: Covariates with absolute correlation with
+    outcome greater than 0.4: eps7p_0 (Actual: 0.509), tss_0
+    (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 Figure 2 is a different variation of Figure 1, but now adds p-value
 contours. This graphic will allow the user to see what treatment effect
@@ -479,8 +480,9 @@ plot.ov(ovtool_results_twang, print_graphic = "3", col = "color")
 
 <img src="inst/fig3-1.png" style="display: block; margin: auto;" />
 
-    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.4: eps7p_0 (Actual:
-    0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
+    #> [1] "NOTE: Covariates with absolute correlation with
+    outcome greater than 0.4: eps7p_0 (Actual: 0.509), tss_0
+    (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 Figure 3 adds a final dimension (observed covariate labels) to Figure 2.
 Similar to Figures 1 and 2, plotted at the top of the figure margin is
@@ -522,10 +524,10 @@ add simulations, they can call `add_reps` and specify the number
 can recreate the plots. Example code to add repetitions:
 
 ``` r
-# If you want to add repetitions, run the following line. You may change more_reps
+# If you want to add repetitions, run the following line.
 # ovtool_results_twang = add_reps(OVtool_results = ovtool_results_twang,
 #                                 model_results = results,
-#                                 more_reps = 3)
+#                                 more_reps = 30)
 #
 # Recreate Graphic
 # plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
@@ -538,21 +540,30 @@ the `ov` object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  6s  running simulation [========>------]  57% completed in  9s  running simulation [==========>----]  71% completed in 12s  running simulation [============>--]  86% completed in 15s  running simulation [===============] 100% completed in 18s
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
 
-    #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved
-    confounders have the same strength of associations with the treatment indicator and outcome that
-    are seen in 6 of the 7 observed confounders. In the most extreme observed case in which the sign
-    changes, the estimated effect size shifts from 0.071 to -0.027. The sign of the estimate would not
-    be expected to be preserved for unobserved confounders that have the same strength of association
-    with the treatment indicator and outcome as eps7p_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved
-    confounders with strengths of associations with the treatment indicator and outcome that are seen
-    in 2 of the 7 observed confounders. In the most extreme observed case, the p-value would be
-    expected to increase from 0.011 to 0.383. Significance at the 0.05 level would not be expected to
-    be preserved for unobserved confounders that have the same strength of association with the
-    treatment indicator and outcome as eps7p_0, sati_0, ada_0, tss_0, dss9_0."
+    #> [1] "Recommendation for reporting the sensitivity
+    analyses"
+    #> [1] "The sign of the estimated effect is expected to
+    remain consistent when simulated unobserved confounders
+    have the same strength of associations with the treatment
+    indicator and outcome that are seen in 6 of the 7 observed
+    confounders. In the most extreme observed case in which the
+    sign changes, the estimated effect size shifts from 0.071
+    to -0.027. The sign of the estimate would not be expected
+    to be preserved for unobserved confounders that have the
+    same strength of association with the treatment indicator
+    and outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is
+    expected to be robust to unobserved confounders with
+    strengths of associations with the treatment indicator and
+    outcome that are seen in 2 of the 7 observed confounders.
+    In the most extreme observed case, the p-value would be
+    expected to increase from 0.011 to 0.383. Significance at
+    the 0.05 level would not be expected to be preserved for
+    unobserved confounders that have the same strength of
+    association with the treatment indicator and outcome as
+    eps7p_0, sati_0, ada_0, tss_0, dss9_0."
 
 The `OVtool` gives a recommendation on how to report findings regarding
 the direction of the treatment effect and statistical significance. An
@@ -698,7 +709,7 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [===>----------------------]  15% completed in 34s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  2m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  3m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  4m  running [=================>--------]  69% completed in  5m  running [===================>------]  77% completed in  5m  running [=====================>----]  85% completed in  6m  running [=======================>--]  92% completed in  6m  running [==========================] 100% completed in  7m
+    #>   running [===>----------------------]  15% completed in 29s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  1m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  2m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  3m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  4m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  5m  running [==========================] 100% completed in  6m
 
 Occasionally the specified number of repetitions (default is `n_reps
 = 50`) is not sufficient. Evidence that `n_reps` is not sufficient are
@@ -721,13 +732,13 @@ user can specify `more_reps` to any number they choose in the following
 function call, `add_reps()`.
 
 ``` r
-# If you want to add repetitions, run the following line. You may change more_reps
+# If you want to add repetitions, run the following line.
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
                                     more_reps = 10)
 ```
 
-    #>   running simulation [=>-------------]  15% completed in  7s  running simulation [==>------------]  23% completed in 14s  running simulation [====>----------]  31% completed in 21s  running simulation [=====>---------]  38% completed in 28s  running simulation [======>--------]  46% completed in 36s  running simulation [=======>-------]  54% completed in 42s  running simulation [========>------]  62% completed in  1m  running simulation [=========>-----]  69% completed in  1m  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
+    #>   running simulation [=>-------------]  15% completed in  6s  running simulation [==>------------]  23% completed in 12s  running simulation [====>----------]  31% completed in 18s  running simulation [=====>---------]  38% completed in 24s  running simulation [======>--------]  46% completed in 30s  running simulation [=======>-------]  54% completed in 36s  running simulation [========>------]  62% completed in 42s  running simulation [=========>-----]  69% completed in 48s  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
 
 Once the number of repetitions is finalized, the user can visualize the
 results through the same three function calls as described in the ATE
@@ -748,7 +759,9 @@ plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
 
 <img src="inst/fig2_att-1.png" style="display: block; margin: auto;" />
 
-    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
+    #> [1] "NOTE: Covariates with absolute correlation with
+    outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0
+    (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 ``` r
 plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
@@ -756,7 +769,9 @@ plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
 
 <img src="inst/fig3_att-1.png" style="display: block; margin: auto;" />
 
-    #> [1] "NOTE: Covariates with absolute correlation with outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0 (Actual: 0.423), dss9_0 (Actual: 0.420)"
+    #> [1] "NOTE: Covariates with absolute correlation with
+    outcome greater than 0.3: eps7p_0 (Actual: 0.509), tss_0
+    (Actual: 0.423), dss9_0 (Actual: 0.420)"
 
 Finally, we will run the `summary.ov` function to receive the tool’s
 recommendations.
@@ -767,9 +782,28 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 
     #>   running simulation [===>-----------]  29% completed in  1s  running simulation [=====>---------]  43% completed in  1s  running simulation [========>------]  57% completed in  2s  running simulation [==========>----]  71% completed in  3s  running simulation [============>--]  86% completed in  3s  running simulation [===============] 100% completed in  4s
 
-    #> [1] "Recommendation for reporting the sensitivity analyses"
-    #> [1] "The sign of the estimated effect is expected to remain consistent when simulated unobserved confounders have the same strength of associations with the treatment indicator and outcome that are seen in 6 of the 7 observed confounders. In the most extreme observed case in which the sign changes, the estimated effect size shifts from 0.064 to -0.04. The sign of the estimate would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0."
-    #> [1] "Statistical significance at the 0.05 level is expected to be robust to unobserved confounders with strengths of associations with the treatment indicator and outcome that are seen in 1 of the 7 observed confounders. In the most extreme observed case, the p-value would be expected to increase from 0.035 to 0.555. Significance at the 0.05 level would not be expected to be preserved for unobserved confounders that have the same strength of association with the treatment indicator and outcome as eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, dss9_0."
+    #> [1] "Recommendation for reporting the sensitivity
+    analyses"
+    #> [1] "The sign of the estimated effect is expected to
+    remain consistent when simulated unobserved confounders
+    have the same strength of associations with the treatment
+    indicator and outcome that are seen in 6 of the 7 observed
+    confounders. In the most extreme observed case in which the
+    sign changes, the estimated effect size shifts from 0.064
+    to -0.04. The sign of the estimate would not be expected to
+    be preserved for unobserved confounders that have the same
+    strength of association with the treatment indicator and
+    outcome as eps7p_0."
+    #> [1] "Statistical significance at the 0.05 level is
+    expected to be robust to unobserved confounders with
+    strengths of associations with the treatment indicator and
+    outcome that are seen in 1 of the 7 observed confounders.
+    In the most extreme observed case, the p-value would be
+    expected to increase from 0.035 to 0.555. Significance at
+    the 0.05 level would not be expected to be preserved for
+    unobserved confounders that have the same strength of
+    association with the treatment indicator and outcome as
+    eps7p_0, sfs8p_0, sati_0, ada_0, tss_0, dss9_0."
 
 The text produced states that the sign of the estimated effect is
 expected to remain consistent when simulated unobserved confounders have

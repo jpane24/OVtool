@@ -8,7 +8,7 @@
 Plots the user specified graphic(s)
 }
 \usage{
-\method{plot}{ov}(x, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1))
+\method{plot}{ov}(x, col="color", print_graphic="1", p_contours = c(0.01, 0.05, 0.1), \dots)
 }
 
 \arguments{
@@ -25,6 +25,9 @@ Takes values "1", "2", or "3", depending what graphics the user wants
   \item{p_contours}{
 %%     ~~Describe \code{x} here~~
 P-value countours to plot. The default plots: 0.01, 0.05, and 0.1. We only recommend changing this if the raw effect p-value is very close to one of these values. Do not specify more than four p-value contours.
+}
+\item{...}{
+Additional arguments.
 }
 }
 
