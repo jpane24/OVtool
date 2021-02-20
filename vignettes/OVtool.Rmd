@@ -12,7 +12,7 @@ header-includes:
 - \usepackage{courier}
 ---
 
-```{r setup, include=F}
+```{r setup, include=F, linewidth=60}
 # github_document
 # html_document
 # word_document
@@ -51,13 +51,11 @@ For this tutorial we are interested in the mental health outcome, `eps7p_3`, emo
 
 ## Installation
 
-We begin by loading the development version of the package from [GitHub](https://github.com/). If you haven't installed the devtools package, make sure you uncomment and run the first line of the following code snippet prior to running the second line. *Note: installing OVtool may require a large number of other package installations if they are not already installed on your machine. To avoid conflicts, we recommend you restart your R session after running:* `devtools::install_github("jpane24/OVtool")`
+We begin by loading package. For the most up-to-date version of the package, you can load the development version from [GitHub](https://github.com/) using the following command: `devtools::install_github("jpane24/OVtool")`. If you haven't installed the devtools package, make sure you also run the first line of code in the snippet below prior to running the second line. *Note: installing OVtool may require a large number of other package installations if they are not already installed on your machine. We recommend using a fresh R session prior to installation. To avoid conflicts, we recommend you restart your R session after running:* 
 
 ```{r, begin, message=F, linewidth=60}
 # install.packages("devtools")
-devtools::install_github("jpane24/OVtool", ref='master') 
-# we recommend restarting your R session after running the previous line of code
-# for the first time on your machine
+# devtools::install_github("jpane24/OVtool", ref='master') 
 library(OVtool)
 ```
 
@@ -116,7 +114,7 @@ ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
 
 The following line of code produces a balance table that demonstrates `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have sufficient balance, but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [Ridgeway et al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf) for further information on balance diagnostics.
 
-```{r, balance, message=F, linewidth=60}
+```{r, balance, message=F}
 # Check Balance
 bal.table(ps.twang)
 ```
@@ -145,7 +143,7 @@ The analyst must also provide:
 * a vector of covariates to be included in the final outcome model, `model_covariates`
 * the estimand of interest, `estimand`
 
-```{r, outcomemodel, linewidth=60}
+```{r, outcomemodel}
 # Run Models -- first standardize outcome
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
@@ -284,7 +282,7 @@ In the next section, we will show how our method works with the average treatmen
 
 Perhaps the user is interested in the average treatment effect on the treated. The tool operates very similarly in the ATT setting. We will briefly show the steps needed to run the ATT version of the tool for continuous treatments below. Largely the only difference between ATE and ATT is the user must specify the correct estimand when (1) generating their weights and (2) running their outcome model. 
 
-```{r, ATT, linewidth=60}
+```{r, ATT}
 ## Create formula - here we use same formula as in the ATE case.
 my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 + 
                           tss_0 + dss9_0)
@@ -301,7 +299,7 @@ Notice that the only difference here is we use `estimand = ATT` to estimate the 
 
 The following code snippet displays how a user would insert a `ps` object produced by `twang` into `outcome_model` and specify the appropriate stopping method to extract the propensity score weights as opposed to utilizing the `weights` argument. Other than this, the only difference in the call to `outcome_model` from the ATE example is specifying the correct `estimand`.
 
-```{r, outcome_att, linewidth=60}
+```{r, outcome_att}
 results_att = outcome_model(ps_object = ps.twang_att,
                             stop.method = "ks.max",
                             data = sud,
@@ -343,7 +341,7 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 The contours shown in Figure 4 are relatively smooth but for sake of example we show how a user would specify 10 additional repetitions. The user can specify `more_reps` to any number they choose in the following function call, `add_reps()`.
 
 ```{r, addreps_att, linewidth=60}
-# If you want to add repetitions, run the following line. You may change more_reps
+# If you want to add repetitions, run the following line.
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
                                     more_reps = 10)
