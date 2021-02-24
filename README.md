@@ -56,20 +56,12 @@ propensity score and outcome models and provide their definitions below.
 
 ## 2.1 Installation
 
-We begin by loading package. For the most up-to-date version of the
-package, you can load the development version from
-[GitHub](https://github.com/) using the following command:
-`devtools::install_github("jpane24/OVtool")`. If you haven’t installed
-the devtools package, make sure you also run the first line of code in
-the snippet below prior to running the second line. *Note: installing
-OVtool may require a large number of other package installations if they
-are not already installed on your machine. We recommend using a fresh R
-session prior to installation. To avoid conflicts, we recommend you
-restart your R session after running:*
+We begin by loading the package. *Note: installing OVtool may require a
+large number of other package installations if they are not already
+installed on your machine. We recommend using a fresh R session prior to
+installation.*
 
 ``` r
-# install.packages("devtools")
-# devtools::install_github("jpane24/OVtool", ref='master') 
 library(OVtool)
 ```
 
@@ -145,7 +137,7 @@ most cases.**
 
 The `OVtool` can either take a vector of weights estimated using any
 method or a propensity score (`ps`) object produced by `TWANG` (Ridgeway
-et al., 2020). The chunk of code below demonstrates how to specify your
+et al., 2021). The chunk of code below demonstrates how to specify your
 propensity score model and generate propensity score weights using the
 `ps` function from `TWANG`. If you already have a column of weights in
 your dataset, you can skip to step 2.
@@ -255,7 +247,7 @@ summary(results$mod_results)
     #> svyglm(formula = formula, design = design_u)
     #> 
     #> Survey design:
-    #> survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
+    #> design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
@@ -369,7 +361,7 @@ ovtool_results_twang = ov_sim(model_results=results,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [==>-----------------------]  12% completed in 28s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  1m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  2m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  3m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  4m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  5m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  6m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  7m  running [==========================] 100% completed in  8m
+    #>   running [==>-----------------------]  12% completed in 29s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  1m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  3m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  4m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  5m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  6m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  7m  running [==========================] 100% completed in  8m
 
 The grid values are not required; if `es_grid` and/or `rho_grid` are set
 to `NULL`, the tool will calculate reasonable values to simulate over.
@@ -554,7 +546,7 @@ the `ov` object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 10s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
 
     #> [1] "Recommendation for reporting the sensitivity
     analyses"
@@ -672,7 +664,7 @@ summary(results_att$mod_results)
     #> svyglm(formula = formula, design = design_u)
     #> 
     #> Survey design:
-    #> survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
+    #> design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
@@ -726,7 +718,7 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [===>----------------------]  15% completed in 28s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  1m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  2m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  3m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  4m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  5m  running [==========================] 100% completed in  6m
+    #>   running [===>----------------------]  15% completed in 29s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  1m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  2m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  3m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  4m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  5m  running [==========================] 100% completed in  6m
 
 ### 4.3.2 Produce additional simulations
 
@@ -917,6 +909,7 @@ McCaffrey, D. F., Ridgeway, G., and Morral, A. R. (2004). Propensity
 score estimation with boosted regression for evaluating causal effects
 in observational studies. Psychological methods 9, 403.
 
-Ridgeway, G., McCaffrey, D., Morral, A., Burgette, L., and Griffin, B.
-A. (2020). Toolkit for Weighting and Analysis of Nonequivalent Groups: A
-tutorial for the twang package. Santa Monica, CA: RAND Corporation.
+Ridgeway, G., McCaffrey, D., Morral, A., Cefalu, M., Burgette, L., and
+Griffin, B. A. (2021). Toolkit for Weighting and Analysis of
+Nonequivalent Groups: A tutorial for the twang package. Santa Monica,
+CA: RAND Corporation.
