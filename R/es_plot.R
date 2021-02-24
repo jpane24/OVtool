@@ -12,7 +12,7 @@ es_plot = function(prep, col="bw"){
   redregion = "white"
 
   ## Parallel coordinates plot of cluster means
-  #### ES with p-value overlay (no points) ####
+  #### Treatment effect contours with no overlay/points ####
   v <- ggplot2::ggplot(r1_df, ggplot2::aes(x = .data$es_grid, y = .data$rho_grid,
                                            z = .data$trt_effect, fill = .data$trt_effect)) +
     ggplot2::geom_rect(ggplot2::aes(ymin = max(r1_df$rho_grid),
@@ -38,11 +38,13 @@ es_plot = function(prep, col="bw"){
     v = v + ggplot2::geom_contour(col="black") +
       ggplot2::xlab("Association with Treatment Indicator\n (effect size scale)") +
       ggplot2::ylab("Absolute Correlation with Outcome (rho)") +
-      ggplot2::ggtitle(paste0("ES contours\n", raw)) +
+      ggplot2::ggtitle(paste0("Estimated treatment effect contours\n", raw)) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      legend.key = ggplot2::element_blank(),
                      legend.text = ggplot2::element_text(size = 10),
-                     legend.key.size =  grid::unit(0.5, "in")) +
+                     legend.key.size =  grid::unit(0.5, "in"),
+                     panel.grid.major = ggplot2::element_line(color="snow2"),
+                     panel.grid.minor = ggplot2::element_line(color="snow2")) +
       # ggplot2::annotation_custom(grob = grid::textGrob(label = raw,
       #                                                  vjust = 3,
       #                                                  gp = grid::gpar(cex = .75)),
