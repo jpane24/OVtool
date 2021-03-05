@@ -9,8 +9,8 @@ package was designed to assess the sensitivity of research findings to
 omitted variables when estimating causal effects using propensity score
 (PS) weighting. This package includes graphics and summary results that
 will enable a researcher to quantify the impact an omitted variable
-would have on their results. Burgette et al. (in preparation) describe
-the methodology behind the primary function in this package, `ov_sim()`.
+would have on their results. Burgette et al. (2021) describe the
+methodology behind the primary function in this package, `ov_sim()`.
 This document presents syntax for the implementation of the `ov_sim()`
 function and provides an example of how to interpret the packages’
 graphical output.
@@ -30,25 +30,25 @@ treatment. More specifically, it contains a subset of measures from the
 Global Appraisal of Individual Needs (GAIN) biopsychosocial assessment
 instrument (Dennis, Titus et al. 2003) from sites that administered two
 different types of substance use disorder treatments (treatment “A” and
-treatment “B”). This dataset consists of 4,000 adolescents. The main
-goal of this analysis is to understand the effect Treatment A and
-Treatment B, indicated by `treat`, have on mental health outcomes and to
-assess the potential for an omitted variable to bias the findings. To
-create our synthetic data set, we used an R package called
+treatment “B”). This data set represents 4,000 adolescents. The main
+goal of this analysis is to understand the relative effectiveness of
+Treatment A versus Treatment B on mental health outcomes and to assess
+the potential for an omitted variable to bias the findings. To create
+our synthetic data set, we used an R package called
 “[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf)
-: Bespoke Creation of Synthetic Data in R”.
+: Bespoke Creation of Synthetic Data in R” (Nowok et al. 2016).
 
 In our synthetic dataset, there are 2,000 adolescents in each treatment
-group. Within this dataset there is a treatment indicator and 28
-variables on substance use disorder and mental health outcomes.
+group, as indicated in the `treat` variable. Within this data set there
+are 28 variables on substance use disorder and mental health outcomes.
 Variables that end in `_0`, `_3`, and `_6` were collected from
 interviews at baseline, 3-, and 6-months post-baseline, respectively.
 
 For this tutorial we are interested in the mental health outcome,
 `eps7p_3`, emotional problem scale (eps) recorded at three months. In
 particular, we want to estimate the relative effectiveness of treatment
-A and B on reducing emotional problems in youth. `eps7p_3` ranges from
-zero to one, where higher values of EPS indicate more emotional
+A versus B on reducing emotional problems in youth. `eps7p_3` ranges
+from zero to one, where higher values of EPS indicate more emotional
 problems. Past research has concluded there are many variables that may
 influence treatment assignment and an adolescents’ emotional problems
 (Griffin et al., 2020). We utilize a selection of these variables in our
@@ -121,15 +121,14 @@ al. (2003).
 
 In the next two sections we showcase how our method works with a
 continuous outcome and binary treatment indicator. In the first
-analysis, we focus on how to use the `OVtool` when interest lies in
-estimating the average treatment effect (ATE) for the population. In the
-second, we focus on cases where interest lies in estimating the average
-treatment effect on the treated (ATT) population. **Note: One can use
-the OVtool to assess sensitivity of findings for binary outcomes. With a
-binary outcome, the OVtool utilizes residuals from the observed
-(i.e. absent unobserved confounder) linear probability model to
-generate the empirical CDF. This approximate should work well enough for
-most cases.**
+analysis, we focus on how to use the `OVtool` when estimating the
+average treatment effect (ATE) for the population. In the second, we
+focus on estimating the average treatment effect on the treated (ATT)
+population. **Note: One can also use the OVtool to assess sensitivity of
+findings for binary outcomes. With a binary outcome, the OVtool utilizes
+residuals linear probability model using observed covariates to generate
+the empirical CDF. If the residuals contain many ties, other types of
+sensitivity analyses may be more appropriate.**
 
 # 3 Continuous Outcome: Average Treatment Effect (ATE)
 
@@ -198,8 +197,8 @@ sud$w_twang = ps.twang$w$ks.max.ATE
 ## 3.2 Running Outcome Model
 
 The next step is to estimate the observed treatment effect. The
-`outcome_model` function in `OVtool` automatically utilizes the
-`svydesign` and `svyglm` functions from the `survey` package in R
+`outcome_model` function in `OVtool` automatically uses the `svydesign`
+and `svyglm` functions from the `survey` package in R
 ([survey](http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf))
 and formats and returns a list of components that are needed throughout
 step 3.
@@ -270,15 +269,15 @@ summary(results$mod_results)
 The outcome model results show an adjusted treatment effect estimate
 that accounts for confounding from observed covariates between youth in
 the two treatment programs (A = 1 and B = 0). From the results, we
-observe that the treatment effect is 0.07 (p = 0.011), whereby youth
-receiving treatment A have slightly higher emotional problems at the
-3-month follow-up than youth in treatment program B.
+observe that the estimated treatment effect is 0.07 (p = 0.011), whereby
+youth receiving treatment A have slightly higher emotional problems at
+the 3-month follow-up than youth in treatment program B.
 
 ## 3.3 Sensitivity Analysis
 
-At this stage, researchers should begin to ask themselves if the
-observed effect in Step 2 is real and how sensitive it is. Our tool is
-used to help answer this logical next step question.
+At this stage, researchers may ask themselves if the observed effect in
+Step 2 is real and how sensitive to unobserved confounders it is. Our
+tool is used to help answer this logical next step question.
 
 ### 3.3.1 Run the sensitivity analysis
 
@@ -301,9 +300,10 @@ additional parameters including:
 
   - `n_reps`: the number of repetitions represents the number of times
     an unobserved confounder is simulated at each effect size and rho
-    combination. **The package defaults to 50. Fifty repetitions should
-    be sufficient, but the analyst may need to reduce or increase the
-    number of repetitions.**
+    combination. **The package defaults to 50. We find that fifty
+    repetitions is sufficient in most cases, but the analyst may need to
+    increase the number of repetitions if the plotted contours are not
+    sufficiently smooth.**
 
 Optional arguments include:
 
@@ -314,8 +314,8 @@ Optional arguments include:
 
   - `add`: The default value is FALSE. This is only set to TRUE if the
     user is running additional repetitions after the first call to
-    `ov_sim`. It would be used if the chosen value of `n_reps` does not
-    appear sufficient to yield a smooth graphic.
+    `ov_sim`. It should be used if the original value of `n_reps` does
+    not yield smooth contours.
 
   - `sim_archive`: The default value is NULL and is only used if
     `add_reps` is called. This parameter should never be defined by the
@@ -323,20 +323,20 @@ Optional arguments include:
 
 The `ov_sim` function does not require the user to specify vectors for
 `es_grid` and `rho_grid`. If the user specifies `NULL` for both, the
-tool will automatically derive appropriate values. We define an effect
+tool will automatically suggest appropriate values. We define an effect
 size value in `es_grid` to show the strength of the relationship between
 the simulated unobserved covariate (U) and the treatment group
 indicator; it is defined as the standardized mean difference in U for
 the treatment A and treatment B groups. Typical rules of thumb for
 effect sizes (Cohen’s D) follow such that effect sizes greater than 0.2
-would be considered small, 0.4 would be moderate and 0.6 would be large
-(Cohen, J., 1995). We define a particular value of rho specified in
+would be considered small, 0.5 would be moderate and 0.8 would be large
+(Cohen, J., 1988). We define a particular value of rho specified in
 `rho_grid` as the absolute correlation the unobserved covariate (U) has
 with the outcome of interest, with larger values indicating stronger
 relationships between U and the outcome.
 
-Please see Burgette et al. (in preparation) for additional details on
-the theory behind `OVtool`.
+Please see Burgette et al. (2021) for additional details on the theory
+behind `OVtool`.
 
 ``` r
 # Run OVtool (with weights (not a ps object))
@@ -361,7 +361,7 @@ ovtool_results_twang = ov_sim(model_results=results,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [==>-----------------------]  12% completed in 29s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  1m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  3m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  4m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  5m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  6m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  7m  running [==========================] 100% completed in  8m
+    #>   running [==>-----------------------]  12% completed in 30s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  2m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  4m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  5m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  6m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  7m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  8m  running [==========================] 100% completed in  8m
 
 The grid values are not required; if `es_grid` and/or `rho_grid` are set
 to `NULL`, the tool will calculate reasonable values to simulate over.
@@ -469,7 +469,7 @@ plot.ov(ovtool_results_twang, print_graphic = "2", col = "color")
 
 Figure 2 is a different variation of Figure 1, but now adds p-value
 contours. This graphic will allow the user to see what treatment effect
-will switch the significance level at critical p-values (i.e. 0.05).
+will switch the significance level at critical p-values (e.g., 0.05).
 This graphic will now give the user an idea of how sensitive both the
 treatment effect estimate and the statistical significance are. The
 analyst can specify what red p-value thresholds they want plotted with
@@ -490,7 +490,7 @@ Similar to Figures 1 and 2, plotted at the top of the figure margin is
 the ps weighted treatment effect (0.071) and associated p-value of
 0.011. The solid black contours represent the treatment effect contour
 lines and the red lines (sometimes dashed) represent the p-value
-threshold. The key on the right side of the graphic shows where various
+thresholds. The key on the right side of the graphic shows where various
 p-value cutoff lines are, including p = 0.05. The blue points on the
 plot represent the observed covariate correlations with the outcome
 (y-axis) and effect size associations with the treatment indicator
@@ -522,8 +522,8 @@ would change the interpretation of their results.*
 ### 3.3.3 Produce additional simulations
 
 These results were produced with 50 simulations (`n_reps`) of the
-unobserved confounder. If the contours are rigid or the user wants to
-add simulations, they can call `add_reps` and specify the number
+unobserved confounder. If the contours are not smooth or the user wants
+to add simulations, they can call `add_reps` and specify the number
 (`more_reps`) of additional simulations. Once this is completed, a user
 can recreate the plots. Example code to add repetitions:
 
@@ -546,7 +546,7 @@ the `ov` object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  6s  running simulation [========>------]  57% completed in  9s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 14s  running simulation [===============] 100% completed in 17s
 
     #> [1] "Recommendation for reporting the sensitivity
     analyses"
@@ -574,14 +574,14 @@ summary.ov(object = ovtool_results_twang, model_results = results)
 **The `OVtool` gives a recommendation on how to report findings
 regarding the direction of the treatment effect and statistical
 significance. An analyst could take the results produced by
-`summary.ov()` and plug them directly into a manuscript.** The tool
-produces these results by iterating through each observed confounder the
-user specified in the `plot_covariates` argument to `ov_sim` and runs
-the simulation for those exact effect size and rho combinations to
-produce the treatment effect and p-value. It then determines which
-observed relationships would produce a treatment effect that changes
-direction and p-value that crosses over the 0.05 threshold when a
-significant raw effect is observed.
+`summary.ov()` and adapt the desciption to be included a manuscript.**
+The tool produces these results by iterating through each observed
+confounder the user specified in the `plot_covariates` argument to
+`ov_sim` and runs the simulation for those exact effect size and rho
+combinations to produce the treatment effect and p-value. It then
+determines which observed relationships would produce a treatment effect
+that changes direction and p-value that crosses over the 0.05 threshold
+when a significant raw effect is observed.
 
 In the next section, we will show how our method works with the average
 treatment effect on the treated (ATT) using a continuous outcome.
@@ -718,14 +718,14 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
     #> you must exclude the following variables from the plot_covariates argument:
     #> eps7p_0, tss_0, dss9_0.
 
-    #>   running [===>----------------------]  15% completed in 29s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  1m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  2m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  3m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  4m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  5m  running [==========================] 100% completed in  6m
+    #>   running [===>----------------------]  15% completed in 31s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  2m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  3m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  4m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  5m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  6m  running [==========================] 100% completed in  6m
 
 ### 4.3.2 Produce additional simulations
 
 Occasionally the specified number of repetitions (default is `n_reps
 = 50`) is not sufficient. Evidence that `n_reps` is not sufficient are
 contours that don’t appear smooth. The number of repetitions needed can
-vary based off sample size, the distribution of the outcome, and the
+vary based on sample size, the distribution of the outcome, and the
 specified estimand. Once we observe our graphical results, if the
 contours do not look smooth, we recommend calling the `add_reps`
 function and specifying `more_reps` to the number of additional
@@ -749,7 +749,7 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     more_reps = 10)
 ```
 
-    #>   running simulation [=>-------------]  15% completed in  6s  running simulation [==>------------]  23% completed in 12s  running simulation [====>----------]  31% completed in 18s  running simulation [=====>---------]  38% completed in 24s  running simulation [======>--------]  46% completed in 30s  running simulation [=======>-------]  54% completed in 36s  running simulation [========>------]  62% completed in 41s  running simulation [=========>-----]  69% completed in 47s  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
+    #>   running simulation [=>-------------]  15% completed in  6s  running simulation [==>------------]  23% completed in 13s  running simulation [====>----------]  31% completed in 19s  running simulation [=====>---------]  38% completed in 25s  running simulation [======>--------]  46% completed in 32s  running simulation [=======>-------]  54% completed in 38s  running simulation [========>------]  62% completed in 45s  running simulation [=========>-----]  69% completed in  1m  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
 
 Once the number of repetitions is finalized, the user can visualize the
 results through the same three function calls as described in the ATE
@@ -797,7 +797,7 @@ recommendations.
 summary.ov(object = ovtool_results_twang_att, model_results = results_att)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  1s  running simulation [=====>---------]  43% completed in  1s  running simulation [========>------]  57% completed in  2s  running simulation [==========>----]  71% completed in  3s  running simulation [============>--]  86% completed in  3s  running simulation [===============] 100% completed in  4s
+    #>   running simulation [===>-----------]  29% completed in  1s  running simulation [=====>---------]  43% completed in  1s  running simulation [========>------]  57% completed in  2s  running simulation [==========>----]  71% completed in  3s  running simulation [============>--]  86% completed in  4s  running simulation [===============] 100% completed in  4s
 
     #> [1] "Recommendation for reporting the sensitivity
     analyses"
@@ -833,14 +833,11 @@ covariates.
 
 # 5 Conclusion
 
-There is continuously a call for work on assessing the sensitivity of
-research findings. To our knowledge, this is a novel approach to
-assessing the sensitivity of research findings to omitted variables when
-estimating causal effects using PS weighting. Development of user
-friendly software tools are critical for advancing research. We hope
-that users will use our tool when they are trying to analyze how
-sensitive their results are to omitted variables when estimating causal
-effects.
+In observational studies, understanding the sensitivity of reported
+results to unobserved confounders is a key step when interpreting the
+strength of evidence. This package aims to provide user-friendly tools
+to assess the sensitivity of research findings to omitted variables when
+estimating causal effects using PS weighting.
 
 # 6 About This Tutorial
 
@@ -888,8 +885,12 @@ development of this tool.
 
 # 8 References
 
-Cohen, J. (1995). The earth is round (p \< .05): Rejoinder. American
-Psychologist, 50, 1103.
+Burgette, L., Griffin, B. A., Pane, J. D., and McCaffrey, D. M. (2021).
+Got a feeling something is missing? Assessing Sensitivity to Omitted
+Variables in Substance Use Treatment. arXiv.
+
+Cohen, J. (1988). Statistical Power Analysis for the Behavioral Sciences
+(2nd ed.). Hillsdale, NJ: Lawrence Erlbaum Associates, Publishers.
 
 Dennis, M. L., Titus, J. C., White, M. K., Unsicker, J. I., & Hodgkins,
 D. (2003). Global appraisal of individual needs: Administration guide
@@ -908,6 +909,10 @@ package version 4.0.
 McCaffrey, D. F., Ridgeway, G., and Morral, A. R. (2004). Propensity
 score estimation with boosted regression for evaluating causal effects
 in observational studies. Psychological methods 9, 403.
+
+Nowok B, Raab GM, Dibben C (2016). “synthpop: Bespoke Creation of
+Synthetic Data in R.” Journal of Statistical Software, 74(11), 1–26.
+doi: 10.18637/jss.v074.i11.
 
 Ridgeway, G., McCaffrey, D., Morral, A., Cefalu, M., Burgette, L., and
 Griffin, B. A. (2021). Toolkit for Weighting and Analysis of
