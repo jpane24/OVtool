@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 Makefile
+cran-comments.md
 ^doc$
 ^Meta$
