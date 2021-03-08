@@ -2,7 +2,7 @@
 title: "OVtool - Omitted Variable tool"
 author: "Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Omitted Variable tool: OVtool}
   %\VignetteEngine{knitr::rmarkdown}
