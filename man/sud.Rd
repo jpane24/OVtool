@@ -48,8 +48,4 @@ A dataset containing substance use disorder and mental health measures for adole
 \source{
 Global Appraisal of Individual Needs biopsychosocial assessment instrument - GAIN - Dennis, Titus et al. 2003
 }
-\examples{
-data(sud)
-## maybe str(sud)
-}
 \keyword{datasets}
