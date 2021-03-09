@@ -1,5 +1,5 @@
 ---
-title: "OVtool - Omitted Variable tool"
+title: "OVtool - Omitted Variable Tool"
 author: "Joseph D. Pane, Beth Ann Griffin, Lane F. Burgette, and Daniel F. McCaffrey"
 date: "`r Sys.Date()`"
 output: rmarkdown::pdf_document
@@ -43,7 +43,7 @@ This package is useful in a wide range of applications where researchers want to
 
 # 2   Examples: Synthetic Substance Use Data 
 
-This package is demonstrated using a synthetic data set that was derived from a large-scale observational study on youth in substance use treatment. More specifically, it contains a subset of measures from the Global Appraisal of Individual Needs (GAIN) biopsychosocial assessment instrument (Dennis, Titus et al. 2003) from sites that administered two different types of substance use disorder treatments (treatment "A" and treatment "B"). This data set represents 4,000 adolescents. The main goal of this analysis is to understand the relative effectiveness of Treatment A versus Treatment B on mental health outcomes and to assess the potential for an omitted variable to bias the findings. To create our synthetic data set, we used an R package called "[synthpop](https://cran.r-project.org/web/packages/synthpop/vignettes/synthpop.pdf ) : Bespoke Creation of Synthetic Data in R" (Nowok et al. 2016). 
+This package is demonstrated using a synthetic data set that was derived from a large-scale observational study on youth in substance use treatment. More specifically, it contains a subset of measures from the Global Appraisal of Individual Needs (GAIN) biopsychosocial assessment instrument (Dennis, Titus et al. 2003) from sites that administered two different types of substance use disorder treatments (treatment "A" and treatment "B"). This data set represents 4,000 adolescents. The main goal of this analysis is to understand the relative effectiveness of Treatment A versus Treatment B on mental health outcomes and to assess the potential for an omitted variable to bias the findings. To create our synthetic data set, we used an R package called "[synthpop](https://CRAN.R-project.org/package=synthpop) : Bespoke Creation of Synthetic Data in R" (Nowok et al. 2016). 
 
 In our synthetic dataset, there are 2,000 adolescents in each treatment group, as indicated in the `treat` variable. Within this data set there are 28 variables on substance use disorder and mental health outcomes. Variables that end in `_0`, `_3`, and `_6` were collected from interviews at baseline, 3-, and 6-months post-baseline, respectively. 
 
@@ -110,7 +110,7 @@ ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
                stop.method = "ks.max", verbose=F, ks.exact = T)
 ```
 
-The following line of code produces a balance table that demonstrates `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have sufficient balance, but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [Ridgeway et al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf) for further information on balance diagnostics.
+The following line of code produces a balance table that demonstrates `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have sufficient balance, but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [Ridgeway et al.](https://CRAN.R-project.org/package=twang) for further information on balance diagnostics.
 
 ```{r, balance, message=F}
 # Check Balance
@@ -127,7 +127,7 @@ sud$w_twang = ps.twang$w$ks.max.ATE
 
 ## 3.2    Running Outcome Model
 
-The next step is to estimate the observed treatment effect. The `outcome_model` function in `OVtool` automatically uses the `svydesign` and `svyglm` functions from the `survey` package in R ([survey](http://cran.fhcrc.org/web/packages/survey/vignettes/survey.pdf)) and formats and returns a list of components that are needed throughout step 3.
+The next step is to estimate the observed treatment effect. The `outcome_model` function in `OVtool` automatically uses the `svydesign` and `svyglm` functions from the `survey` package in R ([survey](https://CRAN.R-project.org/package=survey)) and formats and returns a list of components that are needed throughout step 3.
 
 There are two options the researcher can take to input the relevant information to get their outcome results using `outcome_model()`. 
 
@@ -301,7 +301,7 @@ ps.twang_att <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
 bal.table(ps.twang_att)
 ```
 
-Notice that the only difference here is we use `estimand = ATT` to estimate the propensity score weights using TWANG. We observe reasonable balance; all of our standardized effect size differences are less than 0.1. As mentioned in the ATE example, refer to [Ridgeway et al.](https://cran.r-project.org/web/packages/twang/vignettes/twang.pdf) for further information on balance diagnostics.
+Notice that the only difference here is we use `estimand = ATT` to estimate the propensity score weights using TWANG. We observe reasonable balance; all of our standardized effect size differences are less than 0.1. As mentioned in the ATE example, refer to [Ridgeway et al.](https://CRAN.R-project.org/package=twang) for further information on balance diagnostics.
 
 ## 4.2    Estimating the treatment effect
 
