@@ -145,7 +145,7 @@ The analyst must also provide:
 # Run Models -- first standardize outcome
 sud$eps7p_3_std = sud$eps7p_3/sd(sud$eps7p_3) 
 
-# Run outcome model (function in OVtool that calls survey::svyglm)
+# Run outcome model (function in OVtool that calls svyglm from survey)
 results = outcome_model(ps_object = NULL,
                         stop.method = NULL, 
                         data = sud,
