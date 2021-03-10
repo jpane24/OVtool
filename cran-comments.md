@@ -5,4 +5,4 @@
 ## R CMD check results
 * There were no ERRORs, WARNINGs, or NOTEs.
 * win-builder produces one NOTE regarding the maintainer's (my) email address. 
-
+* Possibly mis-spelled words in DESCRIPTION are spelled correctly
