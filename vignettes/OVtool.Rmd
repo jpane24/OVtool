@@ -191,7 +191,7 @@ The `ov_sim` function does not require the user to specify vectors for `es_grid`
 
 Please see Burgette et al. (2021) for additional details on the theory behind `OVtool`.
 
-```{r, ov_sim, linewidth=60}
+```{r, ov_sim, linewidth=60, eval=F}
 # Run OVtool (with weights (not a ps object))
 ovtool_results_twang = ov_sim(model_results=results, 
                               plot_covariates=c("eps7p_0", "sfs8p_0",
@@ -204,6 +204,11 @@ ovtool_results_twang = ov_sim(model_results=results,
                               progress = TRUE,
                               add = FALSE,
                               sim_archive = NULL)
+```
+
+```{r, ov_sim_output, linewidth=60, echo=F}
+# save(ovtool_results_twang, file = "vignettes/ATE_ovtool.rda", version = 2)
+load("ATE_ovtool.rda")
 ```
 
 The grid values are not required; if `es_grid` and/or `rho_grid` are set to `NULL`, the tool will calculate reasonable values to simulate over. For this tutorial we set `es_grid` to `NULL`. The tool then iterated over all observed covariate associations with the treatment indicator on an effect size scale to derive a reasonable range. 
@@ -331,7 +336,7 @@ Under the ATT setting, our treatment effect is 0.064 with a p-value of 0.035.
 
 We now want to understand how sensitive our result is to unobserved confounders. Below we will run the `ov_sim` function; we notice that in our call to `ov_sim` the parameters remain the same as in our ATE example. The `estimand` parameter is stored in `results_att` and carried forward throughout the remainder of the analysis.
 
-```{r, ovsim_att, linewidth=60}
+```{r, ovsim_att, linewidth=60, eval=F}
 ovtool_results_twang_att = ov_sim(model_results=results_att, 
                                   plot_covariates=c("eps7p_0", "sfs8p_0",
                                                     "sati_0", "ada_0",
@@ -341,6 +346,11 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                   rho_grid = seq(0, 0.40, by = 0.05), 
                                   n_reps = 50,
                                   progress = TRUE)
+```
+
+```{r, ovsim_att_output, linewidth=60, echo=F}
+# save(ovtool_results_twang_att, file = "vignettes/ATT_ovtool.rda", version = 2)
+load("ATT_ovtool.rda")
 ```
 
 ### 4.3.2   Produce additional simulations
@@ -353,11 +363,16 @@ plot.ov(ovtool_results_twang_att, print_graphic = "1", col = "bw")
 
 The contours shown in Figure 4 are relatively smooth but for sake of example we show how a user would specify 10 additional repetitions. The user can specify `more_reps` to any number they choose in the following function call, `add_reps()`.
 
-```{r, addreps_att, linewidth=60}
+```{r, addreps_att, linewidth=60, eval=F}
 # If you want to add repetitions, run the following line.
 ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
                                     more_reps = 10)
+```
+
+```{r, addreps_att_output, linewidth=60, echo=F}
+# save(ovtool_results_twang_att, file = "vignettes/ATT_ovtool2.rda", version = 2)
+load("ATT_ovtool2.rda")
 ```
 
 Once the number of repetitions is finalized, the user can visualize the results through the same three function calls as described in the ATE section above. 

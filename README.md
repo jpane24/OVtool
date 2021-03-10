@@ -352,16 +352,6 @@ ovtool_results_twang = ov_sim(model_results=results,
                               sim_archive = NULL)
 ```
 
-    #> Warning in ov_sim(model_results = results, plot_covariates = c("eps7p_0", :
-    #> You specified a rho grid whose maximum value is less than the maximum absolute
-    #> correlation at least one observed covariate has with the outcome. The rho grid
-    #> was automatically expanded to include all plot_covariates specified in the
-    #> relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
-    #> you must exclude the following variables from the plot_covariates argument:
-    #> eps7p_0, tss_0, dss9_0.
-
-    #>   running [==>-----------------------]  12% completed in 29s  running [====>---------------------]  18% completed in  1m  running [=====>--------------------]  24% completed in  1m  running [=======>------------------]  29% completed in  2m  running [========>-----------------]  35% completed in  3m  running [==========>---------------]  41% completed in  3m  running [===========>--------------]  47% completed in  4m  running [=============>------------]  53% completed in  4m  running [==============>-----------]  59% completed in  5m  running [================>---------]  65% completed in  5m  running [=================>--------]  71% completed in  5m  running [===================>------]  76% completed in  6m  running [====================>-----]  82% completed in  7m  running [======================>---]  88% completed in  7m  running [=======================>--]  94% completed in  8m  running [==========================] 100% completed in  8m
-
 The grid values are not required; if `es_grid` and/or `rho_grid` are set
 to `NULL`, the tool will calculate reasonable values to simulate over.
 For this tutorial we set `es_grid` to `NULL`. The tool then iterated
@@ -545,7 +535,7 @@ the `ov` object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  6s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 11s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 16s
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 10s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 15s
 
     #> [1] "Recommendation for reporting the sensitivity
     analyses"
@@ -564,7 +554,7 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     strengths of associations with the treatment indicator and
     outcome that are seen in 2 of the 7 observed confounders.
     In the most extreme observed case, the p-value would be
-    expected to increase from 0.011 to 0.383. Significance at
+    expected to increase from 0.011 to 0.384. Significance at
     the 0.05 level would not be expected to be preserved for
     unobserved confounders that have the same strength of
     association with the treatment indicator and outcome as
@@ -710,16 +700,6 @@ ovtool_results_twang_att = ov_sim(model_results=results_att,
                                   progress = TRUE)
 ```
 
-    #> Warning in ov_sim(model_results = results_att, plot_covariates = c("eps7p_0", :
-    #> You specified a rho grid whose maximum value is less than the maximum absolute
-    #> correlation at least one observed covariate has with the outcome. The rho grid
-    #> was automatically expanded to include all plot_covariates specified in the
-    #> relevant graphics. If you want the rho grid range to remain from 0 to 0.4 then
-    #> you must exclude the following variables from the plot_covariates argument:
-    #> eps7p_0, tss_0, dss9_0.
-
-    #>   running [===>----------------------]  15% completed in 31s  running [=====>--------------------]  23% completed in  1m  running [=======>------------------]  31% completed in  2m  running [=========>----------------]  38% completed in  2m  running [===========>--------------]  46% completed in  3m  running [=============>------------]  54% completed in  3m  running [===============>----------]  62% completed in  4m  running [=================>--------]  69% completed in  4m  running [===================>------]  77% completed in  5m  running [=====================>----]  85% completed in  5m  running [=======================>--]  92% completed in  6m  running [==========================] 100% completed in  6m
-
 ### 4.3.2 Produce additional simulations
 
 Occasionally the specified number of repetitions (default is `n_reps
@@ -748,8 +728,6 @@ ovtool_results_twang_att = add_reps(OVtool_results = ovtool_results_twang_att,
                                     model_results = results_att,
                                     more_reps = 10)
 ```
-
-    #>   running simulation [=>-------------]  15% completed in  6s  running simulation [==>------------]  23% completed in 13s  running simulation [====>----------]  31% completed in 19s  running simulation [=====>---------]  38% completed in 25s  running simulation [======>--------]  46% completed in 31s  running simulation [=======>-------]  54% completed in 37s  running simulation [========>------]  62% completed in 43s  running simulation [=========>-----]  69% completed in 49s  running simulation [===========>---]  77% completed in  1m  running simulation [============>--]  85% completed in  1m  running simulation [=============>-]  92% completed in  1m  running simulation [===============] 100% completed in  1m
 
 Once the number of repetitions is finalized, the user can visualize the
 results through the same three function calls as described in the ATE
@@ -807,16 +785,16 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     indicator and outcome that are seen in 6 of the 7 observed
     confounders. In the most extreme observed case in which the
     sign changes, the estimated effect size shifts from 0.064
-    to -0.04. The sign of the estimate would not be expected to
-    be preserved for unobserved confounders that have the same
-    strength of association with the treatment indicator and
-    outcome as eps7p_0."
+    to -0.043. The sign of the estimate would not be expected
+    to be preserved for unobserved confounders that have the
+    same strength of association with the treatment indicator
+    and outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is
     expected to be robust to unobserved confounders with
     strengths of associations with the treatment indicator and
     outcome that are seen in 1 of the 7 observed confounders.
     In the most extreme observed case, the p-value would be
-    expected to increase from 0.035 to 0.555. Significance at
+    expected to increase from 0.035 to 0.580. Significance at
     the 0.05 level would not be expected to be preserved for
     unobserved confounders that have the same strength of
     association with the treatment indicator and outcome as
