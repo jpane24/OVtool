@@ -3,4 +3,6 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs, or NOTEs.
+* There were no ERRORs, WARNINGs, or NOTEs.
+* win-builder produces one NOTE regarding the maintainer's (my) email address. 
+
