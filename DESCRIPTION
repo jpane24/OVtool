@@ -1,6 +1,6 @@
 Package: OVtool
 Type: Package
-Title: Omitted Variable tool
+Title: Omitted Variable Tool
 Version: 1.0.0
 Author: Joseph D. Pane, Lane F. Burgette, Beth Ann Griffin, and Daniel F. McCaffrey
 Maintainer: Joseph D. Pane <josephp@rand.org>

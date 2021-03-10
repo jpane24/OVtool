@@ -105,16 +105,16 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
                           tss_0 + dss9_0)
 
 ## Get weights
-library(twang)
-ps.twang <- ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
-               stop.method = "ks.max", verbose=F, ks.exact = T)
+# library(twang)
+ps.twang <- twang::ps(my_formula, data = sud, estimand = 'ATE', booster = "gbm",
+                      stop.method = "ks.max", verbose=F, ks.exact = T)
 ```
 
 The following line of code produces a balance table that demonstrates `TWANG` does a reasonable job of balancing. There are additional diagnostics we could check to ensure we have sufficient balance, but we move on without diving in further because the purpose of this tutorial is to showcase `OVtool`. See [Ridgeway et al.](https://CRAN.R-project.org/package=twang) for further information on balance diagnostics.
 
 ```{r, balance, message=F}
 # Check Balance
-bal.table(ps.twang)
+twang::bal.table(ps.twang)
 ```
 
 The last step needed prior to moving onto the specification of your outcome model is to attach the weights as a column in your dataset. We extract the weights produced from `ps` in the line below. 
@@ -296,9 +296,10 @@ my_formula = as.formula(treat ~ eps7p_0 + sfs8p_0 + sati_0 + ada_0 + recov_0 +
                           tss_0 + dss9_0)
 
 # Propensity score weights:
-ps.twang_att <- ps(my_formula, data = sud, estimand = 'ATT', booster = "gbm",
-               stop.method = "ks.max", verbose=F, ks.exact = T)
-bal.table(ps.twang_att)
+ps.twang_att <- twang::ps(my_formula, data = sud, estimand = 'ATT',
+                          booster = "gbm", stop.method = "ks.max", 
+                          verbose=F, ks.exact = T)
+twang::bal.table(ps.twang_att)
 ```
 
 Notice that the only difference here is we use `estimand = ATT` to estimate the propensity score weights using TWANG. We observe reasonable balance; all of our standardized effect size differences are less than 0.1. As mentioned in the ATE example, refer to [Ridgeway et al.](https://CRAN.R-project.org/package=twang) for further information on balance diagnostics.
