@@ -37,7 +37,7 @@ ovtool_results = ov_sim(model_results=outcome_mod,
                         es_grid = NULL,
                         rho_grid = NULL,
                         n_reps = 2,
-                        progress=F)
+                        progress=FALSE)
 prep = prep_for_plots(ovtool_results, p_contours=.05)
 plot = es_point_plot(prep = prep)
 }

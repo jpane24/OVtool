@@ -40,7 +40,7 @@ ovtool_results = ov_sim(model_results=outcome_mod,
                         es_grid = NULL,
                         rho_grid = NULL,
                         n_reps = 2,
-                        progress=F)
+                        progress=FALSE)
 
 additional = add_reps(OVtool_results = ovtool_results,
                       model_results = outcome_mod,

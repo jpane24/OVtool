@@ -45,10 +45,10 @@ ovtool_results = ov_sim(model_results=outcome_mod,
                         es_grid = NULL,
                         rho_grid = NULL,
                         n_reps = 2,
-                        progress=F)
+                        progress=FALSE)
 summary = summary.ov(object = ovtool_results,
                      model_results = outcome_mod,
                      sig_level=0.05,
-                     progress = F)
+                     progress = FALSE)
 }
 
