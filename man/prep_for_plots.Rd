@@ -29,6 +29,10 @@ prep_for_plots returns a list containing the following components:
 
 }
 \examples{
+data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(0.01, 1,by=.01), size=nrow(sud), replace = T)
 outcome_mod = outcome_model(data = sud,
                             weights = "wts",
                             treatment = "treat",
