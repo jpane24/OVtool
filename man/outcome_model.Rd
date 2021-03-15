@@ -1,11 +1,8 @@
 \name{outcome_model}
 \alias{outcome_model}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{outcome_model
-%%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 This function will run the outcomes model for your analysis. Upon completeion,
 use the model object returned from this function and call ov_simgrid to check
 the sensitivity of your findings.
@@ -14,18 +11,14 @@ the sensitivity of your findings.
 outcome_model(ps_object = NULL, stop.method=NULL, data, weights=NULL, treatment,
 outcome, model_covariates, estimand = "ATE")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ps_object}{
-  %%     ~~Describe \code{x} here~~
   A ps object exported from TWANG
 }
   \item{stop.method}{
-  %%     ~~Describe \code{x} here~~
   If the user specifies ps_object, stop.method should be used to export the weights (e.g "ks.max")
 }
   \item{data}{
-  %%     ~~Describe \code{x} here~~
   A data frame containing the data
 }
   \item{weights}{
@@ -35,11 +28,9 @@ outcome, model_covariates, estimand = "ATE")
   A column name in data for the treatment indicator
 }
   \item{outcome}{
-  %%     ~~Describe \code{x} here~~
   A column name in data indicating the outcome vector
 }
   \item{model_covariates}{
-%%     ~~Describe \code{model_covariates} here~~
   A vector of column names representing the covariates in your final outcome's model
 }
   \item{estimand}{
@@ -47,12 +38,7 @@ outcome, model_covariates, estimand = "ATE")
 }
 }
 \value{
-%%  ~Describe the value returned
 outcome_model returns a list containing the following components:
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 \item{ps_object}{The ps_object from TWANG specified in the function call. If ignored, this component will be NULL}
 \item{stop.method}{The stop method, if applicable, specified in the function call}
 \item{data}{the updated data frame}
@@ -64,6 +50,19 @@ outcome_model returns a list containing the following components:
 \item{mod_results}{an object of class "svyglm"}
 
 }
+\examples{
+data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(0.01, 1,by=.01), size=nrow(sud), replace = T)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0"),
+                            estimand = "ATE")
+}
+
 \references{
 Lumley T (2020). “survey: analysis of complex survey samples.” R package version 4.0.
 }

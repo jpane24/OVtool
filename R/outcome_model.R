@@ -1,10 +1,10 @@
 outcome_model <- function(ps_object=NULL, stop.method=NULL, data, weights=NULL,
                           treatment, outcome, model_covariates,
                           estimand = "ATE"){
+  data$w_orig = NA
   if(!(estimand %in% c("ATT", "ATE"))){
     stop("At the moment, OVtool only handles ATT and ATE.")
   }
-  set.seed(24)
   if(class(ps_object)!="ps"){
     if(missing(data) | missing(weights) | missing(treatment) | missing(outcome) | missing(model_covariates)){
       stop("Please supply either a ps class object, stop.method, and relevant column names for:

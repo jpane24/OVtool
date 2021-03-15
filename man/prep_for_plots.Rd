@@ -1,8 +1,6 @@
 \name{prep_for_plots}
 \alias{prep_for_plots}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{prep_for_plots
-%%  ~~function to do ... ~~
 }
 \description{
 Data preparation for producing the graphics and summary results.
@@ -10,19 +8,15 @@ Data preparation for producing the graphics and summary results.
 \usage{
 prep_for_plots(r1, p_contours)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{r1}{
-%%     ~~Describe \code{x} here~~
-An object returned from sim_grid
+An object returned from ov_sim
 }
   \item{p_contours}{
-%%     ~~Describe \code{x} here~~
 P-value countours to plot. The default plots: 0.01, 0.05, and 0.1. We only recommend changing this if the raw effect p-value is very close to one of these values. Do not specify more than four p-value contours.
 }
 }
 \value{
-%%  ~Describe the value returned
 prep_for_plots returns a list containing the following components:
 \item{r1}{a list with the components returned from ov_simgrid}
 \item{r1_df}{a data frame with components used to create the contour graphic}
@@ -33,4 +27,24 @@ prep_for_plots returns a list containing the following components:
 \item{pval_lines}{a vector of line types to represent pvals}
 \item{raw}{a character with the raw effect and pvalue from the outcome model}
 
+}
+\examples{
+data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(0.01, 1,by=.01), size=nrow(sud), replace = T)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0", "eps7p_0"),
+                            estimand = "ATE")
+
+ovtool_results = ov_sim(model_results=outcome_mod,
+                        plot_covariates=c("sfs8p_0"),
+                        es_grid = NULL,
+                        rho_grid = NULL,
+                        n_reps = 2,
+                        progress=F)
+prep = prep_for_plots(ovtool_results, p_contours=.01)
 }

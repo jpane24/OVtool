@@ -9,7 +9,6 @@ summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, .
   # Find effects and pvalues
   pvals = rep(NA, nrow(temp$obs_cors))
   trt_effect = rep(NA, nrow(temp$obs_cors))
-  options(warn=-1)
   # set status bar
   pb <- progress::progress_bar$new(
     format = "  running simulation [:bar] :percent completed in :elapsed",
@@ -27,7 +26,6 @@ summary.ov <- function(object, model_results, sig_level=0.05, progress = TRUE, .
       Sys.sleep(1 / nrow(temp$obs_cors))
     }
   }
-  options(warn=1)
 
   # Effect Size cases
   effect_size_text = dplyr::case_when((raw_treat < 0 & all(trt_effect < 0)) |

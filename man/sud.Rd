@@ -2,11 +2,9 @@
 \alias{sud}
 \docType{data}
 \title{
-%%   ~~ data name/kind ... ~~
 Longitudinal observational data from adolescents receiving SUD treatment.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
 A dataset containing substance use disorder and mental health measures for adolescents who had one of two substance use treatments.
 }
 
@@ -47,5 +45,8 @@ A dataset containing substance use disorder and mental health measures for adole
 }
 \source{
 Global Appraisal of Individual Needs biopsychosocial assessment instrument - GAIN - Dennis, Titus et al. 2003
+}
+\examples{
+data(sud)
 }
 \keyword{datasets}

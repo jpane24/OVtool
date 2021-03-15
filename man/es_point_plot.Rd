@@ -1,8 +1,6 @@
 \name{es_point_plot}
 \alias{es_point_plot}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{es_point_plot
-%%  ~~function to do ... ~~
 }
 \description{
 Plot of effect size contours with pvalue contours and observed covariate points overlayed
@@ -10,21 +8,37 @@ Plot of effect size contours with pvalue contours and observed covariate points 
 \usage{
 es_point_plot(prep, col = "color")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{prep}{
-%%     ~~Describe \code{x} here~~
 Input from prep_for_plots
 }
   \item{col}{
-%%     ~~Describe \code{x} here~~
 If user wants color or black and white. Specify color with "color" or black and white "bw".
 }
 }
 \value{
-%%  ~Describe the value returned
 a list of class gg and ggplot
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 }
+\examples{
+data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(0.01, .1,by=.01), size=nrow(sud), replace = T)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_6",
+                            model_covariates = c("sfs8p_0", "eps7p_0",
+                                                 "ada_0"),
+                            estimand = "ATE")
+
+ovtool_results = ov_sim(model_results=outcome_mod,
+                        plot_covariates=c("sfs8p_0", "ada_0"),
+                        es_grid = NULL,
+                        rho_grid = NULL,
+                        n_reps = 2,
+                        progress=F)
+prep = prep_for_plots(ovtool_results, p_contours=.05)
+plot = es_point_plot(prep = prep)
+}
+

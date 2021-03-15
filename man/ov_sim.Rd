@@ -1,11 +1,8 @@
 \name{ov_sim}
 \alias{ov_sim}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{ov_sim
-%%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 This function will create the simulation grid. The simulation will iterate over
 effects sizes and absolute correlations with the outcome (rho) and see how the
 treatment effect and relevant p-value changes
@@ -15,7 +12,6 @@ ov_sim(model_results, plot_covariates, es_grid = seq(-.4, .4, by = 0.05),
 rho_grid = seq(0, .4, by = 0.05), n_reps = 50, progress = TRUE, add = FALSE,
 sim_archive = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model_results}{
   object returned from outcome_model
@@ -43,12 +39,8 @@ Default is NULL
 }
 }
 \value{
-%%  ~Describe the value returned
 ov_sim returns a list containing the following components:
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+
 \item{p_val}{matrix of pvalues for each grid point}
 \item{trt_effect}{matrix of effect sizes for each grid point}
 \item{es_grid}{vector of the effect size grid}
@@ -62,4 +54,25 @@ ov_sim returns a list containing the following components:
 \item{std.error}{matrix of standard errors for each grid point}
 \item{es_se_raw}{matrix that stores each repetitions results at every grid point}
 }
+
+\examples{
+data(sud)
+sud = data.frame(sud)
+sud$treat = ifelse(sud$treat == "A", 1, 0)
+sud$wts = sample(seq(0.01, 1,by=.01), size=nrow(sud), replace = T)
+outcome_mod = outcome_model(data = sud,
+                            weights = "wts",
+                            treatment = "treat",
+                            outcome = "eps7p_3",
+                            model_covariates = c("sfs8p_0"),
+                            estimand = "ATE")
+
+ovtool_results = ov_sim(model_results=outcome_mod,
+                        plot_covariates=c("sfs8p_0"),
+                        es_grid = NULL,
+                        rho_grid = NULL,
+                        n_reps = 2,
+                        progress=F)
+}
+
 
