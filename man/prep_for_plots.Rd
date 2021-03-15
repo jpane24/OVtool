@@ -29,22 +29,19 @@ prep_for_plots returns a list containing the following components:
 
 }
 \examples{
-data(sud)
-sud = data.frame(sud)
-sud$treat = ifelse(sud$treat == "A", 1, 0)
-sud$wts = sample(seq(0.01, 1,by=.01), size=nrow(sud), replace = T)
 outcome_mod = outcome_model(data = sud,
                             weights = "wts",
                             treatment = "treat",
-                            outcome = "eps7p_3",
-                            model_covariates = c("sfs8p_0", "eps7p_0"),
+                            outcome = "eps7p_6",
+                            model_covariates = c("sfs8p_0", "eps7p_0",
+                                                 "ada_0"),
                             estimand = "ATE")
 
 ovtool_results = ov_sim(model_results=outcome_mod,
-                        plot_covariates=c("sfs8p_0"),
+                        plot_covariates=c("sfs8p_0", "ada_0"),
                         es_grid = NULL,
                         rho_grid = NULL,
                         n_reps = 2,
                         progress=F)
-prep = prep_for_plots(ovtool_results, p_contours=.01)
+prep = prep_for_plots(ovtool_results, p_contours=.05)
 }
