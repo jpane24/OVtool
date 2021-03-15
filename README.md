@@ -245,7 +245,7 @@ summary(results$mod_results)
     #> svyglm(formula = formula, design = design_u)
     #> 
     #> Survey design:
-    #> design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
+    #> survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
@@ -535,7 +535,7 @@ the `ov` object:
 summary.ov(object = ovtool_results_twang, model_results = results)
 ```
 
-    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  5s  running simulation [========>------]  57% completed in  8s  running simulation [==========>----]  71% completed in 10s  running simulation [============>--]  86% completed in 13s  running simulation [===============] 100% completed in 15s
+    #>   running simulation [===>-----------]  29% completed in  3s  running simulation [=====>---------]  43% completed in  6s  running simulation [========>------]  57% completed in  9s  running simulation [==========>----]  71% completed in 12s  running simulation [============>--]  86% completed in 15s  running simulation [===============] 100% completed in 17s
 
     #> [1] "Recommendation for reporting the sensitivity
     analyses"
@@ -545,7 +545,7 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     indicator and outcome that are seen in 6 of the 7 observed
     confounders. In the most extreme observed case in which the
     sign changes, the estimated effect size shifts from 0.071
-    to -0.027. The sign of the estimate would not be expected
+    to -0.028. The sign of the estimate would not be expected
     to be preserved for unobserved confounders that have the
     same strength of association with the treatment indicator
     and outcome as eps7p_0."
@@ -554,7 +554,7 @@ summary.ov(object = ovtool_results_twang, model_results = results)
     strengths of associations with the treatment indicator and
     outcome that are seen in 2 of the 7 observed confounders.
     In the most extreme observed case, the p-value would be
-    expected to increase from 0.011 to 0.384. Significance at
+    expected to increase from 0.011 to 0.377. Significance at
     the 0.05 level would not be expected to be preserved for
     unobserved confounders that have the same strength of
     association with the treatment indicator and outcome as
@@ -654,7 +654,7 @@ summary(results_att$mod_results)
     #> svyglm(formula = formula, design = design_u)
     #> 
     #> Survey design:
-    #> design_u <- survey::svydesign(ids=~1, weights=~w_orig, data=data)
+    #> survey::svydesign(ids = ~1, weights = ~w_orig, data = data)
     #> 
     #> Coefficients:
     #>               Estimate Std. Error t value Pr(>|t|)    
@@ -785,16 +785,16 @@ summary.ov(object = ovtool_results_twang_att, model_results = results_att)
     indicator and outcome that are seen in 6 of the 7 observed
     confounders. In the most extreme observed case in which the
     sign changes, the estimated effect size shifts from 0.064
-    to -0.043. The sign of the estimate would not be expected
-    to be preserved for unobserved confounders that have the
-    same strength of association with the treatment indicator
-    and outcome as eps7p_0."
+    to -0.04. The sign of the estimate would not be expected to
+    be preserved for unobserved confounders that have the same
+    strength of association with the treatment indicator and
+    outcome as eps7p_0."
     #> [1] "Statistical significance at the 0.05 level is
     expected to be robust to unobserved confounders with
     strengths of associations with the treatment indicator and
     outcome that are seen in 1 of the 7 observed confounders.
     In the most extreme observed case, the p-value would be
-    expected to increase from 0.035 to 0.580. Significance at
+    expected to increase from 0.035 to 0.583. Significance at
     the 0.05 level would not be expected to be preserved for
     unobserved confounders that have the same strength of
     association with the treatment indicator and outcome as
