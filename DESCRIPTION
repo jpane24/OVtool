@@ -28,13 +28,13 @@ Imports:
 	stats,
 	tibble,
 	tidyselect,
-	twang, 
 	varhandle
 Suggests:
   rmarkdown,
   knitr
 Depends:
   R (>= 2.10),
+  twang
 VignetteBuilder: 
   knitr
 RoxygenNote: 7.1.1
