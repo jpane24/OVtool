@@ -1,7 +1,7 @@
 Package: OVtool
 Type: Package
 Title: Omitted Variable Tool
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(person(given = "Joseph", family = "Pane", role = c("aut", "cre"),
                     email = "josephp@rand.org"),
              person(given = "Lane", family = "Burgette", role = "aut"),
