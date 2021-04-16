@@ -405,7 +405,7 @@ The text produced states that the sign of the estimated effect is expected to re
 
 # 5   Conclusion
 
-In observational studies, understanding the sensitivity of reported results to unobserved confounders is a key step when interpreting the strength of evidence. This package aims to provide user-friendly tools to assess the sensitivity of research findings to omitted variables when estimating causal effects using PS weighting. 
+In observational studies, understanding the sensitivity of reported results to unobserved confounders is a key step when interpreting the strength of evidence. This package aims to provide user-friendly tools to assess the sensitivity of research findings to omitted variables when estimating causal effects using PS weighting.
 
 # 6   About This Tutorial
 
