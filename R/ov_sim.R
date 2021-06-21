@@ -92,7 +92,7 @@ ov_sim <- function(model_results, plot_covariates,
                                               TRUE ~ NA_real_))
       my_res = as.vector(stats::residuals(stats::glm(formula = model_results$outcome_mod_fmla,
                                                      family = "quasibinomial",
-                                                     data = dta),
+                                                     data = dta_res),
                                           type = "working"))
 
     } else{
