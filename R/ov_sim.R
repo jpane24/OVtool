@@ -86,10 +86,15 @@ ov_sim <- function(model_results, plot_covariates,
     dta$w_new = dta$w_orig
     # residuals
     if(length(unique(dta[,y])) == 2){
+      dta_res = dta %>%
+        dplyr::mutate(!!as.name(outcome) <- case_when(!!as.name(outcome) > 0 ~ 1,
+                                                      !!as.name(outcome) == 0 ~ 0,
+                                                      TRUE ~ NA_real_))
       my_res = as.vector(stats::residuals(stats::glm(formula = model_results$outcome_mod_fmla,
                                                      family = "quasibinomial",
                                                      data = dta),
                                           type = "working"))
+
     } else{
       my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
     }
