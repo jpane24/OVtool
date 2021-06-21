@@ -85,7 +85,9 @@ ov_sim <- function(model_results, plot_covariates,
     # create w_new and set it to the original weights for now
     dta$w_new = dta$w_orig
     # residuals
-    my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
+    # my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
+    my_res = as.vector(stats::residuals(stats::lm(formula = model_results$outcome_mod_fmla, data = dta),
+                                        type = "working"))
 
     # set status bar:
     pb <- progress::progress_bar$new(
