@@ -113,7 +113,7 @@ ov_sim <- function(model_results, plot_covariates,
                                 es = es_grid[i],
                                 rho = rho_grid[j],
                                 my_estimand = estimand)
-          a <- gen_a_finish(a_res=a_prep, my_estimand=estimand)
+          a <- gen_a_finish(a_res=a_prep, my_estimand=estimand, wts=dta$w_orig)
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
@@ -172,7 +172,7 @@ ov_sim <- function(model_results, plot_covariates,
                                 es = es_grid[i],
                                 rho = rho_grid[j],
                                 my_estimand = estimand)
-          a <- gen_a_finish(a_res=a_prep, my_estimand = estimand)
+          a <- gen_a_finish(a_res=a_prep, my_estimand = estimand, wts = dta$w_orig)
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)

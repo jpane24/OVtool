@@ -277,7 +277,7 @@ These results were produced with 50 simulations (`n_reps`) of the unobserved con
 # plot.ov(ovtool_results_twang, print_graphic = "1", col = "bw")
 ```
 
-### 3.3.4   Recommendations for reporting the sensitivty analysis
+### 3.3.4   Recommendations for reporting the sensitivity analysis
 
 Finally, we can interpret this graphic by running the summary command on the `ov` object:
 
@@ -393,7 +393,7 @@ plot.ov(ovtool_results_twang_att, print_graphic = "2", col = "color")
 plot.ov(ovtool_results_twang_att, print_graphic = "3", col = "color")
 ```
 
-### 4.3.4   Recommendations for reporting the sensitivty analysis
+### 4.3.4   Recommendations for reporting the sensitivity analysis
 
 Finally, we will run the `summary.ov` function to receive the tool's recommendations.  
 
