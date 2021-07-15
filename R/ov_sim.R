@@ -85,7 +85,20 @@ ov_sim <- function(model_results, plot_covariates,
     # create w_new and set it to the original weights for now
     dta$w_new = dta$w_orig
     # residuals
-    my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
+    if(length(unique(dta[,y])) == 2){
+      dta_res = dta %>%
+        dplyr::mutate(!!y := dplyr::case_when(!!base::as.name(y) >  0 ~ 1,
+                                              !!base::as.name(y) == 0 ~ 0,
+                                              TRUE ~ NA_real_))
+      my_res = as.vector(stats::residuals(stats::glm(formula = model_results$outcome_mod_fmla,
+                                                     family = "quasibinomial",
+                                                     data = dta_res),
+                                          type = "working"))
+
+    } else{
+      my_res = as.vector(stats::lm(formula = model_results$outcome_mod_fmla, data = dta)$residuals)
+    }
+
 
     # set status bar:
     pb <- progress::progress_bar$new(
@@ -100,7 +113,7 @@ ov_sim <- function(model_results, plot_covariates,
                                 es = es_grid[i],
                                 rho = rho_grid[j],
                                 my_estimand = estimand)
-          a <- gen_a_finish(a_res=a_prep, my_estimand=estimand)
+          a <- gen_a_finish(a_res=a_prep, my_estimand=estimand, wts=dta$w_orig)
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
@@ -159,7 +172,7 @@ ov_sim <- function(model_results, plot_covariates,
                                 es = es_grid[i],
                                 rho = rho_grid[j],
                                 my_estimand = estimand)
-          a <- gen_a_finish(a_res=a_prep, my_estimand = estimand)
+          a <- gen_a_finish(a_res=a_prep, my_estimand = estimand, wts = dta$w_orig)
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
