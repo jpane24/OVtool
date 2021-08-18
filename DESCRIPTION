@@ -1,10 +1,10 @@
 Package: OVtool
 Type: Package
 Title: Omitted Variable Tool
-Version: 1.0.1
-Authors@R: c(person(given = "Joseph", family = "Pane", role = c("aut", "cre"),
-                    email = "josephp@rand.org"),
-             person(given = "Lane", family = "Burgette", role = "aut"),
+Version: 1.0.2
+Authors@R: c(person(given = "Joseph", family = "Pane", role = "aut"),
+             person(given = "Lane", family = "Burgette", role = c("aut", "cre"),
+                    email = "burgette@rand.org"),
              person(given = "Beth Ann", family = "Griffin", role = "aut"),
              person(given = "Daniel", family = "McCaffrey", role = "aut"))
 Description: This tool was designed to assess the sensitivity of research findings to omitted variables when estimating causal effects using propensity score (PS) weighting. This tool produces graphics and summary results that will enable a researcher to quantify the impact an omitted variable would have on their results. Burgette et al. (2021) describe the methodology behind the primary function in this package, ov_sim. The method is demonstrated in Griffin et al. (2020) <doi:10.1016/j.jsat.2020.108075>.
