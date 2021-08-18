@@ -118,7 +118,7 @@ ov_sim <- function(model_results, plot_covariates,
           dta$w_new <- dta$w_orig * a
           design_u <- survey::svydesign(ids=~1, weights=~w_new, data=dta)
           if(any(design_u$variables$w_new<0) & estimand=="ATE"){
-            stop("This tool is meant to be used with inverse probability weights. Please re-run with IPT weights.")
+            warning("This tool is meant to be used with inverse probability weights. Please re-run with IPT weights.")
           }
           glm0_u_nodr <- survey::svyglm(formula, design=design_u)
           esHd[k] <- summary(glm0_u_nodr)$coefficients[tx,1]
