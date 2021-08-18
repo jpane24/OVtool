@@ -9,4 +9,4 @@
 
 ## Update 1.0.2 on 08-18-2021
 * Add error message under certain scenario
-* Switch maintainer from Joseph Pane (josephp@rand.org) to Lane Burgette (burgette@rand.org)
+* Prepare for shift of maintainer to Lane Burgette (burgette at rand.org).
